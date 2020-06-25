@@ -2860,4 +2860,3 @@ gUnknown_08F00000:
     .global gUnknown_08F000C0
 gUnknown_08F000C0:
     .incbin "baserom.gba", 0x00F000C0, 0xFFF40
-
