@@ -29,6 +29,7 @@ ASFLAGS  := -mcpu=arm7tdmi -mthumb-interwork -I asminclude -I include --defsym V
 OBJ_DIR  := build/$(BUILD_NAME)
 ROM 	 := $(BUILD_NAME).gba
 MAP      := $(ROM:%.gba=%.map)
+ELF      := $(ROM:%.gba=%.elf)
 LDSCRIPT := ld_script.ld
 LDFLAGS = --no-check-section -Map ../../$(MAP)
 
@@ -137,7 +138,7 @@ mostlyclean: tidy
 	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' -o -iname '*.bcg' \) -exec rm {} +
 
 tidy:
-	$(RM) $(ROM) $(MAP) $(OBJS)
+	$(RM) $(ROM) $(MAP) $(ELF) $(OBJS)
 	rm -r build
     
 
@@ -225,7 +226,7 @@ $(WAVE_ASM_BUILDDIR)/%.o: $(WAVE_ASM_SUBDIR)/%.s
 	$(AS) $(ASFLAGS) -o $@ $<
     
 
-%.elf: $(OBJ_DIR)/ld_script.ld $(OBJS)
+$(ELF): $(OBJ_DIR)/ld_script.ld $(OBJS)
 	cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T $(LDSCRIPT) $(OBJS_REL) ../../tools/agbcc/lib/libgcc.a ../../tools/agbcc/lib/libc.a -o ../../$@
 
 $(ROM): %.gba: %.elf
