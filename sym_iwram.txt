@@ -203,6 +203,9 @@
 . = 0x00000AFA; gUnknown_03000AFA = .;
 . = 0x00000AFC; gUnknown_03000AFC = .;
 . = 0x00000B00; gUnknown_03000B00 = .;
+. = 0x00000B08; gUnknown_03000B08 = .;
+. = 0x00000D88; gUnknown_03000D88 = .;
+. = 0x00000E28; gUnknown_03000E28 = .;
 . = 0x00000E78; gUnknown_03000E78 = .;
 . = 0x00000E7C; monitor_stdin = .;
 . = 0x00000E80; monitor_stdout = .;
