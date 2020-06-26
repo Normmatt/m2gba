@@ -2,36 +2,117 @@
 
     .global gUnknown_080FA4B0
 gUnknown_080FA4B0:
-    .incbin "baserom.gba", 0x000FA4B0, 0x38
+    .word sub_800030C+1
+    .word sub_80010DC+1
+    .word sub_800030C+1
+    .word sub_800030C+1
+    .word sub_800030C+1
+    .word sub_800030C+1
+    .word sub_800030C+1
+    .word sub_800030C+1
+    .word sub_800030C+1
+    .word sub_800030C+1
+    .word sub_800030C+1
+    .word 0
+    .word 0
+    .word 0
 
+    .align 2
     .global gUnknown_080FA4E8
 gUnknown_080FA4E8:
-    .incbin "baserom.gba", 0x000FA4E8, 0x1C
+    .asciz "NO MORE TCB in _reg_last\n"
 
+    .align 2
     .global gUnknown_080FA504
 gUnknown_080FA504:
-    .incbin "baserom.gba", 0x000FA504, 0x30
+    .asciz "Can't insert tcb when tcb no of my proc is 0.\n"
 
+    .align 2
     .global gUnknown_080FA534
 gUnknown_080FA534:
-    .incbin "baserom.gba", 0x000FA534, 0x1C
+    .asciz "NO MORE TCB in _reg_ins\n"
 
+    .align 2
     .global gUnknown_080FA550
 gUnknown_080FA550:
-    .incbin "baserom.gba", 0x000FA550, 0x20
+    .asciz "Error next_proc() gNumTcb = %d\n"
 
+    .align 2
     .global gUnknown_080FA570
 gUnknown_080FA570:
-    .incbin "baserom.gba", 0x000FA570, 0x14
+    .asciz "wakeup tcb : %d\n"
 
+    .align 2
     .global gUnknown_080FA584
 gUnknown_080FA584:
-    .incbin "baserom.gba", 0x000FA584, 0x1C
+    .asciz "wakeup <Not Use>  tcb : %d\n"
 
+    .align 2
     .global gUnknown_080FA5A0
 gUnknown_080FA5A0:
-    .incbin "baserom.gba", 0x000FA5A0, 0x84
+    .asciz "err set_signal()"
 
+    .align 2
+    .global gUnknown_080FA5B4
+gUnknown_080FA5B4:
+    .asciz ""
+
+    .align 2
+    .global gUnknown_080FA5B8
+gUnknown_080FA5B8:
+    .asciz "IGA TEST"
+
+    .align 2
+    .global gUnknown_080FA5C4
+gUnknown_080FA5C4:
+    .asciz "SAITEI 2"
+
+    .align 2
+    .global gUnknown_080FA5D0
+gUnknown_080FA5D0:
+    .asciz "SAITEI"
+
+    .align 2
+    .global gUnknown_080FA5D8
+gUnknown_080FA5D8:
+    .asciz "MAGIACNT"
+
+    .align 2
+    .global gUnknown_080FA5E4
+gUnknown_080FA5E4:
+    .asciz "UNDER GROUND"
+
+    .align 2
+    .global gUnknown_080FA5F4
+gUnknown_080FA5F4:
+    .asciz "MAKYO"
+
+    .align 2
+    .global gUnknown_080FA5FC
+gUnknown_080FA5FC:
+    .asciz "SCARABI"
+
+    .align 2
+    .global gUnknown_080FA604
+gUnknown_080FA604:
+    .asciz "SUMMERS"
+
+    .align 2
+    .global gUnknown_080FA60C
+gUnknown_080FA60C:
+    .asciz "FORSIDE"
+
+    .align 2
+    .global gUnknown_080FA614
+gUnknown_080FA614:
+    .asciz "THREEK"
+
+    .align 2
+    .global gUnknown_080FA61C
+gUnknown_080FA61C:
+    .asciz "TWOSON"
+
+    .align 2
     .global gUnknown_080FA624
 gUnknown_080FA624:
     .incbin "baserom.gba", 0x000FA624, 0x200

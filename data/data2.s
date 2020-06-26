@@ -86,17 +86,43 @@ __mprec_tens:
 __mprec_bigtens:
     .incbin "baserom.gba", 0x002B78D8, 0x50
 
+    .align 2
     .global gUnknown_082B7928
 gUnknown_082B7928:
-    .incbin "baserom.gba", 0x002B7928, 0x4
+    .asciz ":tt"
 
+    .align 2
     .global gUnknown_082B792C
 gUnknown_082B792C:
-    .incbin "baserom.gba", 0x002B792C, 0x24
+    .asciz "_sbrk: Heap and stack collision\n"
 
+    .align 2
     .global gUnknown_082B7950
 gUnknown_082B7950:
-    .incbin "baserom.gba", 0x002B7950, 0x60
+    .word gUnknown_080FA61C        @ "TWOSON"
+    .word sub_80B6C60+1
+    .word gUnknown_080FA614        @ "THREEK"
+    .word sub_80B6C88+1
+    .word gUnknown_080FA60C        @ "FORSIDE"
+    .word sub_80B6CB8+1
+    .word gUnknown_080FA604        @ "SUMMERS"
+    .word sub_80B6CEC+1
+    .word gUnknown_080FA5FC        @ "SCARABI"
+    .word sub_80B6D20+1
+    .word gUnknown_080FA5F4        @ "MAKYO"
+    .word sub_80B6D5C+1
+    .word gUnknown_080FA5E4        @ "UNDER GROUND"
+    .word sub_80B6D9C+1
+    .word gUnknown_080FA5D8        @ "MAGIACNT"
+    .word sub_80B6DD8+1
+    .word gUnknown_080FA5D0        @ "SAITEI"
+    .word sub_80B6E00+1
+    .word gUnknown_080FA5C4        @ "SAITEI 2"
+    .word sub_80B6E3C+1
+    .word gUnknown_080FA5B8        @ "IGA TEST"
+    .word DoDebugMenuIGATest+1
+    .word gUnknown_080FA5B4        @ ""
+    .word 0
 
     .global gUnknown_082B79B0
 gUnknown_082B79B0:
@@ -114,9 +140,38 @@ gUnknown_082B79BC:
 gUnknown_082B7B04:
     .incbin "baserom.gba", 0x002B7B04, 0x2C
 
+    .align 2
     .global gUnknown_082B7B30
 gUnknown_082B7B30:
-    .incbin "baserom.gba", 0x002B7B30, 0x74
+    .word sub_80027EC+1
+    .word sub_8002998+1
+    .word sub_8002C90+1
+    .word sub_8002EA0+1
+    .word sub_8002FD0+1
+    .word sub_80028BC+1
+    .word sub_80028EC+1
+    .word sub_800294C+1
+    .word sub_8002DBC+1
+    .word sub_8002ED0+1
+    .word sub_8002BC8+1
+    .word sub_8002F00+1
+    .word sub_8003098+1
+    .word sub_80030C8+1
+    .word sub_80030E0+1
+    .word sub_8003110+1
+    .word sub_8003128+1
+    .word sub_8003154+1
+    .word sub_8002F68+1
+    .word sub_8002E30+1
+    .word sub_8002978+1
+    .word sub_8002A3C+1
+    .word sub_8002D50+1
+    .word sub_8002B04+1
+    .word sub_8002FE8+1
+    .word sub_8002FFC+1
+    .word sub_8002CFC+1
+    .word sub_8002854+1
+    .word 0
 
     .global gUnknown_082B7BA4
 gUnknown_082B7BA4:
@@ -186,9 +241,23 @@ gUnknown_082B8EEC:
 gUnknown_082B8F28:
     .incbin "baserom.gba", 0x002B8F28, 0x74
 
+    .align 2
     .global gUnknown_082B8F9C
 gUnknown_082B8F9C:
-    .incbin "baserom.gba", 0x002B8F9C, 0x38
+    .word sub_8003894+1
+    .word sub_8003B60+1
+    .word sub_8003D48+1
+    .word sub_8004EE8+1
+    .word sub_8004EE8+1
+    .word sub_8004EE8+1
+    .word sub_8004EE8+1
+    .word sub_8004EE8+1
+    .word sub_8004EE8+1
+    .word sub_8004EE8+1
+    .word sub_80054A0+1
+    .word sub_8003FB8+1
+    .word sub_80041F8+1
+    .word sub_80043DC+1
 
     .global gUnknown_082B8FD4
 gUnknown_082B8FD4:
@@ -286,9 +355,22 @@ gUnknown_082D40A8:
 gUnknown_082D4114:
     .incbin "baserom.gba", 0x002D4114, 0x6C
 
+    .align 2
     .global gUnknown_082D4180
 gUnknown_082D4180:
-    .incbin "baserom.gba", 0x002D4180, 0x34
+    .word 0
+    .word sub_8008410+1
+    .word sub_800848C+1
+    .word sub_80085B0+1
+    .word sub_80085D4+1
+    .word sub_80085F0+1
+    .word sub_800861C+1
+    .word sub_8008664+1
+    .word sub_8008738+1
+    .word sub_8008764+1
+    .word sub_8008524+1
+    .word sub_8008438+1
+    .word sub_80086C4+1
 
     .global gUnknown_082D41B4
 gUnknown_082D41B4:
@@ -1966,9 +2048,22 @@ gUnknown_08B1B6AC:
 gUnknown_08B1B8B0:
     .incbin "baserom.gba", 0x00B1B8B0, 0x8
 
+    .align 2
     .global cmd_1A_1F_xx_00_LUT
 cmd_1A_1F_xx_00_LUT:
-    .incbin "baserom.gba", 0x00B1B8B8, 0x34
+    .word sub_80D2DD8+1
+    .word PrintPlayableCharacterName+1
+    .word PrintItemName+1
+    .word print_1A_FF_03_00_string+1
+    .word PrintNumber+1
+    .word PrintPartyDescription+1
+    .word sub_80D3560+1
+    .word sub_80D3628+1
+    .word sub_80D373C+1
+    .word sub_80D3858+1
+    .word sub_80D3934+1
+    .word sub_80D3A64+1
+    .word sub_80D3B38+1
 
     .global gUnknown_08B1B8EC
 gUnknown_08B1B8EC:
@@ -2130,9 +2225,32 @@ gUnknown_08B1D430:
 gUnknown_08B1D4B4:
     .incbin "baserom.gba", 0x00B1D4B4, 0x24
 
+    .align 2
     .global gUnknown_08B1D4D8
 gUnknown_08B1D4D8:
-    .incbin "baserom.gba", 0x00B1D4D8, 0x5C
+    .word sub_80D0030+1
+    .word sub_80D0130+1
+    .word sub_80D01E8+1
+    .word sub_80D0294+1
+    .word sub_80D03E8+1
+    .word sub_80D0460+1
+    .word sub_80D03E8+1
+    .word sub_80D0690+1
+    .word sub_80D04D8+1
+    .word sub_80D051C+1
+    .word sub_80D0560+1
+    .word sub_80D05B4+1
+    .word sub_80D05F8+1
+    .word sub_80D063C+1
+    .word sub_80D06C0+1
+    .word sub_80D0704+1
+    .word sub_80D0748+1
+    .word sub_80D078C+1
+    .word sub_80D0030+1
+    .word sub_80D0030+1
+    .word sub_80D0030+1
+    .word sub_80D0030+1
+    .word sub_80D0030+1
 
     .global gUnknown_08B1D534
 gUnknown_08B1D534:
@@ -2202,13 +2320,25 @@ gUnknown_08B1F356:
 gUnknown_08B1F370:
     .incbin "baserom.gba", 0x00B1F370, 0x18
 
+    .align 2
     .global gUnknown_08B1F388
 gUnknown_08B1F388:
-    .incbin "baserom.gba", 0x00B1F388, 0x1C
+    .word sub_80DDF00+1
+    .word sub_80DE0AC+1
+    .word sub_80DE15C+1
+    .word sub_80DE840+1
+    .word sub_80DEA1C+1
+    .word sub_80DFE40+1
+    .word sub_80DFE7C+1
 
+    .align 2
     .global gUnknown_08B1F3A4
 gUnknown_08B1F3A4:
-    .incbin "baserom.gba", 0x00B1F3A4, 0x14
+    .word sub_80E0074+1
+    .word sub_80E0078+1
+    .word sub_80E0238+1
+    .word sub_80E06EC+1
+    .word sub_80E0BC0+1
 
     .global gUnknown_08B1F3B8
 gUnknown_08B1F3B8:
