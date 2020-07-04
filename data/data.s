@@ -2,17 +2,17 @@
 
     .global gUnknown_080FA4B0
 gUnknown_080FA4B0:
-    .word sub_800030C+1
-    .word sub_80010DC+1
-    .word sub_800030C+1
-    .word sub_800030C+1
-    .word sub_800030C+1
-    .word sub_800030C+1
-    .word sub_800030C+1
-    .word sub_800030C+1
-    .word sub_800030C+1
-    .word sub_800030C+1
-    .word sub_800030C+1
+    .word DummyIntr+1
+    .word VBlankIntr+1
+    .word DummyIntr+1
+    .word DummyIntr+1
+    .word DummyIntr+1
+    .word DummyIntr+1
+    .word DummyIntr+1
+    .word DummyIntr+1
+    .word DummyIntr+1
+    .word DummyIntr+1
+    .word DummyIntr+1
     .word 0
     .word 0
     .word 0

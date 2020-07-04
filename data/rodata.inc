@@ -747,8 +747,8 @@ gUnknown_0808EB14:
 TIMED_EVENT_DATA_TABLE:
     .incbin "baserom.gba", 0x000A0B0C, 0x108
 
-    .global gUnknown_080A0C14
-gUnknown_080A0C14:
+    .global gPhotographerConfigTable
+gPhotographerConfigTable:
     .incbin "baserom.gba", 0x000A0C14, 0x900
 
     .global gUnknown_080A1514

@@ -331,7 +331,7 @@
 . = 0x00003858; gUnknown_03003858 = .;
 . = 0x00003860; gUnknown_03003860 = .;
 . = 0x000038B0; gUnknown_030038B0 = .;
-. = 0x000038C4; gUnknown_030038C4 = .;
+. = 0x000038C4; gCurrentMapId = .;
 . = 0x000038C8; gUnknown_030038C8 = .;
 . = 0x000038CC; gUnknown_030038CC = .;
 . = 0x000038D0; gUnknown_030038D0 = .;
@@ -420,7 +420,7 @@
 . = 0x000050C4; gUnknown_030050C4 = .;
 . = 0x000050C8; shouldStartLumineHall = .;
 . = 0x000050CC; gUnknown_030050CC = .;
-. = 0x000050D0; gUnknown_030050D0 = .;
+. = 0x000050D0; gShouldShowTownMap = .;
 . = 0x000050D4; gUnknown_030050D4 = .;
 . = 0x000050D8; gUnknown_030050D8 = .;
 . = 0x000050DC; gUnknown_030050DC = .;
@@ -428,16 +428,16 @@
 . = 0x000050E4; gUnknown_030050E4 = .;
 . = 0x000050E8; gUnknown_030050E8 = .;
 . = 0x000050EC; gUnknown_030050EC = .;
-. = 0x000050F0; gUnknown_030050F0 = .;
+. = 0x000050F0; gShouldInitWindowEffects = .;
 . = 0x000050F4; gUnknown_030050F4 = .;
 . = 0x00005100; gUnknown_03005100 = .;
 . = 0x00005104; gUnknown_03005104 = .;
 . = 0x00005110; gUnknown_03005110 = .;
 . = 0x00005160; gUnknown_03005160 = .;
 . = 0x000051B8; gUnknown_030051B8 = .;
-. = 0x000051BC; gUnknown_030051BC = .;
+. = 0x000051BC; gNewSongId = .;
 . = 0x000051C0; gUnknown_030051C0 = .;
-. = 0x000051C4; gUnknown_030051C4 = .;
+. = 0x000051C4; gCurrentSongId = .;
 . = 0x000051C8; gUnknown_030051C8 = .;
 . = 0x000051CC; gUnknown_030051CC = .;
 . = 0x000051D0; gUnknown_030051D0 = .;
