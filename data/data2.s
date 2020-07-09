@@ -474,7 +474,27 @@ gUnknown_082D47C8:
 
     .global gUnknown_082D4864
 gUnknown_082D4864:
-    .incbin "baserom.gba", 0x002D4864, 0x3A8
+    .incbin "baserom.gba", 0x002D4864, 0x9C
+
+    .global gUnknown_082D4900
+gUnknown_082D4900:
+    .incbin "baserom.gba", 0x002D4900, 0x9C
+
+    .global gUnknown_082D499C
+gUnknown_082D499C:
+    .incbin "baserom.gba", 0x002D499C, 0x9C
+
+    .global gUnknown_082D4A38
+gUnknown_082D4A38:
+    .incbin "baserom.gba", 0x002D4A38, 0x9C
+
+    .global gUnknown_082D4AD4
+gUnknown_082D4AD4:
+    .incbin "baserom.gba", 0x002D4AD4, 0x9C
+
+    .global gUnknown_082D4B70
+gUnknown_082D4B70:
+    .incbin "baserom.gba", 0x002D4B70, 0x9C
 
     .global gUnknown_082D4C0C
 gUnknown_082D4C0C:

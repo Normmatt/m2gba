@@ -123,51 +123,78 @@ gUnknown_080FA824:
 
     .global gUnknown_080FC424
 gUnknown_080FC424:
-    .incbin "baserom.gba", 0x000FC424, 0x14
+    .string "ゲームをはじめる\0"
 
+    .align 2
     .global gUnknown_080FC438
 gUnknown_080FC438:
-    .incbin "baserom.gba", 0x000FC438, 0x1C
+    .string "：\0"
 
+    .align 2
+gUnknown_080FC43C:
+    .string "はやい\0"
+
+    .align 2
+gUnknown_080FC444:
+    .string "ふつう\0"
+
+    .align 2
+gUnknown_080FC44C:
+    .string "おそい\0"
+
+    .align 2
     .global gUnknown_080FC454
 gUnknown_080FC454:
-    .incbin "baserom.gba", 0x000FC454, 0xC
+    .word gUnknown_080FC43C
+    .word gUnknown_080FC444
+    .word gUnknown_080FC44C
 
+    .align 2
     .global gUnknown_080FC460
 gUnknown_080FC460:
-    .incbin "baserom.gba", 0x000FC460, 0x4
+    .string "レ\0"
 
+    .align 2
     .global gUnknown_080FC464
 gUnknown_080FC464:
-    .incbin "baserom.gba", 0x000FC464, 0x4
+    .string "ベ\0"
 
+    .align 2
     .global gUnknown_080FC468
 gUnknown_080FC468:
-    .incbin "baserom.gba", 0x000FC468, 0x4
+    .string "ル\0"
 
+    .align 2
     .global gUnknown_080FC46C
 gUnknown_080FC46C:
-    .incbin "baserom.gba", 0x000FC46C, 0x4
+    .string "ひ\0"
 
+    .align 2
     .global gUnknown_080FC470
 gUnknown_080FC470:
-    .incbin "baserom.gba", 0x000FC470, 0x4
+    .string "ょ\0"
 
+    .align 2
     .global gUnknown_080FC474
 gUnknown_080FC474:
-    .incbin "baserom.gba", 0x000FC474, 0x4
+    .string "う\0"
 
+    .align 2
     .global gUnknown_080FC478
 gUnknown_080FC478:
-    .incbin "baserom.gba", 0x000FC478, 0x4
+    .string "じ\0"
 
+    .align 2
     .global gUnknown_080FC47C
 gUnknown_080FC47C:
     .incbin "baserom.gba", 0x000FC47C, 0x40
 
     .global gUnknown_080FC4BC
 gUnknown_080FC4BC:
-    .incbin "baserom.gba", 0x000FC4BC, 0x10
+    .word gUnknown_02008400
+    .word gUnknown_02008C00
+    .word gUnknown_02009400
+    .word gUnknown_02009C00
 
     .global gUnknown_080FC4CC
 gUnknown_080FC4CC:
@@ -183,11 +210,323 @@ gUnknown_080FC4E8:
 
     .global gUnknown_080FC768
 gUnknown_080FC768:
-    .incbin "baserom.gba", 0x000FC768, 0x360
+    .asciz "TIME (%03d) MAX(%03d)\n"
 
+    .align 2
+    .global gUnknown_080FC780
+gUnknown_080FC780:
+    .string "ＳＥＬＥＣＴ関連\0"
+
+    .align 2
+    .global gUnknown_080FC794
+gUnknown_080FC794:
+    .string "ＰＥＲＳＯＮ\0"
+
+    .align 2
+    .global gUnknown_080FC7A4
+gUnknown_080FC7A4:
+    .string "自転車\0"
+
+    .align 2
+    .global gUnknown_080FC7AC
+gUnknown_080FC7AC:
+    .string "ＯＢＪ　ＣＨＫ２\0"
+
+    .align 2
+    .global gUnknown_080FC7C0
+gUnknown_080FC7C0:
+    .string "ＯＢＪ　ＣＨＫ\0"
+
+    .align 2
+    .global gUnknown_080FC7D0
+gUnknown_080FC7D0:
+    .string "ＭＡＰムーンサイド\0"
+
+    .align 2
+    .global gUnknown_080FC7E4
+gUnknown_080FC7E4:
+    .string "ＭＡＰセレクト特殊\0"
+
+    .align 2
+    .global gUnknown_080FC7F8
+gUnknown_080FC7F8:
+    .string "ＭＡＰセレクト３\0"
+
+    .align 2
+    .global gUnknown_080FC80C
+gUnknown_080FC80C:
+    .string "ＭＡＰセレクト２\0"
+
+    .align 2
+    .global gUnknown_080FC820
+gUnknown_080FC820:
+    .string "ＭＡＰセレクト１\0"
+
+    .align 2
+    .global gUnknown_080FC834
+gUnknown_080FC834:
+    .string "ルミネテスト\0"
+
+    .align 2
+    .global gUnknown_080FC844
+gUnknown_080FC844:
+    .string "スタッフロール１\0"
+
+    .align 2
+    .global gUnknown_080FC858
+gUnknown_080FC858:
+    .string "スタッフロール０\0"
+
+    .align 2
+	.global gUnknown_080FC86C
+gUnknown_080FC86C:
+    .string "ノイズ\0"
+
+    .align 2
+    .global gUnknown_080FC874
+gUnknown_080FC874:
+    .string "設定画面\0"
+
+    .align 2
+    .global gUnknown_080FC880
+gUnknown_080FC880:
+    .string "タイトル\0"
+
+    .align 2
+    .global gUnknown_080FC88C
+gUnknown_080FC88C:
+    .string "ロゴスタート\0"
+
+    .align 2
+    .global gUnknown_080FC89C
+gUnknown_080FC89C:
+    .string "サターンバレー\0"
+
+    .align 2
+    .global gUnknown_080FC8AC
+gUnknown_080FC8AC:
+    .string "グレープ\0"
+
+    .align 2
+    .global gUnknown_080FC8B8
+gUnknown_080FC8B8:
+    .string "ウィンタース\0"
+
+    .align 2
+    .global gUnknown_080FC8C8
+gUnknown_080FC8C8:
+    .string "スリーク\0"
+
+    .align 2
+    .global gUnknown_080FC8D4
+gUnknown_080FC8D4:
+    .string "ハッピー\0"
+
+    .align 2
+    .global gUnknown_080FC8E0
+gUnknown_080FC8E0:
+    .string "ＤＧ谷\0"
+
+    .align 2
+    .global gUnknown_080FC8E8
+gUnknown_080FC8E8:
+    .string "ツーソン\0"
+
+    .align 2
+    .global gUnknown_080FC8F4
+gUnknown_080FC8F4:
+    .string "オネット\0"
+
+    .align 2
+    .global gUnknown_080FC900
+gUnknown_080FC900:
+    .string "ダンジョン男\0"
+
+    .align 2
+    .global gUnknown_080FC910
+gUnknown_080FC910:
+    .string "スカラビ\0"
+
+    .align 2
+    .global gUnknown_080FC91C
+gUnknown_080FC91C:
+    .string "ランマ\0"
+
+    .align 2
+    .global gUnknown_080FC924
+gUnknown_080FC924:
+    .string "サマーズ海上\0"
+
+    .align 2
+    .global gUnknown_080FC934
+gUnknown_080FC934:
+    .string "サマーズ\0"
+
+    .align 2
+    .global gUnknown_080FC940
+gUnknown_080FC940:
+    .string "ＦＯ地下倉庫から\0"
+
+    .align 2
+    .global gUnknown_080FC954
+gUnknown_080FC954:
+    .string "フォーサイド\0"
+
+    .align 2
+    .global gUnknown_080FC964
+gUnknown_080FC964:
+    .string "ドコドコ砂漠\0"
+
+    .align 2
+    .global gUnknown_080FC974
+gUnknown_080FC974:
+    .string "ルミネ\0"
+
+    .align 2
+    .global gUnknown_080FC97C
+gUnknown_080FC97C:
+    .string "過去の最低国\0"
+
+    .align 2
+    .global gUnknown_080FC98C
+gUnknown_080FC98C:
+    .string "最低国\0"
+
+    .align 2
+    .global gUnknown_080FC994
+gUnknown_080FC994:
+    .string "エデンの海\0"
+
+    .align 2
+    .global gUnknown_080FC9A0
+gUnknown_080FC9A0:
+    .string "マジカント\0"
+
+    .align 2
+    .global gUnknown_080FC9AC
+gUnknown_080FC9AC:
+    .string "地底大陸\0"
+
+    .align 2
+    .global gUnknown_080FC9B8
+gUnknown_080FC9B8:
+    .string "魔境\0"
+
+    .align 2
+    .global gUnknown_080FC9C0
+gUnknown_080FC9C0:
+    .string "ジェフ死亡\0"
+
+    .align 2
+    .global gUnknown_080FC9CC
+gUnknown_080FC9CC:
+    .string "死亡\0"
+
+    .align 2
+    .global gUnknown_080FC9D4
+gUnknown_080FC9D4:
+    .string "ネス家くらい\0"
+
+    .align 2
+    .global gUnknown_080FC9E4
+gUnknown_080FC9E4:
+    .string "黒ベタ\0"
+
+    .align 2
+    .global gUnknown_080FC9EC
+gUnknown_080FC9EC:
+    .string "ネス過去の家４\0"
+
+    .align 2
+    .global gUnknown_080FC9FC
+gUnknown_080FC9FC:
+    .string "ネス過去の家３\0"
+
+    .align 2
+    .global gUnknown_080FCA0C
+gUnknown_080FCA0C:
+    .string "ネス過去の家２\0"
+
+    .align 2
+    .global gUnknown_080FCA1C
+gUnknown_080FCA1C:
+    .string "ネス過去の家１\0"
+
+    .align 2
+    .global gUnknown_080FCA2C
+gUnknown_080FCA2C:
+    .string "空\0"
+
+    .align 2
+    .global gUnknown_080FCA30
+gUnknown_080FCA30:
+    .string "ムーンサイドＣ\0"
+
+    .align 2
+    .global gUnknown_080FCA40
+gUnknown_080FCA40:
+    .string "ムーンサイドＢ\0"
+
+    .align 2
+    .global gUnknown_080FCA50
+gUnknown_080FCA50:
+    .string "ムーンサイドＡ\0"
+
+    .align 2
+    .global gUnknown_080FCA60
+gUnknown_080FCA60:
+    .string "ムーンサイドＲ０４\0"
+
+    .align 2
+    .global gUnknown_080FCA74
+gUnknown_080FCA74:
+    .string "ムーンサイド\0"
+
+    .align 2
+    .global gUnknown_080FCA84
+gUnknown_080FCA84:
+    .string "自転車２\0"
+
+    .align 2
+    .global gUnknown_080FCA90
+gUnknown_080FCA90:
+    .string "自転車１\0"
+
+    .align 2
+    .global gUnknown_080FCA9C
+gUnknown_080FCA9C:
+    .string "ドコからフォーサイド\0"
+
+    .align 2
+    .global gUnknown_080FCAB4
+gUnknown_080FCAB4:
+    .string "スリークからドコ\0"
+
+    .align 2
     .global gUnknown_080FCAC8
 gUnknown_080FCAC8:
-    .incbin "baserom.gba", 0x000FCAC8, 0x58
+    .word gUnknown_03002F10
+    .word 0
+    .word gUnknown_03002F50
+    .word 2
+    .word gUnknown_03002F70+0x1E0
+    .word 96
+    .word gUnknown_03003190
+    .word 98
+    .word gUnknown_030031B0+0x20
+    .word 100
+    .word gUnknown_03002F70+0x20
+    .word 4
+    .word gUnknown_03002F50
+    .word 2
+    .word gUnknown_03002F70+0x1E0
+    .word 96
+    .word gUnknown_03003190
+    .word 98
+    .word gUnknown_03002F50
+    .word 2
+    .word gUnknown_03003190
+    .word 98
 
     .global gUnknown_080FCB20
 gUnknown_080FCB20:
@@ -215,23 +554,37 @@ gUnknown_080FCBE0:
 
     .global gUnknown_080FCC00
 gUnknown_080FCC00:
-    .incbin "baserom.gba", 0x000FCC00, 0x4
+    .string "の\0"
 
+    .align 2
     .global gUnknown_080FCC04
 gUnknown_080FCC04:
-    .incbin "baserom.gba", 0x000FCC04, 0x4
+    .string "マ\0"
 
+    .align 2
     .global gUnknown_080FCC08
 gUnknown_080FCC08:
-    .incbin "baserom.gba", 0x000FCC08, 0x4
+    .string "パ\0"
 
+    .align 2
     .global gUnknown_080FCC0C
 gUnknown_080FCC0C:
-    .incbin "baserom.gba", 0x000FCC0C, 0x14
+    .asciz "VEND(%d) PMAX(%d)\n"
 
+    .align 2
     .global gUnknown_080FCC20
 gUnknown_080FCC20:
-    .incbin "baserom.gba", 0x000FCC20, 0x2C
+    .word gUnknown_082D4690
+    .word gUnknown_082D472C
+    .word gUnknown_082D47C8
+    .word gUnknown_082D4864
+    .word gUnknown_082D4900
+    .word gUnknown_082D499C
+    .word gUnknown_082D4B70
+    .word gUnknown_082D4B70
+    .word gUnknown_082D4AD4
+    .word gUnknown_082D4B70
+    .word gUnknown_082D4A38
 
     .global gUnknown_080FCC4C
 gUnknown_080FCC4C:
@@ -239,156 +592,235 @@ gUnknown_080FCC4C:
 
     .global gUnknown_080FCC60
 gUnknown_080FCC60:
-    .incbin "baserom.gba", 0x000FCC60, 0xC
+    .asciz "ANIM(%d)\n"
 
+    .align 2
     .global gUnknown_080FCC6C
 gUnknown_080FCC6C:
-    .incbin "baserom.gba", 0x000FCC6C, 0x14
+    .asciz "VEND(%d) PMAX(%d)\n"
 
+    .align 2
     .global gUnknown_080FCC80
 gUnknown_080FCC80:
-    .incbin "baserom.gba", 0x000FCC80, 0x2C
+    .word gUnknown_082D4690
+    .word gUnknown_082D472C
+    .word gUnknown_082D47C8
+    .word gUnknown_082D4864
+    .word gUnknown_082D4900
+    .word gUnknown_082D499C
+    .word gUnknown_082D4B70
+    .word gUnknown_082D4B70
+    .word gUnknown_082D4B70
+    .word gUnknown_082D4B70
+    .word gUnknown_082D4A38
 
     .global gUnknown_080FCCAC
 gUnknown_080FCCAC:
-    .incbin "baserom.gba", 0x000FCCAC, 0xC
+    .asciz "CHAR(%d)\n"
 
+    .align 2
     .global gUnknown_080FCCB8
 gUnknown_080FCCB8:
-    .incbin "baserom.gba", 0x000FCCB8, 0xC
+    .asciz "ANIM(%d)\n"
 
+    .align 2
     .global gUnknown_080FCCC4
 gUnknown_080FCCC4:
-    .incbin "baserom.gba", 0x000FCCC4, 0x14
+    .asciz "VEND(%d) PMAX(%d)\n"
 
+    .align 2
     .global gUnknown_080FCCD8
 gUnknown_080FCCD8:
-    .incbin "baserom.gba", 0x000FCCD8, 0x10
+    .asciz "BICYCLE NG(%d)\n"
 
+    .align 2
     .global gUnknown_080FCCE8
 gUnknown_080FCCE8:
-    .incbin "baserom.gba", 0x000FCCE8, 0x10
+    .asciz "BICYCLE OK(%d)n"
 
+    .align 2
     .global gUnknown_080FCCF8
 gUnknown_080FCCF8:
-    .incbin "baserom.gba", 0x000FCCF8, 0x8
+    .asciz "PRI\n"
 
+    .align 2
     .global gUnknown_080FCD00
 gUnknown_080FCD00:
-    .incbin "baserom.gba", 0x000FCD00, 0x14
+    .asciz "XX(%ld) YY(%ld)\n"
 
+    .align 2
     .global gUnknown_080FCD14
 gUnknown_080FCD14:
-    .incbin "baserom.gba", 0x000FCD14, 0x14
+    .asciz "VEND(%d) PMAX(%d)\n"
 
+    .align 2
     .global gUnknown_080FCD28
 gUnknown_080FCD28:
-    .incbin "baserom.gba", 0x000FCD28, 0x8
+    .asciz "ENOUT\n"
 
+    .align 2
     .global gUnknown_080FCD30
 gUnknown_080FCD30:
-    .incbin "baserom.gba", 0x000FCD30, 0x8
+    .asciz "ATTR\n"
 
+    .align 2
     .global gUnknown_080FCD38
 gUnknown_080FCD38:
-    .incbin "baserom.gba", 0x000FCD38, 0x8
+    .asciz "PSTOP\n"
 
+    .align 2
     .global gUnknown_080FCD40
 gUnknown_080FCD40:
-    .incbin "baserom.gba", 0x000FCD40, 0x14
+    .asciz "XX(%ld) YY(%ld)\n"
 
+    .align 2
     .global gUnknown_080FCD54
 gUnknown_080FCD54:
-    .incbin "baserom.gba", 0x000FCD54, 0x14
+    .asciz "VEND(%d) PMAX(%d)\n"
 
+    .align 2
     .global gUnknown_080FCD68
 gUnknown_080FCD68:
-    .incbin "baserom.gba", 0x000FCD68, 0x8
+    .asciz "PRI ON\n"
 
+    .align 2
     .global gUnknown_080FCD70
 gUnknown_080FCD70:
-    .incbin "baserom.gba", 0x000FCD70, 0x14
+    .asciz "XX(%ld) YY(%ld)\n"
 
+    .align 2
     .global gUnknown_080FCD84
 gUnknown_080FCD84:
-    .incbin "baserom.gba", 0x000FCD84, 0xC
+    .asciz "MIZU_ASAI\n"
 
+    .align 2
     .global gUnknown_080FCD90
 gUnknown_080FCD90:
-    .incbin "baserom.gba", 0x000FCD90, 0xC
+    .asciz "MIZU_FUKAI\n"
 
+    .align 2
     .global gUnknown_080FCD9C
 gUnknown_080FCD9C:
-    .incbin "baserom.gba", 0x000FCD9C, 0x10
+    .asciz "MIZU_HASIGO\n"
 
+    .align 2
     .global gUnknown_080FCDAC
 gUnknown_080FCDAC:
-    .incbin "baserom.gba", 0x000FCDAC, 0x8
+    .asciz "SABAKU\n"
 
+    .align 2
     .global gUnknown_080FCDB4
 gUnknown_080FCDB4:
-    .incbin "baserom.gba", 0x000FCDB4, 0x8
+    .asciz "HASIGO\n"
 
+    .align 2
     .global gUnknown_080FCDBC
 gUnknown_080FCDBC:
-    .incbin "baserom.gba", 0x000FCDBC, 0x8
+    .asciz "NAWA\n"
 
+    .align 2
     .global gUnknown_080FCDC4
 gUnknown_080FCDC4:
-    .incbin "baserom.gba", 0x000FCDC4, 0xC
+    .asciz "ESC L UP\n"
 
+    .align 2
     .global gUnknown_080FCDD0
 gUnknown_080FCDD0:
-    .incbin "baserom.gba", 0x000FCDD0, 0xC
+    .asciz "ESC L DOWN\n"
 
+    .align 2
     .global gUnknown_080FCDDC
 gUnknown_080FCDDC:
-    .incbin "baserom.gba", 0x000FCDDC, 0xC
+    .asciz "ESC L EXIT\n"
 
+    .align 2
     .global gUnknown_080FCDE8
 gUnknown_080FCDE8:
-    .incbin "baserom.gba", 0x000FCDE8, 0xC
+    .asciz "ESC R UP\n"
 
+    .align 2
     .global gUnknown_080FCDF4
 gUnknown_080FCDF4:
-    .incbin "baserom.gba", 0x000FCDF4, 0xC
+    .asciz "ESC R DOWN\n"
 
+    .align 2
     .global gUnknown_080FCE00
 gUnknown_080FCE00:
-    .incbin "baserom.gba", 0x000FCE00, 0xC
+    .asciz "ESC R EXIT\n"
 
+    .align 2
     .global gUnknown_080FCE0C
 gUnknown_080FCE0C:
-    .incbin "baserom.gba", 0x000FCE0C, 0x8
+    .asciz "STEP\n"
 
+    .align 2
     .global gUnknown_080FCE14
 gUnknown_080FCE14:
-    .incbin "baserom.gba", 0x000FCE14, 0xC
+    .asciz "STEPIN LD\n"
 
+    .align 2
     .global gUnknown_080FCE20
 gUnknown_080FCE20:
-    .incbin "baserom.gba", 0x000FCE20, 0xC
+    .asciz "STEPIN LU\n"
 
+    .align 2
     .global gUnknown_080FCE2C
 gUnknown_080FCE2C:
-    .incbin "baserom.gba", 0x000FCE2C, 0xC
+    .asciz "STEPIN RD\n"
 
+    .align 2
     .global gUnknown_080FCE38
 gUnknown_080FCE38:
-    .incbin "baserom.gba", 0x000FCE38, 0xC
+    .asciz "STEPIN RU\n"
 
+    .align 2
     .global gUnknown_080FCE44
 gUnknown_080FCE44:
     .incbin "baserom.gba", 0x000FCE44, 0x8
 
     .global gUnknown_080FCE4C
 gUnknown_080FCE4C:
-    .incbin "baserom.gba", 0x000FCE4C, 0x20
+    .incbin "graphics/unknown_palette_080FCE4C.gbapal"
 
     .global gUnknown_080FCE6C
 gUnknown_080FCE6C:
-    .incbin "baserom.gba", 0x000FCE6C, 0xA070
+    .incbin "baserom.gba", 0x000FCE6C, 0xA000
 
+    .global gUnknown_08106E6C
+gUnknown_08106E6C:
+    .string "６ー１６Ｘ１６@@\0"
+
+    .align 2
+    .global gUnknown_08106E80
+gUnknown_08106E80:
+    .string "５ー１６Ｘ８@@\0"
+
+    .align 2
+    .global gUnknown_08106E90
+gUnknown_08106E90:
+    .string "４ー　８Ｘ８@@\0"
+
+    .align 2
+    .global gUnknown_08106EA0
+gUnknown_08106EA0:
+    .string "３ー　４Ｘ８@@\0"
+
+    .align 2
+    .global gUnknown_08106EB0
+gUnknown_08106EB0:
+    .string "２ー　８Ｘ４@@\0"
+
+    .align 2
+    .global gUnknown_08106EC0
+gUnknown_08106EC0:
+    .string "１ー　４Ｘ４@@\0"
+
+    .align 2
+    .global gUnknown_08106ED0
+gUnknown_08106ED0:
+    .string "未登録@@\0"
+
+    .align 2
     .global MPlyJmpTbl
 MPlyJmpTbl:
     .incbin "baserom.gba", 0x00106EDC, 0x90
