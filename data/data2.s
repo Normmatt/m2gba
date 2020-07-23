@@ -126,15 +126,91 @@ gUnknown_082B7950:
 
     .global gUnknown_082B79B0
 gUnknown_082B79B0:
-    .incbin "baserom.gba", 0x002B79B0, 0x4
-
-    .global gUnknown_082B79B4
-gUnknown_082B79B4:
-    .incbin "baserom.gba", 0x002B79B4, 0x8
-
-    .global gUnknown_082B79BC
-gUnknown_082B79BC:
-    .incbin "baserom.gba", 0x002B79BC, 0x148
+    .word gUnknown_086DB070
+    .word gUnknown_0200A400
+    .word gUnknown_02008C00
+    .word 0x0000001A
+    .word 0x00000008
+    .word gUnknown_086DB0FC
+    .word gUnknown_0200AC00
+    .word gUnknown_02009C00
+    .word 0x0000000B
+    .word 0x0000000A
+    .word gUnknown_086DB1F8
+    .word gUnknown_0200BC00
+    .word gUnknown_02009C00
+    .word 0x0000000C
+    .word 0x0000000E
+    .word gUnknown_086DB2B8
+    .word gUnknown_0200C400
+    .word gUnknown_02008C00
+    .word 0x00000019
+    .word 0x00000004
+    .word gUnknown_086DB328
+    .word gUnknown_0200CC00
+    .word gUnknown_02008C00
+    .word 0x00000019
+    .word 0x00000004
+    .word gUnknown_086DB394
+    .word gUnknown_0200D400
+    .word gUnknown_02008C00
+    .word 0x00000019
+    .word 0x00000004
+    .word gUnknown_086DB400
+    .word gUnknown_0200DC00
+    .word gUnknown_02008C00
+    .word 0x00000019
+    .word 0x00000004
+    .word gUnknown_086DB474
+    .word gUnknown_0200E400
+    .word gUnknown_02008C00
+    .word 0x00000019
+    .word 0x00000004
+    .word gUnknown_086DB4E0
+    .word gUnknown_0200EC00
+    .word gUnknown_02008C00
+    .word 0x00000019
+    .word 0x00000004
+    .word gUnknown_086DB550
+    .word gUnknown_0200F400
+    .word gUnknown_02008C00
+    .word 0x00000019
+    .word 0x00000004
+    .word gUnknown_086DB5C4
+    .word gUnknown_0200FC00
+    .word gUnknown_02008C00
+    .word 0x0000001E
+    .word 0x00000010
+    .word gUnknown_086DB820
+    .word gUnknown_02010400
+    .word gUnknown_02008C00
+    .word 0x0000001E
+    .word 0x00000010
+    .word gUnknown_086DBA78
+    .word gUnknown_02010C00
+    .word gUnknown_02008C00
+    .word 0x0000001E
+    .word 0x00000010
+    .word gUnknown_086DBC6C
+    .word gUnknown_02011400
+    .word gUnknown_02008C00
+    .word 0x00000018
+    .word 0x00000014
+    .word gUnknown_086DBDAC
+    .word gUnknown_02011C00
+    .word gUnknown_02009400
+    .word 0x00000016
+    .word 0x00000004
+    .word gUnknown_086DBE18
+    .word gUnknown_02012400
+    .word gUnknown_02009C00
+    .word 0x0000000D
+    .word 0x00000008
+    .word gUnknown_086DBE8C
+    .word gUnknown_02012C00
+    .word gUnknown_02009C00
+    .word 0x00000010
+    .word 0x0000000A
 
     .global gUnknown_082B7B04
 gUnknown_082B7B04:
@@ -1374,7 +1450,83 @@ gUnknown_086D9808:
 
     .global gUnknown_086DAEDC
 gUnknown_086DAEDC:
-    .incbin "baserom.gba", 0x006DAEDC, 0x1060
+    .incbin "baserom.gba", 0x006DAEDC, 0xCC
+
+    .global gUnknown_086DAFA8
+gUnknown_086DAFA8:
+    .incbin "baserom.gba", 0x006DAFA8, 0xC8
+
+    .global gUnknown_086DB070
+gUnknown_086DB070:
+    .incbin "baserom.gba", 0x006DB070, 0x8C
+
+    .global gUnknown_086DB0FC
+gUnknown_086DB0FC:
+    .incbin "baserom.gba", 0x006DB0FC, 0x88
+
+    .global gUnknown_086DB184
+gUnknown_086DB184:
+    .incbin "baserom.gba", 0x006DB184, 0x74
+
+    .global gUnknown_086DB1F8
+gUnknown_086DB1F8:
+    .incbin "baserom.gba", 0x006DB1F8, 0xC0
+
+    .global gUnknown_086DB2B8
+gUnknown_086DB2B8:
+    .incbin "baserom.gba", 0x006DB2B8, 0x70
+
+    .global gUnknown_086DB328
+gUnknown_086DB328:
+    .incbin "baserom.gba", 0x006DB328, 0x6C
+
+    .global gUnknown_086DB394
+gUnknown_086DB394:
+    .incbin "baserom.gba", 0x006DB394, 0x6C
+
+    .global gUnknown_086DB400
+gUnknown_086DB400:
+    .incbin "baserom.gba", 0x006DB400, 0x74
+
+    .global gUnknown_086DB474
+gUnknown_086DB474:
+    .incbin "baserom.gba", 0x006DB474, 0x6C
+
+    .global gUnknown_086DB4E0
+gUnknown_086DB4E0:
+    .incbin "baserom.gba", 0x006DB4E0, 0x70
+
+    .global gUnknown_086DB550
+gUnknown_086DB550:
+    .incbin "baserom.gba", 0x006DB550, 0x74
+
+    .global gUnknown_086DB5C4
+gUnknown_086DB5C4:
+    .incbin "baserom.gba", 0x006DB5C4, 0x25C
+
+    .global gUnknown_086DB820
+gUnknown_086DB820:
+    .incbin "baserom.gba", 0x006DB820, 0x258
+
+    .global gUnknown_086DBA78
+gUnknown_086DBA78:
+    .incbin "baserom.gba", 0x006DBA78, 0x1F4
+
+    .global gUnknown_086DBC6C
+gUnknown_086DBC6C:
+    .incbin "baserom.gba", 0x006DBC6C, 0x140
+
+    .global gUnknown_086DBDAC
+gUnknown_086DBDAC:
+    .incbin "baserom.gba", 0x006DBDAC, 0x6C
+
+    .global gUnknown_086DBE18
+gUnknown_086DBE18:
+    .incbin "baserom.gba", 0x006DBE18, 0x74
+
+    .global gUnknown_086DBE8C
+gUnknown_086DBE8C:
+    .incbin "baserom.gba", 0x006DBE8C, 0xB0
 
     .global gUnknown_086DBF3C
 gUnknown_086DBF3C:
@@ -1562,7 +1714,87 @@ gUnknown_08720620:
 
     .global MOVEMENT_CODE_FUNC_TABLE
 MOVEMENT_CODE_FUNC_TABLE:
-    .incbin "baserom.gba", 0x007208C0, 0x144
+    .word MC_00
+    .word MC_01
+    .word MC_02
+    .word 0
+    .word 0
+    .word 0
+    .word MC_06
+    .word MC_07
+    .word MC_08
+    .word MC_09
+    .word MC_0A
+    .word MC_0B
+    .word MC_0C
+    .word 0
+    .word MC_0E
+    .word MC_0F
+    .word MC_10
+    .word MC_11
+    .word 0
+    .word MC_13
+    .word MC_14
+    .word MC_15
+    .word MC_16
+    .word MC_17
+    .word 0
+    .word MC_19
+    .word MC_1A
+    .word MC_1B
+    .word 0
+    .word MC_1D
+    .word MC_1E
+    .word MC_1F
+    .word MC_20
+    .word MC_21
+    .word 0
+    .word MC_23
+    .word MC_24
+    .word MC_25
+    .word 0
+    .word MC_27
+    .word MC_28
+    .word MC_29
+    .word MC_2A
+    .word MC_2B
+    .word MC_2C
+    .word MC_2D
+    .word MC_2E
+    .word MC_2F
+    .word MC_30
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word MC_39
+    .word 0
+    .word MC_3B
+    .word 0
+    .word 0
+    .word 0
+    .word MC_3F
+    .word MC_40
+    .word MC_41
+    .word MC_42
+    .word 0
+    .word MC_44
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
 
     .global gUnknown_08720A04
 gUnknown_08720A04:

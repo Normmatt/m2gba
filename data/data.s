@@ -1,4 +1,4 @@
-	.section .data
+    .section .data
 
     .global gUnknown_080FA4B0
 gUnknown_080FA4B0:
@@ -278,7 +278,7 @@ gUnknown_080FC858:
     .string "スタッフロール０\0"
 
     .align 2
-	.global gUnknown_080FC86C
+    .global gUnknown_080FC86C
 gUnknown_080FC86C:
     .string "ノイズ\0"
 
@@ -823,7 +823,42 @@ gUnknown_08106ED0:
     .align 2
     .global MPlyJmpTbl
 MPlyJmpTbl:
-    .incbin "baserom.gba", 0x00106EDC, 0x90
+    .word ply_fine
+    .word ply_goto
+    .word ply_patt
+    .word ply_pend
+    .word ply_rept
+    .word ply_fine
+    .word ply_fine
+    .word ply_fine
+    .word ply_fine
+    .word ply_prio
+    .word ply_tempo
+    .word ply_keysh
+    .word ply_voice
+    .word ply_vol
+    .word ply_pan
+    .word ply_bend
+    .word ply_bendr
+    .word ply_lfos_rev01
+    .word ply_lfodl
+    .word ply_mod_rev01
+    .word ply_modt
+    .word ply_fine
+    .word ply_fine
+    .word ply_tune
+    .word ply_fine
+    .word ply_fine
+    .word ply_fine
+    .word ply_port
+    .word ply_fine
+    .word ply_endtie_rev01
+    .word SampFreqSet_rev01
+    .word TrackStop_rev01
+    .word FadeOutBody_rev01
+    .word TrkVolPitSet_rev01
+    .word ClearChain
+    .word SoundMainBTM
 
     .global ScaleTable
 ScaleTable:
@@ -859,7 +894,18 @@ clock_tbl_rev01:
 
     .global xcmd_tbl
 xcmd_tbl:
-    .incbin "baserom.gba", 0x00107184, 0x30
+    .word ply_xxx
+    .word ply_xwave
+    .word ply_xtype
+    .word ply_xxx
+    .word ply_xatta
+    .word ply_xdeca
+    .word ply_xsust
+    .word ply_xrele
+    .word ply_xiecv
+    .word ply_xiecl
+    .word ply_xleng
+    .word ply_xswee
 
 @    .global gMPlayTable
 @gMPlayTable:
