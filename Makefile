@@ -21,7 +21,7 @@ SCANINC := tools/scaninc/scaninc$(EXE)
 PREPROC := tools/preproc/preproc$(EXE)
 GBAFIX := tools/gbafix/gbafix$(EXE)
 
-CC1FLAGS := -mthumb-interwork -Wimplicit -Wparentheses -O0 -fhex-asm -g
+CC1FLAGS := -mthumb-interwork -Wimplicit -Wparentheses -O2 -fhex-asm -g
 CPPFLAGS := -I tools/agbcc/include -iquote include -nostdinc -undef -D VERSION_$(GAME_VERSION) -D REVISION=$(GAME_REVISION) -D $(GAME_LANGUAGE) -D DEBUG=$(DEBUG)
 ASFLAGS  := -mcpu=arm7tdmi -mthumb-interwork -I asminclude -I include --defsym VERSION_$(GAME_VERSION)=1 --defsym REVISION=$(GAME_REVISION) --defsym $(GAME_LANGUAGE)=1 --defsym DEBUG=$(DEBUG)
 
@@ -75,6 +75,10 @@ SRC_ASM_OBJS := $(patsubst $(C_SUBDIR)/%.s,$(SRC_ASM_BUILDDIR)/%.o,$(SRC_ASM_SRC
 
 ASM_SRCS := $(wildcard $(ASM_SUBDIR)/*.s $(ASM_SUBDIR)/*/*.s $(ASM_SUBDIR)/*/*/*.s)
 ASM_OBJS := $(patsubst $(ASM_SUBDIR)/%.s,$(ASM_BUILDDIR)/%.o,$(ASM_SRCS))
+
+# get all the data/*.s files EXCEPT the ones with specific rules
+REGULAR_DATA_ASM_SRCS := $(wildcard $(DATA_ASM_SUBDIR)/*.s)
+REGULAR_DATA_ASM_SRCS := $(filter-out $(DATA_ASM_SUBDIR)/maps.s $(DATA_ASM_SUBDIR)/map_events.s, $(REGULAR_DATA_ASM_SRCS))
 
 DATA_ASM_SRCS := $(wildcard $(DATA_ASM_SUBDIR)/*.s)
 DATA_ASM_OBJS := $(patsubst $(DATA_ASM_SUBDIR)/%.s,$(DATA_ASM_BUILDDIR)/%.o,$(DATA_ASM_SRCS))
@@ -161,19 +165,34 @@ include graphics_file_rules.mk
 ifeq ($(NODEP),1)
 $(C_BUILDDIR)/%.o: c_dep :=
 else
-$(C_BUILDDIR)/%.o: c_dep = $(shell $(SCANINC) -I include $(C_SUBDIR)/$*.c)
+$(C_BUILDDIR)/%.o: c_dep = $(shell $(SCANINC) -I include -I tools/agbcc/include $(C_SUBDIR)/$*.c)
+endif
+
+# The dep rules have to be explicit or else missing files won't be reported.
+# As a side effect, they're evaluated immediately instead of when the rule is invoked.
+# It doesn't look like $(shell) can be deferred so there might not be a better way.
+
+
+ifeq ($(NODEP),1)
+$(ASM_BUILDDIR)/%.o: $(ASM_SUBDIR)/%.s
+	$(AS) $(ASFLAGS) -o $@ $<
+else
+define ASM_DEP
+$1: $2 $$(shell $(SCANINC) -I include -I "" $2)
+	$$(AS) $$(ASFLAGS) -o $$@ $$<
+endef
+$(foreach src, $(ASM_SRCS), $(eval $(call ASM_DEP,$(patsubst $(ASM_SUBDIR)/%.s,$(ASM_BUILDDIR)/%.o, $(src)),$(src))))
 endif
 
 ifeq ($(NODEP),1)
-$(ASM_BUILDDIR)/%.o: asm_dep :=
+$(DATA_ASM_BUILDDIR)/%.o: $(DATA_ASM_SUBDIR)/%.s
+	$(PREPROC) $< charmap.txt | $(CPP) -I include | $(AS) $(ASFLAGS) -o $@
 else
-$(ASM_BUILDDIR)/%.o: asm_dep = $(shell $(SCANINC) -I "" $(ASM_SUBDIR)/$*.s)
-endif
-
-ifeq ($(NODEP),1)
-$(DATA_ASM_BUILDDIR)/%.o: data_dep :=
-else
-$(DATA_ASM_BUILDDIR)/%.o: data_dep = $(shell $(SCANINC) -I include -I "" $(DATA_ASM_SUBDIR)/$*.s)
+define DATA_ASM_DEP
+$1: $2 $$(shell $(SCANINC) -I include -I "" $2)
+	$$(PREPROC) $$< charmap.txt | $$(CPP) -I include | $$(AS) $$(ASFLAGS) -o $$@
+endef
+$(foreach src, $(REGULAR_DATA_ASM_SRCS), $(eval $(call DATA_ASM_DEP,$(patsubst $(DATA_ASM_SUBDIR)/%.s,$(DATA_ASM_BUILDDIR)/%.o, $(src)),$(src))))
 endif
 
 ifeq ($(NODEP),1)
@@ -197,7 +216,7 @@ $(C_BUILDDIR)/%.o : $(C_SUBDIR)/%.c $$(c_dep)
 	$(CPP) $(CPPFLAGS) $< -o $(C_BUILDDIR)/$*.i
 	$(PREPROC) $(C_BUILDDIR)/$*.i charmap.txt > $(C_BUILDDIR)/$*.p.i
 	$(PREPROC) $(C_BUILDDIR)/$*.i charmap.txt | $(CC1) $(CC1FLAGS) -o $(C_BUILDDIR)/$*.s
-	@echo -e ".text\n\t.align\t2, 0\n" >> $(C_BUILDDIR)/$*.s
+	@printf ".text\n\t.align\t2, 0" >> $(C_BUILDDIR)/$*.s
 	$(AS) $(ASFLAGS) -o $@ $(C_BUILDDIR)/$*.s
 
 $(SRC_ASM_BUILDDIR)/%.o: $(C_SUBDIR)/%.s
