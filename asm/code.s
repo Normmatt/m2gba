@@ -124874,7 +124874,7 @@ _080B937C:
 	b _080B9622
 _080B93C0:
 	ldr r0, _080B948C @ =gUnknown_03005390
-	ldr r1, _080B9490 @ =gUnknown_02020D04
+	ldr r1, _080B9490 @ =gUnknown_02020C70 + 0x94
 	str r1, [r0]
 	mov r0, sb
 	cmp r0, #0xff
@@ -124969,7 +124969,7 @@ _080B9480: .4byte gUnknown_08B204E4
 _080B9484: .4byte gUnknown_08B2A9B0
 _080B9488: .4byte gWindowPointers
 _080B948C: .4byte gUnknown_03005390
-_080B9490: .4byte gUnknown_02020D04
+_080B9490: .4byte gUnknown_02020C70 + 0x94
 _080B9494: .4byte m2_character_info
 _080B9498: .4byte 0x000001CB
 _080B949C: .4byte gUnknown_02024860
@@ -186362,7 +186362,7 @@ _080D79D2:
 	ldr r0, [r4, #0x18]
 	str r7, [r0, #0x10]
 	bl sub_80D3C50
-	ldr r1, _080D7ADC @ =gUnknown_02021110
+	ldr r1, _080D7ADC @ =gUnknown_02020C70 + 8*0x94
 	movs r5, #8
 	adds r2, r1, #0
 	adds r2, #0x89
@@ -186400,7 +186400,7 @@ _080D7ACC: .4byte gUnknown_03002A30
 _080D7AD0: .4byte gCurrentProc
 _080D7AD4: .4byte gUnknown_03000AB4
 _080D7AD8: .4byte gWindowPointers
-_080D7ADC: .4byte gUnknown_02021110
+_080D7ADC: .4byte gUnknown_02020C70 + 8*0x94
 _080D7AE0: .4byte gUnknown_03001B10
 _080D7AE4:
 	ldrb r0, [r1, #0xb]
@@ -188352,7 +188352,7 @@ _080D8B02:
 	movs r0, #0x94
 	adds r5, r4, #0
 	muls r5, r0, r5
-	ldr r0, _080D8BE4 @ =gUnknown_02021110
+	ldr r0, _080D8BE4 @ =gUnknown_02020C70 + 8*0x94
 	adds r5, r5, r0
 	adds r0, r5, #0
 	movs r1, #0
@@ -188378,7 +188378,7 @@ _080D8B38:
 	bl sub_80262A8
 	cmp r0, #0
 	beq _080D8B66
-	ldr r4, _080D8BE8 @ =gUnknown_02020FE8
+	ldr r4, _080D8BE8 @ =gUnknown_02020C70 + 6*0x94
 	adds r0, r4, #0
 	movs r1, #0xd7
 	bl sub_80DA29C
@@ -188458,8 +188458,8 @@ _080D8BCE:
 _080D8BD8: .4byte gUnknown_08B213CC
 _080D8BDC: .4byte gUnknown_020248E0
 _080D8BE0: .4byte gUnknown_03004EA4
-_080D8BE4: .4byte gUnknown_02021110
-_080D8BE8: .4byte gUnknown_02020FE8
+_080D8BE4: .4byte gUnknown_02020C70 + 8*0x94
+_080D8BE8: .4byte gUnknown_02020C70 + 6*0x94
 _080D8BEC: .4byte gUnknown_03005350
 _080D8BF0: .4byte m2_character_info
 _080D8BF4: .4byte gUnknown_03004EA0
@@ -188475,7 +188475,7 @@ _080D8C04: @ jump table
 	.4byte _080D8CC0 @ case 5
 	.4byte _080D8CE0 @ case 6
 _080D8C20:
-	ldr r4, _080D8C34 @ =gUnknown_02020FE8
+	ldr r4, _080D8C34 @ =gUnknown_02020C70 + 6*0x94
 	adds r0, r4, #0
 	movs r1, #0xd5
 	bl sub_80DA29C
@@ -188484,7 +188484,7 @@ _080D8C20:
 	strb r0, [r4]
 	b _080D8B92
 	.align 2, 0
-_080D8C34: .4byte gUnknown_02020FE8
+_080D8C34: .4byte gUnknown_02020C70 + 6*0x94
 _080D8C38:
 	movs r0, #0xff
 	bl RandomNumber
@@ -192101,7 +192101,7 @@ _080DA904:
 	asrs r0, r0, #0x10
 	cmp r0, #0x1f
 	ble _080DA830
-	ldr r0, _080DA9B8 @ =gUnknown_02021110
+	ldr r0, _080DA9B8 @ =gUnknown_02020C70 + 8*0x94
 	adds r0, #0x5e
 	ldrb r7, [r0]
 	movs r0, #0x1f
@@ -192180,7 +192180,7 @@ _080DA928:
 	b _080DAA26
 	.align 2, 0
 _080DA9B4: .4byte gUnknown_02020C70
-_080DA9B8: .4byte gUnknown_02021110
+_080DA9B8: .4byte gUnknown_02020C70 + 8*0x94
 _080DA9BC:
 	ldr r1, [sp, #4]
 	str r1, [sp, #8]
@@ -192511,7 +192511,7 @@ _080DAC18:
 	ldr r0, _080DADB0 @ =0x000001DB
 	cmp r1, r0
 	bne _080DAC54
-	ldr r2, _080DADB4 @ =gUnknown_02021110
+	ldr r2, _080DADB4 @ =gUnknown_02020C70 + 8*0x94
 	adds r1, r2, #0
 	adds r1, #0x89
 	movs r0, #0x78
@@ -192549,7 +192549,7 @@ _080DAC70:
 	asrs r0, r2, #0x10
 	movs r1, #0x94
 	muls r1, r0, r1
-	ldr r5, _080DADB4 @ =gUnknown_02021110
+	ldr r5, _080DADB4 @ =gUnknown_02020C70 + 8*0x94
 	adds r6, r1, r5
 	adds r0, #1
 	lsls r0, r0, #0x10
@@ -192570,7 +192570,7 @@ _080DAC9C:
 	asrs r1, r3, #0x10
 	movs r0, #0x94
 	muls r1, r0, r1
-	ldr r0, _080DADB4 @ =gUnknown_02021110
+	ldr r0, _080DADB4 @ =gUnknown_02020C70 + 8*0x94
 	adds r5, r1, r0
 	adds r0, r6, #0
 	adds r0, #0x42
@@ -192694,7 +192694,7 @@ _080DAD8C:
 	beq _080DAD94
 	b _080DAC54
 _080DAD94:
-	ldr r0, _080DADC4 @ =gUnknown_02021E5C
+	ldr r0, _080DADC4 @ =gUnknown_02020C70 + 31*0x94
 	movs r1, #0
 	movs r2, #0x94
 	bl memset
@@ -192710,11 +192710,11 @@ _080DAD9E:
 	bx r1
 	.align 2, 0
 _080DADB0: .4byte 0x000001DB
-_080DADB4: .4byte gUnknown_02021110
+_080DADB4: .4byte gUnknown_02020C70 + 8*0x94
 _080DADB8: .4byte 0x0000011D
 _080DADBC: .4byte gUnknown_020248E0
 _080DADC0: .4byte 0x00000D4C
-_080DADC4: .4byte gUnknown_02021E5C
+_080DADC4: .4byte gUnknown_02020C70 + 31*0x94
 
 	thumb_func_start sub_80DADC8
 sub_80DADC8: @ 0x080DADC8
@@ -193397,7 +193397,7 @@ sub_80DB2F8: @ 0x080DB2F8
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	str r0, [sp]
-	ldr r4, _080DB38C @ =gUnknown_02021110
+	ldr r4, _080DB38C @ =gUnknown_02020C70 + 8*0x94
 	movs r0, #8
 	str r0, [sp, #4]
 	mov sl, r0
@@ -193464,7 +193464,7 @@ _080DB36E:
 	strb r1, [r0]
 	b _080DB3BE
 	.align 2, 0
-_080DB38C: .4byte gUnknown_02021110
+_080DB38C: .4byte gUnknown_02020C70 + 8*0x94
 _080DB390:
 	ldrb r0, [r5, #3]
 	cmp r0, #0
@@ -196503,7 +196503,7 @@ _080DCC64:
 	ldrb r1, [r0]
 	movs r0, #0x94
 	muls r1, r0, r1
-	ldr r0, _080DCCBC @ =gUnknown_02020CCF
+	ldr r0, _080DCCBC @ =gUnknown_02020C70 + 0x5F
 	adds r0, r1, r0
 	movs r1, #0
 	bl sub_80D67E8
@@ -196541,7 +196541,7 @@ _080DCC64:
 	b _080DCCE8
 	.align 2, 0
 _080DCCB8: .4byte 0x00000864
-_080DCCBC: .4byte gUnknown_02020CCF
+_080DCCBC: .4byte gUnknown_02020C70 + 0x5F
 _080DCCC0: .4byte gUnknown_03005270
 _080DCCC4: .4byte gWindowPointers
 _080DCCC8: .4byte tile_offset
@@ -198222,7 +198222,7 @@ _080DD998:
 	adds r5, r1, #0
 _080DD9A0:
 	ldr r1, _080DD9E0 @ =gUnknown_03005390
-	ldr r0, _080DD9E4 @ =gUnknown_02021110
+	ldr r0, _080DD9E4 @ =gUnknown_02020C70 + 8*0x94
 	str r0, [r1]
 	ldr r0, _080DD9E8 @ =gUnknown_020248E0
 	ldr r1, _080DD9EC @ =0x00000938
@@ -198254,7 +198254,7 @@ _080DD9BE:
 	.align 2, 0
 _080DD9DC: .4byte gUnknown_02024860
 _080DD9E0: .4byte gUnknown_03005390
-_080DD9E4: .4byte gUnknown_02021110
+_080DD9E4: .4byte gUnknown_02020C70 + 8*0x94
 _080DD9E8: .4byte gUnknown_020248E0
 _080DD9EC: .4byte 0x00000938
 _080DD9F0:
@@ -198928,7 +198928,7 @@ _080DDF26:
 	b _080DE0A4
 _080DDF28:
 	ldr r0, _080DDF54 @ =gUnknown_0300538C
-	ldr r1, _080DDF58 @ =gUnknown_02021110
+	ldr r1, _080DDF58 @ =gUnknown_02020C70 + 8*0x94
 	str r1, [r0]
 	ldr r0, _080DDF5C @ =gUnknown_03005390
 	str r1, [r0]
@@ -198948,7 +198948,7 @@ _080DDF28:
 	b _080DE0A4
 	.align 2, 0
 _080DDF54: .4byte gUnknown_0300538C
-_080DDF58: .4byte gUnknown_02021110
+_080DDF58: .4byte gUnknown_02020C70 + 8*0x94
 _080DDF5C: .4byte gUnknown_03005390
 _080DDF60: .4byte gUnknown_08739D1C
 _080DDF64: .4byte gUnknown_03004EA0
@@ -198991,7 +198991,7 @@ _080DDFA4:
 	adds r1, r0, #0
 	movs r0, #0x94
 	muls r0, r1, r0
-	ldr r1, _080DDFE0 @ =gUnknown_02021110
+	ldr r1, _080DDFE0 @ =gUnknown_02020C70 + 8*0x94
 	adds r0, r0, r1
 	str r0, [r5]
 	bl sub_80DAE00
@@ -199008,7 +199008,7 @@ _080DDFA4:
 _080DDFD4: .4byte gUnknown_02025038
 _080DDFD8: .4byte gUnknown_02024860
 _080DDFDC: .4byte gUnknown_03005390
-_080DDFE0: .4byte gUnknown_02021110
+_080DDFE0: .4byte gUnknown_02020C70 + 8*0x94
 _080DDFE4:
 	cmp r0, #2
 	beq _080DE00C
@@ -199314,7 +199314,7 @@ _080DE20C:
 	adds r4, r0, #0
 	adds r4, #0x5e
 	ldr r7, _080DE2B4 @ =gUnknown_03001D94
-	ldr r6, _080DE2B8 @ =gUnknown_02020CCF
+	ldr r6, _080DE2B8 @ =gUnknown_02020C70 + 0x5F
 	movs r5, #0x6c
 _080DE240:
 	lsls r1, r2, #0x10
@@ -199374,7 +199374,7 @@ _080DE2A8: .4byte 0x00000828
 _080DE2AC: .4byte gUnknown_02024860
 _080DE2B0: .4byte gUnknown_02020C70
 _080DE2B4: .4byte gUnknown_03001D94
-_080DE2B8: .4byte gUnknown_02020CCF
+_080DE2B8: .4byte gUnknown_02020C70 + 0x5F
 _080DE2BC: .4byte gUnknown_03005324
 _080DE2C0:
 	ldr r1, _080DE32C @ =gUnknown_03005350
@@ -202430,7 +202430,7 @@ _080DFC88:
 	.align 2, 0
 _080DFC90: .4byte gUnknown_02024860
 _080DFC94:
-	ldr r2, _080DFCE0 @ =gUnknown_02021110
+	ldr r2, _080DFCE0 @ =gUnknown_02020C70 + 8*0x94
 	movs r5, #8
 	movs r4, #0
 	adds r3, r2, #0
@@ -202471,7 +202471,7 @@ _080DFCD6:
 	strh r0, [r1, #0x16]
 	b _080DFE24
 	.align 2, 0
-_080DFCE0: .4byte gUnknown_02021110
+_080DFCE0: .4byte gUnknown_02020C70 + 8*0x94
 _080DFCE4:
 	movs r0, #0xa
 	bl sub_80EF7D0
@@ -202585,7 +202585,7 @@ _080DFDC2:
 	mov sb, r0
 	cmp r1, #0
 	bne _080DFE24
-	ldr r2, _080DFE0C @ =gUnknown_02021110
+	ldr r2, _080DFE0C @ =gUnknown_02020C70 + 8*0x94
 	movs r5, #8
 	movs r4, #0
 	adds r1, r2, #0
@@ -202616,7 +202616,7 @@ _080DFDF2:
 	b _080DF9F8
 	.align 2, 0
 _080DFE08: .4byte gUnknown_02024860
-_080DFE0C: .4byte gUnknown_02021110
+_080DFE0C: .4byte gUnknown_02020C70 + 8*0x94
 _080DFE10:
 	ldr r0, _080DFE34 @ =gUnknown_020248E0
 	ldr r1, _080DFE38 @ =0x000008D6

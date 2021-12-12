@@ -55,11 +55,6 @@
 . = 0x00020BDC; gUnknown_02020BDC = .;
 . = 0x00020C60; gUnknown_02020C60 = .;
 . = 0x00020C70; gUnknown_02020C70 = .;
-. = 0x00020CCF; gUnknown_02020CCF = .;
-. = 0x00020D04; gUnknown_02020D04 = .;
-. = 0x00020FE8; gUnknown_02020FE8 = .;
-. = 0x00021110; gUnknown_02021110 = .;
-. = 0x00021E5C; gUnknown_02021E5C = .;
 . = 0x00021EF0; gUnknown_02021EF0 = .;
 . = 0x00021F10; gUnknown_02021F10 = .;
 . = 0x00021F50; gUnknown_02021F50 = .;

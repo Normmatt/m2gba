@@ -48,18 +48,31 @@ typedef struct struct_8217D48
 
 typedef struct Battler
 {
-  u8 unknown[0x42];
-  s16 id;            // 0x42
-  u8 unk44[0x15];
-  u8 letter;         // 0x59
-  u8 consciousness;  // 0x5A
-  u8 unk5B;
-  u8 allyOrEnemy;    // 0x5C
-  u8 npcId;          // 0x5D
-  u8 row;            // 0x5E
-  u8 afflictions[7]; // 0x5F
-  u8 unk68[0x2C];
-  s16 enemyId;       // 0x92
+  /*  0 */ u8 unk0[0x42];
+  /* 42 */ s16 id;
+  /* 44 */ s16 sprite;
+  /* 46 */ u8 unk46[0x13];
+  /* 59 */ u8 letter;
+  /* 5A */ u8 consciousness;
+  /* 5B */ u8 unk5B;
+  /* 5C */ u8 allyOrEnemy;
+  /* 5D */ u8 npcId;
+  /* 5E */ u8 row;
+  /* 5F */ u8 afflictions[7];
+  /* 66 */ u8 unk66[2];
+  /* 68 */ s16 offense;
+  /* 6A */ s16 defense;
+  /* 6C */ u8 unk6C[0xC];
+  /* 78 */ u8 unk78;
+  /* 79 */ u8 paralysisResist;
+  /* 7A */ u8 freezeResist;
+  /* 7B */ u8 flashResist;
+  /* 7C */ u8 fireResist;
+  /* 7D */ u8 brainshockResist;
+  /* 7E */ u8 hypnosisResist;
+  /* 7F */ u8 unk7F;
+  /* 80 */ u8 unk80[0x12];
+  /* 92 */ s16 enemyId;
 } Battler;
 
 typedef struct BattleAction
@@ -107,17 +120,45 @@ struct EnemyData {
 
 typedef struct Struct2024860
 {
-  /*  0 */ u8 unk0[86];
+  /*  0 */ u32 unk0;
+  /*  4 */ u8 unk4[22];
+  /* 1A */ s16 unk1A;
+  /* 1C */ s16 unk1C;
+  /* 1E */ u8 unk1E[4];
+  /* 22 */ s16 unk22;
+  /* 24 */ s16 unk24;
+  /* 26 */ u8 unk26[48];
   /* 56 */ s16 unk56;
   /* ??? there may be more fields */
 } Struct2024860;
+
+typedef struct Struct20248E0
+{
+  /*   0 */ u8 unk0[0x8F8];
+  /* 8F8 */ s16 itemDropped;
+  /* ???  there may be more fields */
+} Struct20248E0;
 
 //Functions
 //main.c
 /*void AgbMain();
 void sub_80002F4();
 void sub_800032C();*/
+// GetBattleSpriteWidth
 extern u32 RandomNumber(u32 range);
+extern s16 sub_80DA6FC(s16 enemyId);
+extern void sub_80DB03C(u8);
+// DisplayInBattleText
+extern void sub_80DB168(const u8 *);
+// DisplayTextWait / DisplayInBattleTextWithNumber
+extern void sub_80DB1FC(const u8 *, s32);
+extern s16 sub_80E83FC(u16);
+extern s16 sub_80E84E0(void);
+extern s16 sub_80E8E24(void);
+extern void sub_80E8E80(void);
+extern void sub_80E8F1C(void);
+// FindInventorySpace2
+extern s32 sub_80EC4CC(s16);
 
 //EWRAM
 /*extern void *gUnknown_02000000;
@@ -128,6 +169,7 @@ extern u8 gUnknown_02000C40[2048];*/
 // BattlersTable
 extern EWRAM_DATA struct Battler gUnknown_02020C70[32];
 extern EWRAM_DATA struct Struct2024860 gUnknown_02024860;
+extern EWRAM_DATA struct Struct20248E0 gUnknown_020248E0;
 
 //IWRAM
 /*extern u32 gBG0HOFS;
@@ -140,6 +182,10 @@ extern u32 gBG3HOFS;
 extern u32 gBG3VOFS;*/
 // BattlerTargetFlags
 extern u32 gUnknown_0300534C;
+// CurrentAttacker
+extern struct Battler *gUnknown_0300538C;
+// CurrentTarget
+extern struct Battler *gUnknown_03005390;
 
 //Data
 /*extern const u16 gUnknown_080EB808[];
@@ -147,6 +193,26 @@ extern u16 gUnknown_080ECF78[8];
 extern u16 gUnknown_080ECF88[8];
 extern u16 gUnknown_080ECF98[7];
 extern u16 gUnknown_080ECFA6[7];*/
+// TextBattle_Dodged
+extern const u8 gUnknown_0806018C[];
+// TextBattle_Spy_Offense
+extern const u8 gUnknown_08060351[];
+// TextBattle_Spy_Defense
+extern const u8 gUnknown_08060365[];
+// TextBattle_Spy_VulnerableToFire
+extern const u8 gUnknown_08060374[];
+// TextBattle_Spy_VulnerableToIce
+extern const u8 gUnknown_08060386[];
+// TextBattle_Spy_VulnerableToFlash
+extern const u8 gUnknown_08060397[];
+// TextBattle_Spy_VulnerableToParalysis
+extern const u8 gUnknown_080603A9[];
+// TextBattle_Spy_VulnerableToHypnosis
+extern const u8 gUnknown_080603BA[];
+// TextBattle_Spy_VulnerableToBrainshock
+extern const u8 gUnknown_080603CC[];
+// TextBattle_Spy_FoundItem
+extern const u8 gUnknown_080621FA[];
 // EnemyConfigurationTable
 extern const struct EnemyData gUnknown_08739D1C[231];
 // PowersOfTwo32Bit
