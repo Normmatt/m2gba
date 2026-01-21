@@ -407,7 +407,7 @@
 . = 0x0000507C; gUnknown_0300507C = .;
 . = 0x00005080; gUnknown_03005080 = .;
 . = 0x00005094; gUnknown_03005094 = .;
-. = 0x00005098; MOVEMENT_SYSTEM_PC = .;
+. = 0x00005098; gAnimationScriptPC = .;
 . = 0x0000509C; gUnknown_0300509C = .;
 . = 0x000050A0; gUnknown_030050A0 = .;
 . = 0x000050A4; gUnknown_030050A4 = .;

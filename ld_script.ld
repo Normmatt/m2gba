@@ -23,6 +23,8 @@ SECTIONS
 	ALIGN(4)
 	{
 		asm/code.o(.text);
+        src/hal_anim.o(.text);
+        asm/code1.o(.text);
 		src/battle_1.o(.text);
 		asm/code2.o(.text);
 	} = 0

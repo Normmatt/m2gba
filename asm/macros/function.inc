@@ -9,7 +9,7 @@
 	.size \name, .-\name
 	.endm
 
-	.macro THUMB_FUNC_START name
+	.macro thumb_func_start name
 	.align 2, 0
 	.global \name
 	.thumb

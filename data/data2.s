@@ -1712,77 +1712,77 @@ gUnknown_08720618:
 gUnknown_08720620:
     .incbin "baserom.gba", 0x00720620, 0x2A0
 
-    .global MOVEMENT_CODE_FUNC_TABLE
-MOVEMENT_CODE_FUNC_TABLE:
-    .word MC_00
-    .word MC_01
-    .word MC_02
+    .global kHALAnimationScriptFuncTable
+kHALAnimationScriptFuncTable:
+    .word HALAnimCC_00
+    .word HALAnimCC_01
+    .word HALAnimCC_02
     .word 0
     .word 0
     .word 0
-    .word MC_06
-    .word MC_07
-    .word MC_08
-    .word MC_09
-    .word MC_0A
-    .word MC_0B
-    .word MC_0C
+    .word HALAnimCC_06
+    .word HALAnimCC_07
+    .word HALAnimCC_08
+    .word HALAnimCC_09
+    .word HALAnimCC_0A
+    .word HALAnimCC_0B
+    .word HALAnimCC_0C
     .word 0
-    .word MC_0E
-    .word MC_0F
-    .word MC_10
-    .word MC_11
+    .word HALAnimCC_0E
+    .word HALAnimCC_0F
+    .word HALAnimCC_10
+    .word HALAnimCC_11
     .word 0
-    .word MC_13
-    .word MC_14
-    .word MC_15
-    .word MC_16
-    .word MC_17
+    .word HALAnimCC_13
+    .word HALAnimCC_14
+    .word HALAnimCC_15
+    .word HALAnimCC_16
+    .word HALAnimCC_17
     .word 0
-    .word MC_19
-    .word MC_1A
-    .word MC_1B
+    .word HALAnimCC_19
+    .word HALAnimCC_1A
+    .word HALAnimCC_1B
     .word 0
-    .word MC_1D
-    .word MC_1E
-    .word MC_1F
-    .word MC_20
-    .word MC_21
+    .word HALAnimCC_1D
+    .word HALAnimCC_1E
+    .word HALAnimCC_1F
+    .word HALAnimCC_20
+    .word HALAnimCC_21
     .word 0
-    .word MC_23
-    .word MC_24
-    .word MC_25
+    .word HALAnimCC_23
+    .word HALAnimCC_24
+    .word HALAnimCC_25
     .word 0
-    .word MC_27
-    .word MC_28
-    .word MC_29
-    .word MC_2A
-    .word MC_2B
-    .word MC_2C
-    .word MC_2D
-    .word MC_2E
-    .word MC_2F
-    .word MC_30
-    .word 0
-    .word 0
-    .word 0
-    .word 0
+    .word HALAnimCC_27
+    .word HALAnimCC_28
+    .word HALAnimCC_29
+    .word HALAnimCC_2A
+    .word HALAnimCC_2B
+    .word HALAnimCC_2C
+    .word HALAnimCC_2D
+    .word HALAnimCC_2E
+    .word HALAnimCC_2F
+    .word HALAnimCC_30
     .word 0
     .word 0
     .word 0
     .word 0
-    .word MC_39
-    .word 0
-    .word MC_3B
     .word 0
     .word 0
     .word 0
-    .word MC_3F
-    .word MC_40
-    .word MC_41
-    .word MC_42
     .word 0
-    .word MC_44
+    .word HALAnimCC_39
+    .word 0
+    .word HALAnimCC_3B
+    .word 0
+    .word 0
+    .word 0
+    .word HALAnimCC_3F
+    .word HALAnimCC_40
+    .word HALAnimCC_41
+    .word HALAnimCC_42
+    .word 0
+    .word HALAnimCC_44
     .word 0
     .word 0
     .word 0
@@ -2674,7 +2674,38 @@ gUnknown_08B1F506:
 
     .global gUnknown_08B1F50C
 gUnknown_08B1F50C:
-    .incbin "baserom.gba", 0x00B1F50C, 0x80
+    .4byte 1 << 0
+	.4byte 1 << 1
+	.4byte 1 << 2
+	.4byte 1 << 3
+	.4byte 1 << 4
+	.4byte 1 << 5
+	.4byte 1 << 6
+	.4byte 1 << 7
+	.4byte 1 << 8
+	.4byte 1 << 9
+	.4byte 1 << 10
+	.4byte 1 << 11
+	.4byte 1 << 12
+	.4byte 1 << 13
+	.4byte 1 << 14
+	.4byte 1 << 15
+	.4byte 1 << 16
+	.4byte 1 << 17
+	.4byte 1 << 18
+	.4byte 1 << 19
+	.4byte 1 << 20
+	.4byte 1 << 21
+	.4byte 1 << 22
+	.4byte 1 << 23
+	.4byte 1 << 24
+	.4byte 1 << 25
+	.4byte 1 << 26
+	.4byte 1 << 27
+	.4byte 1 << 28
+	.4byte 1 << 29
+	.4byte 1 << 30
+	.4byte 1 << 31
 
     .global gUnknown_08B1F58C
 gUnknown_08B1F58C:
@@ -2698,11 +2729,7 @@ gUnknown_08B1F674:
 
     .global gUnknown_08B204E4
 gUnknown_08B204E4:
-    .incbin "baserom.gba", 0x00B204E4, 0x8
-
-    .global gUnknown_08B204EC
-gUnknown_08B204EC:
-    .incbin "baserom.gba", 0x00B204EC, 0xEE0
+    .incbin "baserom.gba", 0x00B204E4, 0xEE8
 
     .global gUnknown_08B213CC
 gUnknown_08B213CC:
