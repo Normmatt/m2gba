@@ -3,111 +3,6 @@
 .syntax unified
 .section .text
 
-	arm_func_start start
-start: @ 0x08F00000
-	b crt0
-	.include "asm/rom_header.inc"
-    
-crt0:
-	mov r0, #0x12
-	msr cpsr_fc, r0
-	ldr sp, _080000F8 @ =gUnknown_03007FA0
-	mov r0, #0x1f
-	msr cpsr_fc, r0
-	ldr sp, _080000F4 @ =gUnknown_03007E00
-	ldr r1, _080001AC @ =gUnknown_03007FFC
-	add r0, pc, #0x18 @ =sub_80000FC
-	str r0, [r1]
-	ldr r1, _080001B0 @ =AgbMain
-	mov lr, pc
-	bx r1
-	b crt0
-	.align 2, 0
-_080000F4: .4byte gUnknown_03007E00
-_080000F8: .4byte gUnknown_03007FA0
-
-	arm_func_start sub_80000FC
-sub_80000FC: @ 0x080000FC
-	mov r3, #0x4000000
-	add r3, r3, #0x200
-	ldr r2, [r3]
-	and r1, r2, r2, lsr #16
-	ands r0, r1, #0x2000
-	strbne r0, [r3, #-0x17c]
-_08000114:
-	bne _08000114
-	mov r2, #0
-	ands r0, r1, #0x80
-	bne _08000198
-	add r2, r2, #4
-	ands r0, r1, #1
-	bne _08000198
-	add r2, r2, #4
-	ands r0, r1, #2
-	bne _08000198
-	add r2, r2, #4
-	ands r0, r1, #8
-	bne _08000198
-	add r2, r2, #4
-	ands r0, r1, #0x10
-	bne _08000198
-	add r2, r2, #4
-	ands r0, r1, #0x40
-	bne _08000198
-	add r2, r2, #4
-	ands r0, r1, #0x100
-	bne _08000198
-	add r2, r2, #4
-	ands r0, r1, #0x200
-	bne _08000198
-	add r2, r2, #4
-	ands r0, r1, #0x400
-	bne _08000198
-	add r2, r2, #4
-	ands r0, r1, #0x800
-	bne _08000198
-	add r2, r2, #4
-	ands r0, r1, #0x1000
-_08000198:
-	strh r0, [r3, #2]
-	ldr r1, _080001B4 @ =gUnknown_080FA4B0
-	add r1, r1, r2
-	ldr r0, [r1]
-	bx r0
-	.align 2, 0
-_080001AC: .4byte gUnknown_03007FFC
-_080001B0: .4byte AgbMain
-_080001B4: .4byte gUnknown_080FA4B0
-
-	thumb_func_start AgbMain
-AgbMain: @ 0x080001B8
-	push {r4, r5, lr}
-	ldr r1, _080001E8 @ =gUnknown_03002A34
-	movs r0, #0
-	str r0, [r1]
-	bl ResetTheRam
-	bl sub_800E5B4
-	bl m2_init_character_info_defaults
-	ldr r4, _080001EC @ =MainCallback
-	ldr r0, _080001F0 @ =sub_80137A4
-	str r0, [r4]
-	bl EnableM4A
-	adds r5, r4, #0
-	ldr r4, _080001F4 @ =gUnknown_03002A4C
-_080001DA:
-	ldr r0, [r5]
-	bl _call_via_r0
-	ldr r0, [r4]
-	cmp r0, #0
-	beq _080001DA
-_080001E6:
-	b _080001E6
-	.align 2, 0
-_080001E8: .4byte gUnknown_03002A34
-_080001EC: .4byte MainCallback
-_080001F0: .4byte sub_80137A4
-_080001F4: .4byte gUnknown_03002A4C
-
 	thumb_func_start ResetTheRam
 ResetTheRam: @ 0x080001F8
 	push {r4, r5, r6, lr}
@@ -167,7 +62,7 @@ ResetTheRam: @ 0x080001F8
 	str r6, [r4, #8]
 	ldr r0, [r4, #8]
 	bl m2_init_heap
-	ldr r0, _080002E4 @ =sub_80000FC
+	ldr r0, _080002E4 @ =DefaultIRQHandler
 	str r0, [r4]
 	ldr r1, _080002E8 @ =IntrMain_RAM
 	str r1, [r4, #4]
@@ -219,7 +114,7 @@ _080002D4: .4byte 0x85010000
 _080002D8: .4byte 0x85001F40
 _080002DC: .4byte 0x85006000
 _080002E0: .4byte 0x85000100
-_080002E4: .4byte sub_80000FC
+_080002E4: .4byte DefaultIRQHandler
 _080002E8: .4byte IntrMain_RAM
 _080002EC: .4byte 0x84000200
 _080002F0: .4byte gUnknown_03007FFC
@@ -11393,7 +11288,7 @@ m2_init_heap: @ 0x08005B60
 	movs r1, #0xc0
 	lsls r1, r1, #9
 	bl m2_setup_heap_data
-	ldr r0, _08005B98 @ =gUnknown_03002A4C
+	ldr r0, _08005B98 @ =gAllocationCount
 	str r4, [r0]
 	add sp, #4
 	pop {r4}
@@ -11403,7 +11298,7 @@ m2_init_heap: @ 0x08005B60
 _08005B8C: .4byte 0x040000D4
 _08005B90: .4byte gMallocHeap
 _08005B94: .4byte 0x85006000
-_08005B98: .4byte gUnknown_03002A4C
+_08005B98: .4byte gAllocationCount
 
 	thumb_func_start m2_malloc
 m2_malloc: @ 0x08005B9C
@@ -11430,7 +11325,7 @@ _08005BB8:
 _08005BC0:
 	b _08005BC0
 _08005BC2:
-	ldr r1, _08005BD0 @ =gUnknown_03002A4C
+	ldr r1, _08005BD0 @ =gAllocationCount
 	ldr r0, [r1]
 	adds r0, #1
 	str r0, [r1]
@@ -11438,7 +11333,7 @@ _08005BC2:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08005BD0: .4byte gUnknown_03002A4C
+_08005BD0: .4byte gAllocationCount
 
 	thumb_func_start m2_free
 m2_free: @ 0x08005BD4
@@ -11461,14 +11356,14 @@ _08005BEC:
 _08005BEE:
 	adds r0, r1, #0
 	bl m2_free_internal
-	ldr r1, _08005C00 @ =gUnknown_03002A4C
+	ldr r1, _08005C00 @ =gAllocationCount
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08005C00: .4byte gUnknown_03002A4C
+_08005C00: .4byte gAllocationCount
 
 	thumb_func_start m2_setup_heap_data
 m2_setup_heap_data: @ 0x08005C04

@@ -139,11 +139,42 @@ typedef struct Struct20248E0
   /* ???  there may be more fields */
 } Struct20248E0;
 
+struct EventScriptRunner {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+    u8 unk4[4];
+    u16 unk8;
+    u16 unkA;
+    const u8 *unkC;
+    const u8 *unk10[4];
+    const u8 *unk20[4];
+};
+
+struct Struct030050A4 {
+    u8 unk0[0x60];
+    u8 unk60;
+    u8 unk61;
+    u8 unk62[0xE];
+    s16 unk70[8];
+    u8 unk80[0x28];
+    void (*unkA8)();
+    u8 unkAC[8];
+    struct EventScriptRunner unkB4[5];
+};
+
+
 //Functions
 //main.c
-/*void AgbMain();
-void sub_80002F4();
-void sub_800032C();*/
+//void AgbMain();
+void ResetTheRam(void);
+// void sub_80002F4();
+// void sub_800032C();
+void EnableM4A(void);
+void sub_800E5B4(void);
+void sub_80137A4(void);
+void m2_init_character_info_defaults(void);
 // GetBattleSpriteWidth
 extern u32 RandomNumber(u32 range);
 extern s16 sub_80DA6FC(s16 enemyId);
@@ -180,6 +211,12 @@ extern u32 gBG2HOFS;
 extern u32 gBG2VOFS;
 extern u32 gBG3HOFS;
 extern u32 gBG3VOFS;*/
+extern void (*MainCallback)(void);
+extern u32 gUnknown_03002A34;
+extern u32 gAllocationCount;
+extern const u8 *gAnimationScriptPC;
+extern struct EventScriptRunner *gUnknown_0300509C;
+extern struct Struct030050A4 *gUnknown_030050A4;
 // BattlerTargetFlags
 extern u32 gUnknown_0300534C;
 // CurrentAttacker
@@ -213,6 +250,7 @@ extern const u8 gUnknown_080603BA[];
 extern const u8 gUnknown_080603CC[];
 // TextBattle_Spy_FoundItem
 extern const u8 gUnknown_080621FA[];
+extern void (*const kHALAnimationScriptFuncTable[])(void);
 // EnemyConfigurationTable
 extern const struct EnemyData gUnknown_08739D1C[231];
 // PowersOfTwo32Bit

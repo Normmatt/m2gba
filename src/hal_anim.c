@@ -1,36 +1,5 @@
 #include "definitions.h"
 
-struct EventScriptRunner {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    u8 unk3;
-    u8 unk4[4];
-    u16 unk8;
-    u16 unkA;
-    const u8 *unkC;
-    const u8 *unk10[4];
-    const u8 *unk20[4];
-};
-
-struct Struct030050A4 {
-    u8 unk0[0x60];
-    u8 unk60;
-    u8 unk61;
-    u8 unk62[0xE];
-    s16 unk70[8];
-    u8 unk80[0x28];
-    void (*unkA8)();
-    u8 unkAC[8];
-    struct EventScriptRunner unkB4[5];
-};
-
-extern const u8 *gAnimationScriptPC;
-extern struct EventScriptRunner *gUnknown_0300509C;
-extern struct Struct030050A4 *gUnknown_030050A4;
-
-extern void (*const kHALAnimationScriptFuncTable[])(void);
-
 void m2_run_movement_script(struct Struct030050A4 *arg0) {
     s32 i;
     gUnknown_030050A4 = arg0;

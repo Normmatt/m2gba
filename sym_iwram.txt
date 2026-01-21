@@ -289,7 +289,7 @@
 . = 0x00002A40; gUnknown_03002A40 = .;
 . = 0x00002A44; gUnknown_03002A44 = .;
 . = 0x00002A48; gUnknown_03002A48 = .;
-. = 0x00002A4C; gUnknown_03002A4C = .;
+. = 0x00002A4C; gAllocationCount = .;
 . = 0x00002A50; gUnknown_03002A50 = .;
 . = 0x00002A54; gUnknown_03002A54 = .;
 . = 0x00002A58; gUnknown_03002A58 = .;

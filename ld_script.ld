@@ -22,9 +22,11 @@ SECTIONS
     .text :
 	ALIGN(4)
 	{
+		src/crt0.o(.text);
+        src/main.o(.text);
 		asm/code.o(.text);
-        src/hal_anim.o(.text);
-        asm/code1.o(.text);
+		src/hal_anim.o(.text);
+		asm/code1.o(.text);
 		src/battle_1.o(.text);
 		asm/code2.o(.text);
 	} = 0
