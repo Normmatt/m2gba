@@ -212,8 +212,13 @@ extern u32 gBG2VOFS;
 extern u32 gBG3HOFS;
 extern u32 gBG3VOFS;*/
 extern void (*MainCallback)(void);
+extern u32 IntrMain_RAM[0x200];
 extern u32 gUnknown_03002A34;
 extern u32 gAllocationCount;
+extern u8 gUnknown_03002F10[TILE_SIZE_4BPP * 6 * 6];
+extern u32 gUnknown_03003390;
+extern u32 gUnknown_03003394;
+extern struct OamData gOamBuffer[0x80];
 extern const u8 *gAnimationScriptPC;
 extern struct EventScriptRunner *gUnknown_0300509C;
 extern struct Struct030050A4 *gUnknown_030050A4;
@@ -225,6 +230,7 @@ extern struct Battler *gUnknown_0300538C;
 extern struct Battler *gUnknown_03005390;
 
 //Data
+extern const u32 DefaultIRQHandler[];
 /*extern const u16 gUnknown_080EB808[];
 extern u16 gUnknown_080ECF78[8];
 extern u16 gUnknown_080ECF88[8];

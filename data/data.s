@@ -507,25 +507,25 @@ gUnknown_080FCAB4:
 gUnknown_080FCAC8:
     .word gUnknown_03002F10
     .word 0
-    .word gUnknown_03002F50
+    .word gUnknown_03002F10+0x40
     .word 2
-    .word gUnknown_03002F70+0x1E0
+    .word gUnknown_03002F10+0x240
     .word 96
-    .word gUnknown_03003190
+    .word gUnknown_03002F10+0x280
     .word 98
-    .word gUnknown_030031B0+0x20
+    .word gUnknown_03002F10+0x2C0
     .word 100
-    .word gUnknown_03002F70+0x20
+    .word gUnknown_03002F10+0x80
     .word 4
-    .word gUnknown_03002F50
+    .word gUnknown_03002F10+0x40
     .word 2
-    .word gUnknown_03002F70+0x1E0
+    .word gUnknown_03002F10+0x240
     .word 96
-    .word gUnknown_03003190
+    .word gUnknown_03002F10+0x280
     .word 98
-    .word gUnknown_03002F50
+    .word gUnknown_03002F10+0x40
     .word 2
-    .word gUnknown_03003190
+    .word gUnknown_03002F10+0x280
     .word 98
 
     .global gUnknown_080FCB20

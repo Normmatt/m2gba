@@ -3,128 +3,6 @@
 .syntax unified
 .section .text
 
-	thumb_func_start ResetTheRam
-ResetTheRam: @ 0x080001F8
-	push {r4, r5, r6, lr}
-	mov r6, sb
-	mov r5, r8
-	push {r5, r6}
-	sub sp, #4
-	ldr r1, _080002C8 @ =0x04000204
-	ldr r2, _080002CC @ =0x00004014
-	adds r0, r2, #0
-	strh r0, [r1]
-	movs r5, #0
-	str r5, [sp]
-	ldr r4, _080002D0 @ =0x040000D4
-	mov r0, sp
-	str r0, [r4]
-	movs r0, #0x80
-	lsls r0, r0, #0x12
-	str r0, [r4, #4]
-	ldr r0, _080002D4 @ =0x85010000
-	str r0, [r4, #8]
-	ldr r0, [r4, #8]
-	str r5, [sp]
-	mov r2, sp
-	str r2, [r4]
-	movs r0, #0xc0
-	lsls r0, r0, #0x12
-	str r0, [r4, #4]
-	ldr r0, _080002D8 @ =0x85001F40
-	str r0, [r4, #8]
-	ldr r0, [r4, #8]
-	str r5, [sp]
-	str r2, [r4]
-	movs r0, #0xc0
-	lsls r0, r0, #0x13
-	str r0, [r4, #4]
-	ldr r0, _080002DC @ =0x85006000
-	str r0, [r4, #8]
-	ldr r0, [r4, #8]
-	movs r0, #0xa0
-	mov r8, r0
-	str r0, [sp]
-	str r2, [r4]
-	movs r2, #0xe0
-	lsls r2, r2, #0x13
-	mov sb, r2
-	str r2, [r4, #4]
-	ldr r6, _080002E0 @ =0x85000100
-	str r6, [r4, #8]
-	ldr r0, [r4, #8]
-	str r5, [sp]
-	mov r0, sp
-	str r0, [r4]
-	movs r0, #0xa0
-	lsls r0, r0, #0x13
-	str r0, [r4, #4]
-	str r6, [r4, #8]
-	ldr r0, [r4, #8]
-	bl m2_init_heap
-	ldr r0, _080002E4 @ =DefaultIRQHandler
-	str r0, [r4]
-	ldr r1, _080002E8 @ =IntrMain_RAM
-	str r1, [r4, #4]
-	ldr r0, _080002EC @ =0x84000200
-	str r0, [r4, #8]
-	ldr r0, [r4, #8]
-	ldr r0, _080002F0 @ =gUnknown_03007FFC
-	str r1, [r0]
-	bl sub_80087C8
-	mov r2, r8
-	str r2, [sp]
-	mov r0, sp
-	str r0, [r4]
-	ldr r0, _080002F4 @ =gOamBuffer
-	str r0, [r4, #4]
-	str r6, [r4, #8]
-	ldr r1, [r4, #8]
-	str r0, [r4]
-	mov r2, sb
-	str r2, [r4, #4]
-	ldr r0, _080002F8 @ =0x84000100
-	str r0, [r4, #8]
-	ldr r0, [r4, #8]
-	str r5, [sp]
-	mov r0, sp
-	str r0, [r4]
-	ldr r0, _080002FC @ =gUnknown_03002F10
-	str r0, [r4, #4]
-	ldr r0, _08000300 @ =0x85000120
-	str r0, [r4, #8]
-	ldr r0, [r4, #8]
-	ldr r0, _08000304 @ =gUnknown_03003390
-	str r5, [r0]
-	ldr r0, _08000308 @ =gUnknown_03003394
-	str r5, [r0]
-	bl sub_80010D8
-	add sp, #4
-	pop {r3, r4}
-	mov r8, r3
-	mov sb, r4
-	pop {r4, r5, r6}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080002C8: .4byte 0x04000204
-_080002CC: .4byte 0x00004014
-_080002D0: .4byte 0x040000D4
-_080002D4: .4byte 0x85010000
-_080002D8: .4byte 0x85001F40
-_080002DC: .4byte 0x85006000
-_080002E0: .4byte 0x85000100
-_080002E4: .4byte DefaultIRQHandler
-_080002E8: .4byte IntrMain_RAM
-_080002EC: .4byte 0x84000200
-_080002F0: .4byte gUnknown_03007FFC
-_080002F4: .4byte gOamBuffer
-_080002F8: .4byte 0x84000100
-_080002FC: .4byte gUnknown_03002F10
-_08000300: .4byte 0x85000120
-_08000304: .4byte gUnknown_03003390
-_08000308: .4byte gUnknown_03003394
-
 	thumb_func_start DummyIntr
 DummyIntr: @ 0x0800030C
 	bx lr
@@ -17304,16 +17182,16 @@ sub_8008864: @ 0x08008864
 	cmp r0, #1
 	bhi _08008888
 	ldr r0, _08008880 @ =gUnknown_03000060
-	ldr r1, _08008884 @ =gUnknown_03002F70
+	ldr r1, _08008884 @ =gUnknown_03002F10+0x60
 	str r1, [r0, #8]
 	movs r1, #3
 	b _08008890
 	.align 2, 0
 _08008880: .4byte gUnknown_03000060
-_08008884: .4byte gUnknown_03002F70
+_08008884: .4byte gUnknown_03002F10+0x60
 _08008888:
 	ldr r0, _08008898 @ =gUnknown_03000060
-	ldr r1, _0800889C @ =gUnknown_03002F50
+	ldr r1, _0800889C @ =gUnknown_03002F10+0x40
 	str r1, [r0, #8]
 	movs r1, #2
 _08008890:
@@ -17322,7 +17200,7 @@ _08008890:
 	bx r0
 	.align 2, 0
 _08008898: .4byte gUnknown_03000060
-_0800889C: .4byte gUnknown_03002F50
+_0800889C: .4byte gUnknown_03002F10+0x40
 
 	thumb_func_start sub_80088A0
 sub_80088A0: @ 0x080088A0
@@ -17340,16 +17218,16 @@ sub_80088A4: @ 0x080088A4
 	cmp r0, #1
 	bhi _080088C8
 	ldr r0, _080088C0 @ =gUnknown_03000060
-	ldr r1, _080088C4 @ =gUnknown_030031B0
+	ldr r1, _080088C4 @ =gUnknown_03002F10+0x2A0
 	str r1, [r0, #0x18]
 	movs r1, #0x63
 	b _080088D0
 	.align 2, 0
 _080088C0: .4byte gUnknown_03000060
-_080088C4: .4byte gUnknown_030031B0
+_080088C4: .4byte gUnknown_03002F10+0x2A0
 _080088C8:
 	ldr r0, _080088D8 @ =gUnknown_03000060
-	ldr r1, _080088DC @ =gUnknown_03003190
+	ldr r1, _080088DC @ =gUnknown_03002F10+0x280
 	str r1, [r0, #0x18]
 	movs r1, #0x62
 _080088D0:
@@ -17358,7 +17236,7 @@ _080088D0:
 	bx r0
 	.align 2, 0
 _080088D8: .4byte gUnknown_03000060
-_080088DC: .4byte gUnknown_03003190
+_080088DC: .4byte gUnknown_03002F10+0x280
 
 	thumb_func_start sub_80088E0
 sub_80088E0: @ 0x080088E0

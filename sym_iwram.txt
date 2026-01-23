@@ -302,10 +302,6 @@
 . = 0x00002A80; gUnknown_03002A80 = .;
 . = 0x00002A90; gUnknown_03002A90 = .;
 . = 0x00002F10; gUnknown_03002F10 = .;
-. = 0x00002F50; gUnknown_03002F50 = .;
-. = 0x00002F70; gUnknown_03002F70 = .;
-. = 0x00003190; gUnknown_03003190 = .;
-. = 0x000031B0; gUnknown_030031B0 = .;
 . = 0x00003390; gUnknown_03003390 = .;
 . = 0x00003394; gUnknown_03003394 = .;
 . = 0x000033A0; gOamBuffer = .;
