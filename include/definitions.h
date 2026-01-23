@@ -171,7 +171,10 @@ struct Struct030050A4 {
 void ResetTheRam(void);
 // void sub_80002F4();
 // void sub_800032C();
+void sub_80010D8(void);
 void EnableM4A(void);
+void m2_init_heap(void);
+void sub_80087C8(void);
 void sub_800E5B4(void);
 void sub_80137A4(void);
 void m2_init_character_info_defaults(void);

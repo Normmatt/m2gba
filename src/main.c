@@ -49,3 +49,6 @@ void ResetTheRam(void) {
     gUnknown_03003394 = 0;
     sub_80010D8();
 }
+
+void DummyIntr(void) {
+}

@@ -3,11 +3,6 @@
 .syntax unified
 .section .text
 
-	thumb_func_start DummyIntr
-DummyIntr: @ 0x0800030C
-	bx lr
-	.align 2, 0
-
 	thumb_func_start InitPadState
 InitPadState: @ 0x08000310
 	push {r4, r5, lr}
