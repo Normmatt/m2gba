@@ -4,7 +4,12 @@
 #include "gba/types.h"
 #include "m4a.h"
 
-#define NUM_ELEMS(a) (sizeof(a)/sizeof 0[a])
+// XXX: replace condition when C2y comes out and has a __STDC_VERSION__ value
+#if 0
+#define COUNTOF(a) _Countof(a)
+#else
+#define COUNTOF(a) (sizeof(a)/sizeof 0[a])
+#endif
 
 // define a function pointer type
 typedef void (*void_pointer)(void);
@@ -15,13 +20,19 @@ typedef union __attribute__((__packed__)) {
     u16 word;
 } byteword;
 
+typedef struct Struct2510
+{
+  u16 unk0[2][10];
+  u8 unk28[8];
+} Struct2510;
+
 typedef struct sKeyStatus
 {
-  u16 heldKeysRaw;
-  u16 newKeysRaw;
-  u16 newAndRepeatedKeys;
-  u16 keyRepeatCounter;
-  u16 KeyRepeatContinueDelay;
+  u16 unk0[2];
+  u16 unk4;
+  u16 unk6;
+  u16 unk8[10];
+  u16 unk1C[10];
 } sKeyStatus;
 
 typedef struct sIrqHandler
@@ -171,6 +182,7 @@ struct Struct030050A4 {
 void ResetTheRam(void);
 // void sub_80002F4();
 // void sub_800032C();
+void sub_80003B0(s32, u16);
 void sub_80010D8(void);
 void EnableM4A(void);
 void m2_init_heap(void);
@@ -206,6 +218,7 @@ extern EWRAM_DATA struct Struct2024860 gUnknown_02024860;
 extern EWRAM_DATA struct Struct20248E0 gUnknown_020248E0;
 
 //IWRAM
+extern u16 gUnknown_03000000[4];
 /*extern u32 gBG0HOFS;
 extern u32 gBG0VOFS;
 extern u32 gBG1HOFS;
@@ -216,6 +229,10 @@ extern u32 gBG3HOFS;
 extern u32 gBG3VOFS;*/
 extern void (*MainCallback)(void);
 extern u32 IntrMain_RAM[0x200];
+extern u16 gHeldKeys[2];
+extern u16 gNewKeys[2];
+extern struct Struct2510 gUnknown_03002510;
+extern struct sKeyStatus gUnknown_03002540;
 extern u32 gUnknown_03002A34;
 extern u32 gAllocationCount;
 extern u8 gUnknown_03002F10[TILE_SIZE_4BPP * 6 * 6];

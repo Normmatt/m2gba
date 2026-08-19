@@ -52,3 +52,67 @@ void ResetTheRam(void) {
 
 void DummyIntr(void) {
 }
+
+void InitPadState(void) {
+	s32 i;
+
+	gNewKeys[0] = gNewKeys[1] = 0;
+	gHeldKeys[0] = gHeldKeys[1] = 0;
+	for(i = 0; i < (s32)COUNTOF(gUnknown_03000000); ++i) {
+		gUnknown_03000000[i] = 0;
+	}
+	sub_80003B0(0, 0x3FF);
+	sub_80003B0(1, 0x3FF);
+	gUnknown_03002540.unk0[0] = 0;
+	gUnknown_03002540.unk0[1] = 0;
+}
+
+void sub_8000364(s32 arg0, u16 arg1, s32 arg2, s32 arg3) {
+	s32 i;
+
+	gUnknown_03002540.unk0[arg0] |= arg1;
+	gUnknown_03002540.unk4 = arg2;
+	gUnknown_03002540.unk6 = arg3;
+	for (i = 0; i < (s32)COUNTOF(gUnknown_03002540.unk8); ++i) {
+		gUnknown_03002540.unk8[i] = 0;
+		gUnknown_03002540.unk1C[i] = 0;
+	}
+}
+
+void sub_8000398(s32 arg0, u16 arg1) {
+	gUnknown_03002540.unk0[arg0] &= ~arg1;
+}
+
+void sub_80003B0(s32 arg0, u16 arg1) {
+	s32 i;
+
+	for (i = 0; i < (s32)COUNTOF(gUnknown_03002510.unk0[0]); ++i) {
+		if (arg1 & 1) {
+			gUnknown_03002510.unk0[arg0][i] = 0;
+		}
+		arg1 >>= 1;
+	}
+}
+
+void sub_80003E4(s32 arg0, u16 arg1, u16 arg2) {
+	s32 i;
+
+	for (i = 0; i < (s32)COUNTOF(gUnknown_03002510.unk0[0]); ++i) {
+		if (arg1 & 1) {
+			gUnknown_03002510.unk0[arg0][i] = arg2;
+		}
+		arg1 >>= 1;
+	}
+}
+
+u16 sub_800041C(s32 arg0, u16 arg1) {
+	s32 i;
+
+	for (i = 0; i < (s32)COUNTOF(gUnknown_03002510.unk0[0]); ++i) {
+		if (arg1 & 1) {
+			return gUnknown_03002510.unk0[arg0][i];
+		}
+		arg1 >>= 1;
+	}
+	return 0;
+}
