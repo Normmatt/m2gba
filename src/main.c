@@ -116,3 +116,50 @@ u16 sub_800041C(s32 arg0, u16 arg1) {
 	}
 	return 0;
 }
+
+void UpdatePadState(void) {
+	s32 i;
+	u16 autofireCheckableInputs;
+	u16 rawInputs = ~REG_KEYINPUT;
+	u16 heldKeys;
+	gNewKeys[0] = rawInputs & ~gHeldKeys[0];
+	gHeldKeys[0] = rawInputs;
+	heldKeys = gHeldKeys[0];
+	for (i = 0; i < (s32)COUNTOF(gUnknown_03002510.unk0[0]); ++i) {
+		if (heldKeys & 1) {
+			++gUnknown_03002510.unk0[0][i];
+		} else {
+			gUnknown_03002510.unk0[0][i] = 0;
+		}
+		heldKeys >>= 1;
+	}
+	if (gUnknown_03002540.unk0[0]) {
+		for (autofireCheckableInputs = gUnknown_03002540.unk0[0], i = 0;
+		     i < (s32)COUNTOF(gUnknown_03002540.unk8);
+		     ++i, autofireCheckableInputs >>= 1) {
+			if (autofireCheckableInputs & 1) {
+				if (gUnknown_03002540.unk8[i] & 0x8000) {
+					if ((gHeldKeys[0] >> i) & 1) {
+						if ((++gUnknown_03002540.unk8[i] & 0x7FFF) >= gUnknown_03002540.unk6) {
+							gUnknown_03002540.unk8[i] = 0x8000;
+							gNewKeys[0] |= 1 << i;
+						}
+					} else {
+						gUnknown_03002540.unk8[i] = 0;
+					}
+				} else {
+					if ((gHeldKeys[0] >> i) & 1) {
+						if (++gUnknown_03002540.unk8[i] >= gUnknown_03002540.unk4) {
+							gUnknown_03002540.unk8[i] = 0x8000;
+							gNewKeys[0] |= 1 << i;
+						}
+					} else {
+						gUnknown_03002540.unk8[i] = 0;
+					}
+				}
+			}
+		}
+	}
+}
+
+
