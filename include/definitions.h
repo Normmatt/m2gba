@@ -31,8 +31,7 @@ typedef struct sKeyStatus
   u16 unk0[2];
   u16 unk4;
   u16 unk6;
-  u16 unk8[10];
-  u16 unk1C[10];
+  u16 unk8[2][10];
 } sKeyStatus;
 
 typedef struct sIrqHandler

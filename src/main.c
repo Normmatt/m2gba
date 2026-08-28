@@ -73,9 +73,9 @@ void sub_8000364(s32 arg0, u16 arg1, s32 arg2, s32 arg3) {
 	gUnknown_03002540.unk0[arg0] |= arg1;
 	gUnknown_03002540.unk4 = arg2;
 	gUnknown_03002540.unk6 = arg3;
-	for (i = 0; i < (s32)COUNTOF(gUnknown_03002540.unk8); ++i) {
-		gUnknown_03002540.unk8[i] = 0;
-		gUnknown_03002540.unk1C[i] = 0;
+	for (i = 0; i < (s32)COUNTOF(gUnknown_03002540.unk8[0]); ++i) {
+		gUnknown_03002540.unk8[0][i] = 0;
+		gUnknown_03002540.unk8[1][i] = 0;
 	}
 }
 
@@ -135,26 +135,26 @@ void UpdatePadState(void) {
 	}
 	if (gUnknown_03002540.unk0[0]) {
 		for (autofireCheckableInputs = gUnknown_03002540.unk0[0], i = 0;
-		     i < (s32)COUNTOF(gUnknown_03002540.unk8);
+		     i < (s32)COUNTOF(gUnknown_03002540.unk8[0]);
 		     ++i, autofireCheckableInputs >>= 1) {
 			if (autofireCheckableInputs & 1) {
-				if (gUnknown_03002540.unk8[i] & 0x8000) {
+				if (gUnknown_03002540.unk8[0][i] & 0x8000) {
 					if ((gHeldKeys[0] >> i) & 1) {
-						if ((++gUnknown_03002540.unk8[i] & 0x7FFF) >= gUnknown_03002540.unk6) {
-							gUnknown_03002540.unk8[i] = 0x8000;
+						if ((++gUnknown_03002540.unk8[0][i] & 0x7FFF) >= gUnknown_03002540.unk6) {
+							gUnknown_03002540.unk8[0][i] = 0x8000;
 							gNewKeys[0] |= 1 << i;
 						}
 					} else {
-						gUnknown_03002540.unk8[i] = 0;
+						gUnknown_03002540.unk8[0][i] = 0;
 					}
 				} else {
 					if ((gHeldKeys[0] >> i) & 1) {
-						if (++gUnknown_03002540.unk8[i] >= gUnknown_03002540.unk4) {
-							gUnknown_03002540.unk8[i] = 0x8000;
+						if (++gUnknown_03002540.unk8[0][i] >= gUnknown_03002540.unk4) {
+							gUnknown_03002540.unk8[0][i] = 0x8000;
 							gNewKeys[0] |= 1 << i;
 						}
 					} else {
-						gUnknown_03002540.unk8[i] = 0;
+						gUnknown_03002540.unk8[0][i] = 0;
 					}
 				}
 			}
@@ -162,4 +162,55 @@ void UpdatePadState(void) {
 	}
 }
 
+void sub_800055C(void) {
+	s32 i;
+	s32 j;
+	u16 r2;
+	u16 r8;
 
+	gUnknown_03000000[0] = gUnknown_03000000[1];
+	gUnknown_03000000[1] = gUnknown_03000000[2];
+	gUnknown_03000000[2] = gUnknown_03000000[3];
+	gUnknown_03000000[3] = ~REG_KEYINPUT;
+
+	gNewKeys[0] = (gHeldKeys[0] ^ gUnknown_03000000[0]) & gUnknown_03000000[0];
+	gHeldKeys[0] = gUnknown_03000000[0];
+	r2 = gHeldKeys[0];
+
+	for (i = 0; i < 10; ++i) {
+		if (r2 & 1) {
+			++gUnknown_03002510.unk0[0][i];
+		} else {
+			gUnknown_03002510.unk0[0][i] = 0;
+		}
+		r2 >>= 1;
+	}
+
+	for (i = 0; i < 2; ++i) {
+		if (gUnknown_03002540.unk0[i]) {
+			for (r8 = gUnknown_03002540.unk0[i], j = 0; j < 10; ++j, r8 >>= 1) {
+				if (r8 & 1) {
+					if (gUnknown_03002540.unk8[i][j] & 0x8000) {
+						if ((gHeldKeys[i] >> j) & 1) {
+							if ((++gUnknown_03002540.unk8[i][j] & 0x7FFF) >= gUnknown_03002540.unk6) {
+								gUnknown_03002540.unk8[i][j] = 0x8000;
+								gNewKeys[i] |= 1 << j;
+							}
+						} else {
+							gUnknown_03002540.unk8[i][j] = 0;
+						}
+					} else {
+						if ((gHeldKeys[i] >> j) & 1) {
+							if (++gUnknown_03002540.unk8[i][j] >= gUnknown_03002540.unk4) {
+								gUnknown_03002540.unk8[i][j] = 0x8000;
+								gNewKeys[i] |= 1 << j;
+							}
+						} else {
+							gUnknown_03002540.unk8[i][j] = 0;
+						}
+					}
+				}
+			}
+		}
+	}
+}
