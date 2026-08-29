@@ -214,3 +214,108 @@ void sub_800055C(void) {
 		}
 	}
 }
+
+void sub_80006B0(void) {
+	u32 i;
+
+	gUnknown_03000010 = 0;
+	gCurrentProc = 0;
+	_reg_last = 1;
+	gUnknown_03002A30 = gUnknown_03002580;
+	DmaFill32(3, 0, gUnknown_03002580, sizeof gUnknown_03002580);
+	for (i = 0; i < COUNTOF(gUnknown_03002580); ++i) {
+		gUnknown_03002A30[i].unkD = 0;
+		gUnknown_03002A30[i].unk0 = 0;
+		gUnknown_03002A30[i].unk9 = 0;
+		gUnknown_03002A30[i].unkA = 0;
+		gUnknown_03002A30[i].unk8 = 0;
+		gUnknown_03002A30[i].unk4 = 0;
+		gUnknown_03002A30[i].unkE = 0;
+		gUnknown_03002A30[i].unkB = 0;
+		gUnknown_03002A30[i].unkC = 0;
+	}
+	gUnknown_03002A30[0].unkD = 2;
+	gUnknown_03002A30[0].unkE = 1;
+	gUnknown_03002A30[0].unk0 = sub_8000DD4;
+}
+
+void sub_8000754(void) {}
+
+s32 sub_8000758(u32 arg0, u32 arg1) {
+	s32 currentProc;
+	s32 result;
+	currentProc = gCurrentProc;
+	gCurrentProc = gUnknown_03002A30[0].unkA;
+	result = sub_800083C(arg0, arg1);
+	gCurrentProc = currentProc;
+	return result;
+}
+
+s32 sub_800077C(s32 (*arg0)(), u32 arg1) {
+	s32 p;
+
+	if (_reg_last == COUNTOF(gUnknown_03002580)) {
+		log_fatal(gUnknown_080FA4E8); // "NO MORE TCB in _reg_last\n"
+	}
+
+	p = sub_8000D18();
+	gUnknown_03002A30[gUnknown_03000010].unkA = p;
+	gUnknown_03002A30[p].unkD = 1;
+	gUnknown_03002A30[p].unk0 = arg0;
+	gUnknown_03002A30[p].unk9 = gUnknown_03000010;
+	gUnknown_03002A30[p].unkA = 0;
+	gUnknown_03002A30[p].unk8 = 0;
+	gUnknown_03002A30[p].unk4 = arg1;
+	gUnknown_03002A30[p].unkE = 1;
+	gUnknown_03002A30[p].unkB = 0;
+	gUnknown_03002A30[p].unkC = 0;
+	gUnknown_03000010 = p;
+	++_reg_last;
+	return p;
+}
+
+s32 sub_8000818(s32 (*arg0)(), u32 arg1) {
+	s32 currentProc;
+	s32 result;
+	currentProc = gCurrentProc;
+	gCurrentProc = gUnknown_03002A30[0].unk9;
+	result = sub_800083C(arg0, arg1);
+	gCurrentProc = currentProc;
+	return result;
+}
+
+s32 sub_800083C(s32 (*arg0)(), u32 arg1) {
+	u32 r5;
+	u32 r1;
+
+	if (gCurrentProc == 0) {
+		log_fatal(gUnknown_080FA504); // "Can't insert tcb when tcb no of my proc is 0.\n"
+	}
+	if (_reg_last == 25) {
+		log_fatal(gUnknown_080FA534); // "NO MORE TCB in _reg_ins\n"
+	}
+
+	r5 = sub_8000D18();
+	gUnknown_03002A30[r5].unkD = 1;
+	gUnknown_03002A30[r5].unk0 = arg0;
+	gUnknown_03002A30[r5].unk8 = 0;
+	gUnknown_03002A30[r5].unk4 = arg1;
+	gUnknown_03002A30[r5].unkE = 1;
+	gUnknown_03002A30[r5].unkB = 0;
+	gUnknown_03002A30[r5].unkC = 0;
+
+	if (_reg_last >= 2) {
+		r1 = gUnknown_03002A30[gCurrentProc].unk9;
+		gUnknown_03002A30[gCurrentProc].unk9 = r5;
+		gUnknown_03002A30[r1].unkA = r5;
+		gUnknown_03002A30[r5].unk9 = r1;
+		gUnknown_03002A30[r5].unkA = gCurrentProc;
+	} else {
+		gUnknown_03002A30[gUnknown_03000010].unkA = r5;
+		gUnknown_03002A30[r5].unk9 = gUnknown_03000010;
+		gUnknown_03002A30[r5].unkA = 0;
+		gUnknown_03000010 = r5;
+	}
+	++_reg_last;
+	return r5;
+}

@@ -34,6 +34,19 @@ typedef struct sKeyStatus
   u16 unk8[2][10];
 } sKeyStatus;
 
+struct Proc {
+	s32 (*unk0)();
+	u32 unk4;
+	u8 unk8;
+	u8 unk9;
+	u8 unkA;
+	u8 unkB;
+	u8 unkC;
+	u8 unkD;
+	u8 unkE;
+	u8 unkF[0x21];
+};
+
 typedef struct sIrqHandler
 {
   u32 dword0;
@@ -182,6 +195,10 @@ void ResetTheRam(void);
 // void sub_80002F4();
 // void sub_800032C();
 void sub_80003B0(s32, u16);
+s32 sub_800083C(s32 (*arg0)(), u32 arg1);
+s32 sub_8000D18(void);
+s32 sub_8000DD4();
+void log_fatal(const char *fmt, ...);
 void sub_80010D8(void);
 void EnableM4A(void);
 void m2_init_heap(void);
@@ -218,6 +235,9 @@ extern EWRAM_DATA struct Struct20248E0 gUnknown_020248E0;
 
 //IWRAM
 extern u16 gUnknown_03000000[4];
+extern u32 gUnknown_03000010;
+extern u32 _reg_last;
+
 /*extern u32 gBG0HOFS;
 extern u32 gBG0VOFS;
 extern u32 gBG1HOFS;
@@ -232,6 +252,9 @@ extern u16 gHeldKeys[2];
 extern u16 gNewKeys[2];
 extern struct Struct2510 gUnknown_03002510;
 extern struct sKeyStatus gUnknown_03002540;
+extern s32 gCurrentProc;
+extern struct Proc gUnknown_03002580[25];
+extern struct Proc *gUnknown_03002A30;
 extern u32 gUnknown_03002A34;
 extern u32 gAllocationCount;
 extern u8 gUnknown_03002F10[TILE_SIZE_4BPP * 6 * 6];
@@ -282,5 +305,9 @@ extern const struct EnemyData gUnknown_08739D1C[231];
 extern const u32 gUnknown_08B1F50C[32];
 // BattleActionTable
 extern const struct BattleAction gUnknown_08B204E4[318];
+
+extern char gUnknown_080FA4E8[];
+extern char gUnknown_080FA504[];
+extern char gUnknown_080FA534[];
 
 #endif  // GUARD_AGB_SRAM_H
