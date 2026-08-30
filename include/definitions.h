@@ -235,9 +235,10 @@ extern EWRAM_DATA struct Struct20248E0 gUnknown_020248E0;
 
 //IWRAM
 extern u16 gUnknown_03000000[4];
+extern s32 gProcReturnVal;
+extern u32 gUnknown_0300000C;
 extern u32 gUnknown_03000010;
 extern u32 _reg_last;
-
 /*extern u32 gBG0HOFS;
 extern u32 gBG0VOFS;
 extern u32 gBG1HOFS;
@@ -309,5 +310,6 @@ extern const struct BattleAction gUnknown_08B204E4[318];
 extern char gUnknown_080FA4E8[];
 extern char gUnknown_080FA504[];
 extern char gUnknown_080FA534[];
+extern char gUnknown_080FA550[];
 
 #endif  // GUARD_AGB_SRAM_H

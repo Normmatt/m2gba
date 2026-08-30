@@ -1,53 +1,53 @@
 #include "definitions.h"
 
 void AgbMain(void) {
-    gUnknown_03002A34 = 0;
-    ResetTheRam();
-    sub_800E5B4();
-    m2_init_character_info_defaults();
-    MainCallback = sub_80137A4;
-    EnableM4A();
-    
-    do {
-        MainCallback();
-    } while (gAllocationCount == 0);
-    
-    // Hang if any allocations were not properly freed
-    while (1) {}
+	gUnknown_03002A34 = 0;
+	ResetTheRam();
+	sub_800E5B4();
+	m2_init_character_info_defaults();
+	MainCallback = sub_80137A4;
+	EnableM4A();
+
+	do {
+		MainCallback();
+	} while (gAllocationCount == 0);
+
+	// Hang if any allocations were not properly freed
+	while (1) {}
 }
 
 void ResetTheRam(void) {
-    REG_WAITCNT = WAITCNT_SRAM_4                    // 4 cycles to access SRAM
-                | WAITCNT_WS0_N_3 | WAITCNT_WS0_S_1 // 3 cycles for non-sequentially reading ROM, 1 sequentially
-                | WAITCNT_WS1_N_4 | WAITCNT_WS1_S_4 // junk, we don't care about wait state 1 and these are 0s
-                | WAITCNT_WS2_N_4 | WAITCNT_WS2_S_8 // junk, we don't care about wait state 2 and these are 0s
-                | WAITCNT_PHI_OUT_NONE              // no cartridge terminal output pin use (this is a 0)
-                | WAITCNT_PREFETCH_ENABLE           // turn on ROM prefetching buffer
-                | WAITCNT_AGB;                      // This is not Mother On Game Boy Color (this is a 0)
+	REG_WAITCNT = WAITCNT_SRAM_4                    // 4 cycles to access SRAM
+	            | WAITCNT_WS0_N_3 | WAITCNT_WS0_S_1 // 3 cycles for non-sequentially reading ROM, 1 sequentially
+	            | WAITCNT_WS1_N_4 | WAITCNT_WS1_S_4 // junk, we don't care about wait state 1 and these are 0s
+	            | WAITCNT_WS2_N_4 | WAITCNT_WS2_S_8 // junk, we don't care about wait state 2 and these are 0s
+	            | WAITCNT_PHI_OUT_NONE              // no cartridge terminal output pin use (this is a 0)
+	            | WAITCNT_PREFETCH_ENABLE           // turn on ROM prefetching buffer
+	            | WAITCNT_AGB;                      // This is not Mother On Game Boy Color (this is a 0)
 
-    DmaFill32(3, 0, EWRAM_START, EWRAM_SIZE);
-    DmaFill32(3, 0, IWRAM_START, 0x7D00);
-    DmaFill32(3, 0, VRAM, VRAM_SIZE);
-    DmaFill32(3, 0xA0, OAM, OAM_SIZE);
-    DmaFill32(3, 0, PLTT, PLTT_SIZE);
+	DmaFill32(3, 0, EWRAM_START, EWRAM_SIZE);
+	DmaFill32(3, 0, IWRAM_START, 0x7D00);
+	DmaFill32(3, 0, VRAM, VRAM_SIZE);
+	DmaFill32(3, 0xA0, OAM, OAM_SIZE);
+	DmaFill32(3, 0, PLTT, PLTT_SIZE);
 
-    m2_init_heap();
+	m2_init_heap();
 
-    // Copy the interrupt handler into RAM for speed, and update its address
-    // after doing so.
-    // IntrMain_RAM is 0x800 bytes, which is a pretty big overestimate for the
-    // size of the function, so bytes from other functions will be copied in too.
-    DmaCopy32(3, DefaultIRQHandler, IntrMain_RAM, sizeof IntrMain_RAM);
-    INTR_VECTOR = IntrMain_RAM;
+	// Copy the interrupt handler into RAM for speed, and update its address
+	// after doing so.
+	// IntrMain_RAM is 0x800 bytes, which is a pretty big overestimate for the
+	// size of the function, so bytes from other functions will be copied in too.
+	DmaCopy32(3, DefaultIRQHandler, IntrMain_RAM, sizeof IntrMain_RAM);
+	INTR_VECTOR = IntrMain_RAM;
 
-    sub_80087C8();
+	sub_80087C8();
 
-    DmaFill32(3, 0xA0, gOamBuffer, sizeof gOamBuffer);
-    DmaCopy32(3, gOamBuffer, OAM, OAM_SIZE);
-    DmaFill32(3, 0, gUnknown_03002F10, sizeof gUnknown_03002F10);
-    gUnknown_03003390 = 0;
-    gUnknown_03003394 = 0;
-    sub_80010D8();
+	DmaFill32(3, 0xA0, gOamBuffer, sizeof gOamBuffer);
+	DmaCopy32(3, gOamBuffer, OAM, OAM_SIZE);
+	DmaFill32(3, 0, gUnknown_03002F10, sizeof gUnknown_03002F10);
+	gUnknown_03003390 = 0;
+	gUnknown_03003394 = 0;
+	sub_80010D8();
 }
 
 void DummyIntr(void) {
@@ -241,7 +241,7 @@ void sub_80006B0(void) {
 
 void sub_8000754(void) {}
 
-s32 sub_8000758(u32 arg0, u32 arg1) {
+s32 sub_8000758(s32 (*arg0)(), u32 arg1) {
 	s32 currentProc;
 	s32 result;
 	currentProc = gCurrentProc;
@@ -319,3 +319,266 @@ s32 sub_800083C(s32 (*arg0)(), u32 arg1) {
 	++_reg_last;
 	return r5;
 }
+
+s32 create_proc(s32 (*arg0)(), u32 arg1) {
+	s32 r6;
+	s32 r1;
+
+	if (_reg_last == 25) {
+		log_fatal(gUnknown_080FA534);
+	}
+	r6 = sub_8000D18();
+	gUnknown_03002A30[r6].unkD = 1;
+	gUnknown_03002A30[r6].unk0 = arg0;
+	gUnknown_03002A30[r6].unk8 = 0;
+	gUnknown_03002A30[r6].unk4 = arg1;
+	gUnknown_03002A30[r6].unkE = 1;
+	gUnknown_03002A30[r6].unkB = 0;
+	gUnknown_03002A30[r6].unkC = 0;
+	if (_reg_last > 1) {
+		r1 = gUnknown_03002A30[gCurrentProc].unkA;
+		gUnknown_03002A30[gCurrentProc].unkA = r6;
+		gUnknown_03002A30[r1].unk9 = r6;
+		gUnknown_03002A30[r6].unkA = r1;
+		gUnknown_03002A30[r6].unk9 = gCurrentProc;
+	} else {
+		gUnknown_03002A30[gUnknown_03000010].unkA = r6;
+		gUnknown_03002A30[r6].unk9 = gUnknown_03000010;
+		gUnknown_03002A30[r6].unkA = 0;
+	}
+
+	if (gCurrentProc == gUnknown_03000010) {
+		gUnknown_03000010 = r6;
+	}
+	++_reg_last;
+	return r6;
+}
+
+#ifdef NONMATCHING
+s32 next_proc(void) {
+	if (_reg_last == 1) {
+		return 3;
+	}
+	if (gUnknown_03002A30[gCurrentProc].unkD == 0) {
+		log_fatal(gUnknown_080FA550, _reg_last); // "Error next_proc() gNumTcb = %d\n"
+	}
+	if (gUnknown_03002A30[gCurrentProc].unk8 == 2) {
+		gUnknown_03002A30[gCurrentProc].unk8 = 0;
+	}
+
+	gProcReturnVal = gUnknown_03002A30[gCurrentProc].unk0(gUnknown_03002A30[gCurrentProc].unk4);
+
+	if (_reg_last == 1) {
+		return 3;
+	}
+	if (gUnknown_03002A30[gCurrentProc].unk8 == 0) {
+		gUnknown_03002A30[gCurrentProc].unk8 = 1;
+	}
+	gCurrentProc = gUnknown_03002A30[gCurrentProc].unkA;
+
+	while (gUnknown_03002A30[gCurrentProc].unkD != 1 || gUnknown_03002A30[gCurrentProc].unkE != 1) {
+		if (gUnknown_03002A30[gCurrentProc].unkD == 2) {
+			for (gUnknown_0300000C = 0; gUnknown_0300000C < 25; ++gUnknown_0300000C) {
+				if (gUnknown_03002A30[gUnknown_0300000C].unkE == 2) {
+					gUnknown_03002A30[gUnknown_0300000C].unkE = 1;
+				}
+				if (gUnknown_03002A30[gUnknown_0300000C].unkE == 1) {
+					gUnknown_03002A30[gUnknown_0300000C].unkB = gUnknown_03002A30[gUnknown_0300000C].unkC;
+					gUnknown_03002A30[gUnknown_0300000C].unkC = 0;
+				}
+			}
+		}
+		gCurrentProc = gUnknown_03002A30[gCurrentProc].unkA;
+	}
+
+	return gProcReturnVal;
+}
+#else
+__attribute__((naked)) s32 next_proc(void) {
+__asm__(".syntax unified\n\
+	push {r4, r5, r6, r7, lr}\n\
+	mov r7, sb\n\
+	mov r6, r8\n\
+	push {r6, r7}\n\
+	ldr r0, _08000A90 @ =_reg_last\n\
+	mov r8, r0\n\
+	ldr r3, [r0]\n\
+	cmp r3, #1\n\
+	beq _08000A8A\n\
+	ldr r6, _08000A94 @ =gCurrentProc\n\
+	ldr r1, [r6]\n\
+	ldr r7, _08000A98 @ =gUnknown_03002A30\n\
+	ldr r2, [r7]\n\
+	lsls r0, r1, #1\n\
+	adds r0, r0, r1\n\
+	lsls r0, r0, #4\n\
+	adds r0, r0, r2\n\
+	ldrb r0, [r0, #0xd]\n\
+	cmp r0, #0\n\
+	bne _08000A50\n\
+	ldr r0, _08000A9C @ =gUnknown_080FA550\n\
+	adds r1, r3, #0\n\
+	bl log_fatal\n\
+_08000A50:\n\
+	adds r5, r6, #0\n\
+	ldr r1, [r5]\n\
+	adds r4, r7, #0\n\
+	ldr r2, [r4]\n\
+	lsls r0, r1, #1\n\
+	adds r0, r0, r1\n\
+	lsls r0, r0, #4\n\
+	adds r1, r0, r2\n\
+	ldrb r0, [r1, #8]\n\
+	cmp r0, #2\n\
+	bne _08000A6A\n\
+	movs r0, #0\n\
+	strb r0, [r1, #8]\n\
+_08000A6A:\n\
+	ldr r0, [r5]\n\
+	ldr r2, [r4]\n\
+	lsls r1, r0, #1\n\
+	adds r1, r1, r0\n\
+	lsls r1, r1, #4\n\
+	adds r1, r1, r2\n\
+	ldr r0, [r1, #4]\n\
+	ldr r1, [r1]\n\
+	bl _call_via_r1\n\
+	ldr r3, _08000AA0 @ =gProcReturnVal\n\
+	str r0, [r3]\n\
+	mov r1, r8\n\
+	ldr r0, [r1]\n\
+	cmp r0, #1\n\
+	bne _08000AA4\n\
+_08000A8A:\n\
+	movs r0, #3\n\
+	b _08000B70\n\
+	.align 2, 0\n\
+_08000A90: .4byte _reg_last\n\
+_08000A94: .4byte gCurrentProc\n\
+_08000A98: .4byte gUnknown_03002A30\n\
+_08000A9C: .4byte gUnknown_080FA550\n\
+_08000AA0: .4byte gProcReturnVal\n\
+_08000AA4:\n\
+	ldr r1, [r5]\n\
+	ldr r2, [r4]\n\
+	lsls r0, r1, #1\n\
+	adds r0, r0, r1\n\
+	lsls r0, r0, #4\n\
+	adds r1, r0, r2\n\
+	ldrb r0, [r1, #8]\n\
+	cmp r0, #0\n\
+	bne _08000ABA\n\
+	movs r0, #1\n\
+	strb r0, [r1, #8]\n\
+_08000ABA:\n\
+	ldr r1, [r6]\n\
+	ldr r2, [r7]\n\
+	lsls r0, r1, #1\n\
+	adds r0, r0, r1\n\
+	lsls r0, r0, #4\n\
+	adds r0, r0, r2\n\
+	ldrb r1, [r0, #0xa]\n\
+	str r1, [r6]\n\
+	lsls r0, r1, #1\n\
+	adds r0, r0, r1\n\
+	lsls r0, r0, #4\n\
+	adds r0, r0, r2\n\
+	ldr r1, [r0, #0xc]\n\
+	ldr r0, _08000B7C @ =0x00FFFF00\n\
+	ands r1, r0\n\
+	ldr r0, _08000B80 @ =0x00010100\n\
+	mov sb, r3\n\
+	cmp r1, r0\n\
+	beq _08000B6C\n\
+	mov r8, r7\n\
+	ldr r0, _08000B84 @ =gUnknown_0300000C\n\
+	mov ip, r0\n\
+_08000AE6:\n\
+	ldr r1, [r6]\n\
+	ldr r2, [r7]\n\
+	lsls r0, r1, #1\n\
+	adds r0, r0, r1\n\
+	lsls r0, r0, #4\n\
+	adds r0, r0, r2\n\
+	ldrb r0, [r0, #0xd]\n\
+	cmp r0, #2\n\
+	bne _08000B48\n\
+	movs r0, #0\n\
+	mov r1, ip\n\
+	str r0, [r1]\n\
+	mov r3, ip\n\
+	mov r4, r8\n\
+	movs r5, #0\n\
+_08000B04:\n\
+	ldr r1, [r3]\n\
+	ldr r2, [r4]\n\
+	lsls r0, r1, #1\n\
+	adds r0, r0, r1\n\
+	lsls r0, r0, #4\n\
+	adds r1, r0, r2\n\
+	ldrb r0, [r1, #0xe]\n\
+	cmp r0, #2\n\
+	bne _08000B1A\n\
+	movs r0, #1\n\
+	strb r0, [r1, #0xe]\n\
+_08000B1A:\n\
+	ldr r1, [r3]\n\
+	ldr r2, [r4]\n\
+	lsls r0, r1, #1\n\
+	adds r0, r0, r1\n\
+	lsls r0, r0, #4\n\
+	adds r1, r0, r2\n\
+	ldrb r0, [r1, #0xe]\n\
+	cmp r0, #1\n\
+	bne _08000B3E\n\
+	ldrb r0, [r1, #0xc]\n\
+	strb r0, [r1, #0xb]\n\
+	ldr r1, [r3]\n\
+	ldr r2, [r4]\n\
+	lsls r0, r1, #1\n\
+	adds r0, r0, r1\n\
+	lsls r0, r0, #4\n\
+	adds r0, r0, r2\n\
+	strb r5, [r0, #0xc]\n\
+_08000B3E:\n\
+	ldr r0, [r3]\n\
+	adds r0, #1\n\
+	str r0, [r3]\n\
+	cmp r0, #0x18\n\
+	bls _08000B04\n\
+_08000B48:\n\
+	ldr r1, [r6]\n\
+	ldr r2, [r7]\n\
+	lsls r0, r1, #1\n\
+	adds r0, r0, r1\n\
+	lsls r0, r0, #4\n\
+	adds r0, r0, r2\n\
+	ldrb r1, [r0, #0xa]\n\
+	str r1, [r6]\n\
+	lsls r0, r1, #1\n\
+	adds r0, r0, r1\n\
+	lsls r0, r0, #4\n\
+	adds r0, r0, r2\n\
+	ldr r1, [r0, #0xc]\n\
+	ldr r0, _08000B7C @ =0x00FFFF00\n\
+	ands r1, r0\n\
+	ldr r0, _08000B80 @ =0x00010100\n\
+	cmp r1, r0\n\
+	bne _08000AE6\n\
+_08000B6C:\n\
+	mov r1, sb\n\
+	ldr r0, [r1]\n\
+_08000B70:\n\
+	pop {r3, r4}\n\
+	mov r8, r3\n\
+	mov sb, r4\n\
+	pop {r4, r5, r6, r7}\n\
+	pop {r1}\n\
+	bx r1\n\
+	.align 2, 0\n\
+_08000B7C: .4byte 0x00FFFF00\n\
+_08000B80: .4byte 0x00010100\n\
+_08000B84: .4byte gUnknown_0300000C\n\
+.syntax divided");
+}
+#endif
