@@ -582,3 +582,143 @@ _08000B84: .4byte gUnknown_0300000C\n\
 .syntax divided");
 }
 #endif
+
+s32 end_proc(u32 arg0) {
+	u8 unk9;
+	u8 unkA;
+
+#ifdef UBFIX
+    if (arg0 == 0 || arg0 < 0 || arg0 >= 25 || gUnknown_03002A30[arg0].unkD == 0) {
+#else
+	// The bounds checking logic runs after the array has already been accessed!
+	// A modern compiler with LTO might be able to optimize the bounds checks away.
+	if (gUnknown_03002A30[arg0].unkD == 0 || arg0 == 0 || arg0 < 0 || arg0 >= 25) {
+#endif
+		return 2;
+	}
+	unk9 = gUnknown_03002A30[arg0].unk9;
+	unkA = gUnknown_03002A30[arg0].unkA;
+	gUnknown_03002A30[unk9].unkA = unkA;
+	gUnknown_03002A30[unkA].unk9 = unk9;
+	if (arg0 == gUnknown_03000010) {
+		gUnknown_03000010 = unk9;
+	}
+	if (gCurrentProc == arg0) {
+		gCurrentProc = gUnknown_03002A30[arg0].unk9;
+	}
+	gUnknown_03002A30[arg0].unkD = 0;
+	gUnknown_03002A30[arg0].unk0 = (s32(*)())0;
+	gUnknown_03002A30[arg0].unk9 = 0;
+	gUnknown_03002A30[arg0].unkA = 0;
+	gUnknown_03002A30[arg0].unkE = 0;
+	gUnknown_03002A30[arg0].unkB = 0;
+	gUnknown_03002A30[arg0].unkC = 0;
+	--_reg_last;
+	return 0;
+}
+
+void end_current_proc(void) {
+    end_proc(gCurrentProc);
+}
+
+s32 sub_8000C3C(u32 arg0) {
+	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].unkD != 1) {
+		return 2;
+	}
+	gUnknown_03002A30[arg0].unk8 = 2;
+	gUnknown_03002A30[arg0].unkE = 1;
+	return 0;
+}
+
+s32 sub_8000C74(u32 arg0, u32 arg1) {
+	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].unkD != 1) {
+		return 2;
+	}
+	gUnknown_03002A30[arg0].unk4 = arg1;
+	return 0;
+}
+
+s32 sub_8000CA4(u32 arg0) {
+	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].unkD != 1) {
+		return 2;
+	}
+	gUnknown_03002A30[arg0].unkE = 0;
+	return 0;
+}
+
+s32 wakeup_tcb(u32 arg0) {
+	if (arg0 < 0 || arg0 >= 25 || arg0 == 0) {
+		log_fatal(gUnknown_080FA570, arg0);
+		return 2;
+	}
+	if (gUnknown_03002A30[arg0].unkD == 1) {
+		gUnknown_03002A30[arg0].unkE = 2;
+		return 0;
+	}
+	log_fatal(gUnknown_080FA584, arg0);
+	return 2;
+}
+
+u32 sub_8000D18(void) {
+	u32 i;
+	for (i = 1; i < 25; ++i) {
+		if (gUnknown_03002A30[i].unkD == 0) {
+			break;
+		}
+	}
+	return i;
+}
+
+s32 set_signal(u32 arg0, u8 arg1) {
+	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].unkD != 1) {
+		log_fatal(gUnknown_080FA5A0);
+		return 2;
+	}
+	gUnknown_03002A30[arg0].unkC = arg1;
+	return 0;
+}
+
+u32 sub_8000D84(void) {
+	return gUnknown_03002A30[gCurrentProc].unkB;
+}
+
+u32 sub_8000DA0(u32 arg0) {
+	return gUnknown_03002A30[arg0].unkB;
+}
+
+void sub_8000DB4(void) {
+	gUnknown_03002A30[gCurrentProc].unkB = 0;
+}
+
+s32 sub_8000DD4(u32 unused) {
+	return 0;
+}
+
+void sub_8000DD8(void) {
+	u32 i;
+	for (i = 0; i < 25; ++i) {
+		gUnknown_03002A30[i].unkC = 1;
+		gUnknown_03002A30[i].unkE = 2;
+	}
+}
+
+s32 sub_8000E04(u32 arg0) {
+	if (arg0 < 0 || arg0 >= 25 || arg0 == 0) {
+		return 2;
+	}
+	if (gUnknown_03002A30[arg0].unkD != 1) {
+		return 0;
+	}
+	if (gUnknown_03002A30[arg0].unkE != 1) {
+		return 0;
+	}
+	return 1;
+}
+
+void sub_8000E3C(void) {
+	sub_8000CA4(gCurrentProc);
+}
+
+void log_fatal(const char *fmt, ...) {
+    while (1) {}
+}

@@ -196,8 +196,8 @@ void ResetTheRam(void);
 // void sub_800032C();
 void sub_80003B0(s32, u16);
 s32 sub_800083C(s32 (*arg0)(), u32 arg1);
-s32 sub_8000D18(void);
-s32 sub_8000DD4();
+u32 sub_8000D18(void);
+s32 sub_8000DD4(u32);
 void log_fatal(const char *fmt, ...);
 void sub_80010D8(void);
 void EnableM4A(void);
@@ -311,5 +311,8 @@ extern char gUnknown_080FA4E8[];
 extern char gUnknown_080FA504[];
 extern char gUnknown_080FA534[];
 extern char gUnknown_080FA550[];
+extern char gUnknown_080FA570[];
+extern char gUnknown_080FA584[];
+extern char gUnknown_080FA5A0[];
 
 #endif  // GUARD_AGB_SRAM_H
