@@ -31016,7 +31016,7 @@ _080B7A6A:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #0x14
-	bl sub_8000364
+	bl AddAutofireButtons
 	bl sub_8020064
 	bl _080B88F8
 	.align 2, 0
@@ -31414,7 +31414,7 @@ _080B7E1C: @ jump table
 _080B7E38:
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	ldr r5, _080B7E8C @ =gWindowPointers
 	ldr r0, [r5]
 	movs r4, #1
@@ -31528,7 +31528,7 @@ _080B7F2E:
 _080B7F38:
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	ldr r4, _080B7F88 @ =gWindowPointers
 	ldr r0, [r4]
 	movs r1, #1
@@ -31579,7 +31579,7 @@ _080B7F90:
 	strh r0, [r1]
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	ldr r4, _080B7FF0 @ =gWindowPointers
 	ldr r0, [r4]
 	movs r1, #1
@@ -31650,7 +31650,7 @@ _080B8048:
 _080B8050:
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	ldr r4, _080B8178 @ =gWindowPointers
 	ldr r0, [r4]
 	movs r2, #1
@@ -31764,7 +31764,7 @@ _080B8050:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r1, _080B818C @ =gUnknown_03005224
 	movs r0, #2
 	strh r0, [r1]
@@ -31792,7 +31792,7 @@ _080B8190:
 	bl sub_80C8BE4
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	ldr r0, [r4, #0x18]
 	strh r5, [r0, #0x36]
 	strh r5, [r0, #0x34]
@@ -31817,7 +31817,7 @@ _080B81E0: .4byte gUnknown_030009F4
 _080B81E4:
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	ldr r5, _080B8238 @ =gWindowPointers
 	ldr r0, [r5]
 	movs r4, #1
@@ -31943,7 +31943,7 @@ _080B82E8:
 	bl m2_setupwindow
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	ldr r0, _080B8338 @ =gUnknown_08B17EE4
 	ldr r1, _080B833C @ =gUnknown_08B17424
 	movs r2, #0x11
@@ -32245,7 +32245,7 @@ _080B85A4:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #0x14
-	bl sub_8000364
+	bl AddAutofireButtons
 	b _080B88A4
 	.align 2, 0
 _080B85B4: .4byte gUnknown_08B17EE4
@@ -32326,7 +32326,7 @@ _080B864A:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #0x14
-	bl sub_8000364
+	bl AddAutofireButtons
 _080B8678:
 	lsls r0, r6, #0x10
 	asrs r0, r0, #0x10
@@ -32420,7 +32420,7 @@ _080B8726:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #0x14
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r1, _080B8770 @ =gUnknown_0300130C
 	ldr r0, [r1]
 	movs r2, #1
@@ -32565,7 +32565,7 @@ _080B8876:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #0x14
-	bl sub_8000364
+	bl AddAutofireButtons
 _080B88A4:
 	ldr r0, _080B88D8 @ =gUnknown_0300130C
 	ldr r1, [r0]
@@ -32644,7 +32644,7 @@ _080B8916:
 	strh r1, [r0]
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	ldr r0, _080B89E0 @ =gUnknown_03005094
 	ldrb r0, [r0]
 	cmp r0, #0
@@ -33007,7 +33007,7 @@ _080B8C04:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	b _080B8DB0
 	.align 2, 0
 _080B8C68: .4byte gNewKeys
@@ -33048,7 +33048,7 @@ _080B8C78:
 	strh r0, [r1]
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 _080B8CCE:
 	ldr r4, _080B8D9C @ =gWindowPointers
 	ldr r0, [r4, #0x1c]
@@ -33094,7 +33094,7 @@ _080B8CCE:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r0, [r4, #0x1c]
 	bl sub_80C438C
 	ldr r1, [r4, #0x1c]
@@ -33125,7 +33125,7 @@ _080B8D56:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #0x14
-	bl sub_8000364
+	bl AddAutofireButtons
 	movs r0, #1
 	rsbs r0, r0, #0
 	bl _080B963C
@@ -33670,7 +33670,7 @@ _080B9262:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	movs r0, #0
 	b _080B963C
 	.align 2, 0
@@ -34268,7 +34268,7 @@ _080B9758:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	b _080B97B2
 	.align 2, 0
 _080B9784: .4byte m2_character_info
@@ -34388,7 +34388,7 @@ _080B9840:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 _080B9890:
 	ldr r0, _080B98A0 @ =m2_selected_person
 	movs r1, #0
@@ -34458,7 +34458,7 @@ _080B9914:
 	bl sub_80C8BE4
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	movs r0, #0
 	bl _080BA84E
 	.align 2, 0
@@ -34632,7 +34632,7 @@ _080B9A88:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r1, [r4, #0x10]
 	movs r0, #0
 	strh r0, [r1, #0x32]
@@ -36141,7 +36141,7 @@ _080BA7AC:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r0, [r4, #0x10]
 	strh r5, [r0, #0x32]
 	ldr r0, [r4, #0x10]
@@ -36698,7 +36698,7 @@ _080BAC40:
 	strh r5, [r0, #0x34]
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _080BAE8E
 	.align 2, 0
 _080BAC64: .4byte gWindowPointers
@@ -36750,7 +36750,7 @@ _080BAC92:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	bl sub_80D7154
 	b _080BAE8E
 	.align 2, 0
@@ -37062,7 +37062,7 @@ _080BAF5C:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r1, _080BB014 @ =gUnknown_03005224
 	movs r0, #2
 	strh r0, [r1]
@@ -37086,7 +37086,7 @@ _080BAF5C:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 _080BAFB0:
 	ldr r0, _080BB020 @ =m2_selected_person
 	movs r1, #0
@@ -37323,7 +37323,7 @@ _080BB1A8:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	bl _080BBEC6
 	.align 2, 0
 _080BB1C0: .4byte gWindowPointers
@@ -37353,7 +37353,7 @@ _080BB1EC:
 	strh r0, [r1]
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	movs r4, #0
 	movs r0, #0x4d
 	strb r0, [r7, #0x15]
@@ -37431,7 +37431,7 @@ _080BB292:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r1, _080BB3A8 @ =gUnknown_03005224
 	movs r0, #2
 	strh r0, [r1]
@@ -37565,7 +37565,7 @@ _080BB3C6:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r1, _080BB4D4 @ =gUnknown_03005224
 	movs r0, #2
 	strh r0, [r1]
@@ -37702,7 +37702,7 @@ _080BB4FA:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r1, _080BB60C @ =gUnknown_03005224
 	movs r0, #2
 	strh r0, [r1]
@@ -38253,7 +38253,7 @@ _080BB9B4:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r1, _080BBAD8 @ =gUnknown_03005224
 	movs r0, #2
 	strh r0, [r1]
@@ -38395,7 +38395,7 @@ _080BBAFC:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r1, _080BBC1C @ =gUnknown_03005224
 	movs r0, #2
 	strh r0, [r1]
@@ -38551,7 +38551,7 @@ _080BBC52:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r1, _080BBD7C @ =gUnknown_03005224
 	movs r0, #2
 	strh r0, [r1]
@@ -40569,7 +40569,7 @@ _080BCBB6:
 	movs r1, #0xc0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	bl sub_80D6844
 	bl sub_80D3C50
 	bl sub_80BD844
@@ -40797,7 +40797,7 @@ _080BCDAC:
 	movs r1, #0xc0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	asrs r0, r6, #0x10
 	cmp r0, #0
 	beq _080BCDF0
@@ -40978,7 +40978,7 @@ sub_80BCF00: @ 0x080BCF00
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r1, _080BD104 @ =gUnknown_03005270
 	ldr r2, [r4, #8]
 	movs r3, #0x24
@@ -41412,7 +41412,7 @@ _080BD218:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	bl sub_80BD844
 	b _080BD306
 	.align 2, 0
@@ -60237,7 +60237,7 @@ _080C6638:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 _080C665E:
 	bl sub_80BD844
 	ldr r2, _080C66EC @ =gUnknown_03005270
@@ -60887,7 +60887,7 @@ _080C6B7C: .4byte palette_mask
 _080C6B80:
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	ldr r0, _080C6BD8 @ =gWindowPointers
 	ldr r0, [r0, #0x10]
 	movs r1, #0xe
@@ -60964,7 +60964,7 @@ DoNamingScreen: @ 0x080C6BDC
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r0, [r5, #0xc]
 	movs r1, #0
 	movs r2, #0
@@ -95046,7 +95046,7 @@ _080D7814:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r2, _080D7884 @ =gUnknown_03001B10
 	ldrb r0, [r2]
 	movs r1, #1
@@ -95392,7 +95392,7 @@ _080D7B10:
 	movs r0, #0
 	str r0, [r1]
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	bl end_current_proc
 	b _080D7C84
 	.align 2, 0
@@ -97616,7 +97616,7 @@ _080D8D92:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	add sp, #0x38
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -97917,7 +97917,7 @@ _080D8FDE:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r1, _080D9080 @ =gUnknown_02024860
 	adds r2, r1, #0
 	adds r2, #0x62
@@ -100760,7 +100760,7 @@ sub_80DA6E4: @ 0x080DA6E4
 	push {lr}
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	bl sub_80D939C
 	bl sub_80BD8FC
 	pop {r0}
@@ -111918,7 +111918,7 @@ _080E00A8:
 	bl sub_80DCBAC
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 _080E00D4:
 	movs r0, #1
 	rsbs r0, r0, #0
@@ -112068,7 +112068,7 @@ _080E0212:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r0, _080E0230 @ =gUnknown_020248E0
 	ldr r1, _080E0234 @ =0x0000094E
 	adds r0, r0, r1
@@ -115590,7 +115590,7 @@ _080E1F9A:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #5
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r2, _080E2020 @ =gUnknown_03001B10
 	ldrb r0, [r2]
 	movs r1, #1

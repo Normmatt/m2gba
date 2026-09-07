@@ -1204,8 +1204,8 @@ sub_8001800: @ 0x08001800
 	lsrs r4, r4, #0x10
 	movs r0, #0
 	adds r1, r4, #0
-	bl sub_80003B0
-	ldr r1, _08001820 @ =gUnknown_03002540
+	bl ClearHeldDurationForButtons
+	ldr r1, _08001820 @ =gAutofireState
 	ldrh r0, [r1]
 	orrs r4, r0
 	strh r4, [r1]
@@ -1213,7 +1213,7 @@ sub_8001800: @ 0x08001800
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08001820: .4byte gUnknown_03002540
+_08001820: .4byte gAutofireState
 
 	thumb_func_start sub_8001824
 sub_8001824: @ 0x08001824
@@ -5363,7 +5363,7 @@ _08003998:
 	movs r1, #0xc0
 	movs r2, #0x23
 	movs r3, #0xf
-	bl sub_8000364
+	bl AddAutofireButtons
 	b _08003B48
 	.align 2, 0
 _080039B0: .4byte gUnknown_082B8FF0
@@ -5438,7 +5438,7 @@ _08003A3C:
 _08003A44:
 	movs r0, #0
 	movs r1, #0xc0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08003B48
 _08003A4E:
 	movs r4, #0
@@ -5472,12 +5472,12 @@ _08003A7A:
 	bne _08003A98
 	movs r0, #0
 	movs r1, #0x40
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08003B0A
 	.align 2, 0
 _08003A94: .4byte gUnknown_03000024
 _08003A98:
-	ldr r0, _08003AAC @ =gUnknown_03002540
+	ldr r0, _08003AAC @ =gAutofireState
 	ldrh r1, [r0]
 	movs r0, #0x40
 	ands r0, r1
@@ -5487,7 +5487,7 @@ _08003A98:
 	bl sub_8001800
 	b _08003B0A
 	.align 2, 0
-_08003AAC: .4byte gUnknown_03002540
+_08003AAC: .4byte gAutofireState
 _08003AB0:
 	movs r0, #0x80
 	ands r0, r1
@@ -5519,12 +5519,12 @@ _08003ADA:
 	bne _08003AF8
 	movs r0, #0
 	movs r1, #0x80
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08003B0A
 	.align 2, 0
 _08003AF4: .4byte gUnknown_03000024
 _08003AF8:
-	ldr r0, _08003B54 @ =gUnknown_03002540
+	ldr r0, _08003B54 @ =gAutofireState
 	ldrh r1, [r0]
 	movs r0, #0x80
 	ands r0, r1
@@ -5570,7 +5570,7 @@ _08003B48:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08003B54: .4byte gUnknown_03002540
+_08003B54: .4byte gAutofireState
 _08003B58: .4byte gUnknown_03000024
 _08003B5C: .4byte gUnknown_082B8FF0
 
@@ -5627,7 +5627,7 @@ _08003B9A:
 	movs r1, #0xc0
 	movs r2, #0x23
 	movs r3, #0xf
-	bl sub_8000364
+	bl AddAutofireButtons
 	b _08003D34
 	.align 2, 0
 _08003BD0: .4byte gUnknown_03000024
@@ -5667,7 +5667,7 @@ _08003C0C:
 _08003C16:
 	movs r0, #0
 	movs r1, #0xc0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08003D34
 _08003C20:
 	ldr r0, _08003C70 @ =0x00000201
@@ -5703,7 +5703,7 @@ _08003C20:
 	str r7, [r0, #4]
 	movs r0, #0
 	movs r1, #0xc0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08003D34
 	.align 2, 0
 _08003C70: .4byte 0x00000201
@@ -5739,10 +5739,10 @@ _08003CA6:
 	bne _08003CB8
 	movs r0, #0
 	movs r1, #0x40
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08003D24
 _08003CB8:
-	ldr r0, _08003CCC @ =gUnknown_03002540
+	ldr r0, _08003CCC @ =gAutofireState
 	ldrh r1, [r0]
 	movs r0, #0x40
 	ands r0, r1
@@ -5752,7 +5752,7 @@ _08003CB8:
 	bl sub_8001800
 	b _08003D24
 	.align 2, 0
-_08003CCC: .4byte gUnknown_03002540
+_08003CCC: .4byte gAutofireState
 _08003CD0:
 	movs r0, #0x80
 	ands r0, r1
@@ -5785,10 +5785,10 @@ _08003CFE:
 	bne _08003D12
 	movs r0, #0
 	movs r1, #0x80
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08003D24
 _08003D12:
-	ldr r0, _08003D44 @ =gUnknown_03002540
+	ldr r0, _08003D44 @ =gAutofireState
 	ldrh r1, [r0]
 	movs r0, #0x80
 	ands r0, r1
@@ -5813,7 +5813,7 @@ _08003D34:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08003D44: .4byte gUnknown_03002540
+_08003D44: .4byte gAutofireState
 
 	thumb_func_start sub_8003D48
 sub_8003D48: @ 0x08003D48
@@ -5854,7 +5854,7 @@ sub_8003D48: @ 0x08003D48
 	movs r1, #0xc0
 	movs r2, #0x23
 	movs r3, #0xf
-	bl sub_8000364
+	bl AddAutofireButtons
 	b _08003F34
 	.align 2, 0
 _08003D9C: .4byte gUnknown_03000024
@@ -5883,7 +5883,7 @@ _08003DA0:
 	bl sub_8003F44
 	movs r0, #0
 	movs r1, #0xc0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08003F34
 	.align 2, 0
 _08003DDC: .4byte gNewKeys
@@ -5921,7 +5921,7 @@ _08003DE0:
 	str r6, [r0, #8]
 	movs r0, #0
 	movs r1, #0xc0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08003F34
 	.align 2, 0
 _08003E34: .4byte 0x00000201
@@ -5936,7 +5936,7 @@ _08003E3C:
 	str r7, [r1, #4]
 	movs r0, #0
 	movs r1, #0xc0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08003F34
 _08003E56:
 	movs r0, #0x40
@@ -5976,10 +5976,10 @@ _08003E82:
 	bne _08003EA6
 	movs r0, #0
 	movs r1, #0x40
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08003F24
 _08003EA6:
-	ldr r0, _08003EBC @ =gUnknown_03002540
+	ldr r0, _08003EBC @ =gAutofireState
 	ldrh r1, [r0]
 	movs r0, #0x40
 	ands r0, r1
@@ -5989,7 +5989,7 @@ _08003EA6:
 	bl sub_8001800
 	b _08003F24
 	.align 2, 0
-_08003EBC: .4byte gUnknown_03002540
+_08003EBC: .4byte gAutofireState
 _08003EC0:
 	movs r0, #0x80
 	ands r0, r1
@@ -6028,10 +6028,10 @@ _08003EEE:
 	bne _08003F12
 	movs r0, #0
 	movs r1, #0x80
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08003F24
 _08003F12:
-	ldr r0, _08003F40 @ =gUnknown_03002540
+	ldr r0, _08003F40 @ =gAutofireState
 	ldrh r1, [r0]
 	movs r0, #0x80
 	ands r0, r1
@@ -6055,7 +6055,7 @@ _08003F34:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08003F40: .4byte gUnknown_03002540
+_08003F40: .4byte gAutofireState
 
 	thumb_func_start sub_8003F44
 sub_8003F44: @ 0x08003F44
@@ -7755,13 +7755,13 @@ _08004B34:
 	bne _08004B58
 	movs r0, #0
 	movs r1, #0x10
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08004B6A
 	.align 2, 0
 _08004B50: .4byte gUnknown_03000024
 _08004B54: .4byte 0x00000DA4
 _08004B58:
-	ldr r0, _08004B84 @ =gUnknown_03002540
+	ldr r0, _08004B84 @ =gAutofireState
 	ldrh r1, [r0]
 	movs r0, #0x10
 	ands r0, r1
@@ -7779,14 +7779,14 @@ _08004B6A:
 	bne _08004B90
 	movs r0, #0
 	movs r1, #0x20
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08004BA2
 	.align 2, 0
-_08004B84: .4byte gUnknown_03002540
+_08004B84: .4byte gAutofireState
 _08004B88: .4byte gUnknown_03000024
 _08004B8C: .4byte 0x00000DA4
 _08004B90:
-	ldr r0, _08004BBC @ =gUnknown_03002540
+	ldr r0, _08004BBC @ =gAutofireState
 	ldrh r1, [r0]
 	movs r0, #0x20
 	ands r0, r1
@@ -7804,14 +7804,14 @@ _08004BA2:
 	bne _08004BC8
 	movs r0, #0
 	movs r1, #0x80
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08004BDA
 	.align 2, 0
-_08004BBC: .4byte gUnknown_03002540
+_08004BBC: .4byte gAutofireState
 _08004BC0: .4byte gUnknown_03000024
 _08004BC4: .4byte 0x00000DA8
 _08004BC8:
-	ldr r0, _08004BF4 @ =gUnknown_03002540
+	ldr r0, _08004BF4 @ =gAutofireState
 	ldrh r1, [r0]
 	movs r0, #0x80
 	ands r0, r1
@@ -7829,14 +7829,14 @@ _08004BDA:
 	bne _08004C00
 	movs r0, #0
 	movs r1, #0x40
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	b _08004C12
 	.align 2, 0
-_08004BF4: .4byte gUnknown_03002540
+_08004BF4: .4byte gAutofireState
 _08004BF8: .4byte gUnknown_03000024
 _08004BFC: .4byte 0x00000DA8
 _08004C00:
-	ldr r0, _08004C94 @ =gUnknown_03002540
+	ldr r0, _08004C94 @ =gAutofireState
 	ldrh r1, [r0]
 	movs r0, #0x40
 	ands r0, r1
@@ -7915,7 +7915,7 @@ _08004C8E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08004C94: .4byte gUnknown_03002540
+_08004C94: .4byte gAutofireState
 _08004C98: .4byte gUnknown_03000024
 _08004C9C: .4byte 0x00000DA4
 _08004CA0: .4byte gHeldKeys
@@ -8521,7 +8521,7 @@ _0800512A:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #6
-	bl sub_8000364
+	bl AddAutofireButtons
 	ldr r0, _08005164 @ =gUnknown_03000024
 	ldr r0, [r0]
 	ldr r1, _08005168 @ =0x000011F4
@@ -8796,7 +8796,7 @@ _08005382:
 _08005394:
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	ldr r0, _080053B8 @ =gUnknown_03000024
 	ldr r1, [r0]
 	movs r0, #0xb
@@ -8860,7 +8860,7 @@ _08005418:
 	bl sub_8004E34
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8000398
+	bl RemoveAutofireButtons
 	ldr r0, _08005444 @ =gUnknown_03000024
 	ldr r1, [r0]
 	movs r0, #0x15
@@ -55407,7 +55407,7 @@ sub_801C13C: @ 0x0801C13C
 	movs r1, #0xf0
 	movs r2, #0xf
 	movs r3, #6
-	bl sub_8000364
+	bl AddAutofireButtons
 	bl sub_80087C8
 	movs r0, #0xa0
 	str r0, [sp]

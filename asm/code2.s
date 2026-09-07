@@ -31162,7 +31162,7 @@ _080F23F2:
 	movs r1, #0xf0
 	movs r2, #0x14
 	movs r3, #2
-	bl sub_8000364
+	bl AddAutofireButtons
 	movs r0, #0
 	b _080F25C0
 	.align 2, 0

@@ -1,8 +1,8 @@
-. = 0x00000000; gUnknown_03000000 = .;
+. = 0x00000000; gKeysBuffer = .;
 . = 0x00000008; gProcReturnVal = .;
 . = 0x0000000C; gUnknown_0300000C = .;
 . = 0x00000010; gUnknown_03000010 = .;
-. = 0x00000014; _reg_last = .;
+. = 0x00000014; gNumTcb = .;
 . = 0x00000018; gUnknown_03000018 = .;
 . = 0x0000001C; gUnknown_0300001C = .;
 . = 0x00000020; gIsM4AEnabled = .;
@@ -278,8 +278,8 @@
 . = 0x000023F6; gUnknown_030023F6 = .;
 . = 0x00002500; gNewKeys = .;
 . = 0x00002504; gHeldKeys = .;
-. = 0x00002510; gUnknown_03002510 = .;
-. = 0x00002540; gUnknown_03002540 = .;
+. = 0x00002510; gKeyHeldDurations = .;
+. = 0x00002540; gAutofireState = .;
 . = 0x00002570; gCurrentProc = .;
 . = 0x00002580; gUnknown_03002580 = .;
 . = 0x00002A30; gUnknown_03002A30 = .;

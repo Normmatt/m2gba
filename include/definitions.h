@@ -20,19 +20,25 @@ typedef union __attribute__((__packed__)) {
     u16 word;
 } byteword;
 
-typedef struct Struct2510
+typedef struct KeyHeldDurations
 {
-  u16 unk0[2][10];
+  u16 durations[2][10];
   u8 unk28[8];
-} Struct2510;
+} KeyHeldDurations;
 
-typedef struct sKeyStatus
+typedef struct AutofireState
 {
-  u16 unk0[2];
-  u16 unk4;
-  u16 unk6;
-  u16 unk8[2][10];
-} sKeyStatus;
+	/* 00 */ u16 enabledButtons[2];
+	/// The duration (in frames) before autofire will begin, after a button is first pressed
+	/* 04 */ u16 initialDelay;
+	/// The duration (in frames) before the next autofire input, after a previous autofire input
+	/* 06 */ u16 subsequentDelay;
+	/* 08 */ u16 counters[2][10];
+} AutofireState;
+enum {
+	AUTOFIRE_COUNTER_DURATION_MASK = 0x7FFF,
+	AUTOFIRE_COUNTER_IS_SUBSEQUENT = 0x8000
+};
 
 struct Proc {
 	s32 (*unk0)();
@@ -194,7 +200,7 @@ struct Struct030050A4 {
 void ResetTheRam(void);
 // void sub_80002F4();
 // void sub_800032C();
-void sub_80003B0(s32, u16);
+void ClearHeldDurationForButtons(s32, u16);
 s32 sub_800083C(s32 (*arg0)(), u32 arg1);
 u32 sub_8000D18(void);
 s32 sub_8000DD4(u32);
@@ -234,11 +240,13 @@ extern EWRAM_DATA struct Struct2024860 gUnknown_02024860;
 extern EWRAM_DATA struct Struct20248E0 gUnknown_020248E0;
 
 //IWRAM
-extern u16 gUnknown_03000000[4];
+/// Buffer of 4 frames' worth of input, used in sub_800055C
+extern u16 gKeysBuffer[4];
 extern s32 gProcReturnVal;
+// Head and tail of the linked list of Proc structs?
 extern u32 gUnknown_0300000C;
 extern u32 gUnknown_03000010;
-extern u32 _reg_last;
+extern u32 gNumTcb;
 /*extern u32 gBG0HOFS;
 extern u32 gBG0VOFS;
 extern u32 gBG1HOFS;
@@ -251,8 +259,8 @@ extern void (*MainCallback)(void);
 extern u32 IntrMain_RAM[0x200];
 extern u16 gHeldKeys[2];
 extern u16 gNewKeys[2];
-extern struct Struct2510 gUnknown_03002510;
-extern struct sKeyStatus gUnknown_03002540;
+extern struct KeyHeldDurations gKeyHeldDurations;
+extern struct AutofireState gAutofireState;
 extern s32 gCurrentProc;
 extern struct Proc gUnknown_03002580[25];
 extern struct Proc *gUnknown_03002A30;

@@ -58,61 +58,61 @@ void InitPadState(void) {
 
 	gNewKeys[0] = gNewKeys[1] = 0;
 	gHeldKeys[0] = gHeldKeys[1] = 0;
-	for(i = 0; i < (s32)COUNTOF(gUnknown_03000000); ++i) {
-		gUnknown_03000000[i] = 0;
+	for(i = 0; i < (s32)COUNTOF(gKeysBuffer); ++i) {
+		gKeysBuffer[i] = 0;
 	}
-	sub_80003B0(0, 0x3FF);
-	sub_80003B0(1, 0x3FF);
-	gUnknown_03002540.unk0[0] = 0;
-	gUnknown_03002540.unk0[1] = 0;
+	ClearHeldDurationForButtons(0, KEYS_MASK);
+	ClearHeldDurationForButtons(1, KEYS_MASK);
+	gAutofireState.enabledButtons[0] = 0;
+	gAutofireState.enabledButtons[1] = 0;
 }
 
-void sub_8000364(s32 arg0, u16 arg1, s32 arg2, s32 arg3) {
+void AddAutofireButtons(s32 buttonSetNum, u16 buttons, s32 initialDelay, s32 subsequentDelay) {
 	s32 i;
 
-	gUnknown_03002540.unk0[arg0] |= arg1;
-	gUnknown_03002540.unk4 = arg2;
-	gUnknown_03002540.unk6 = arg3;
-	for (i = 0; i < (s32)COUNTOF(gUnknown_03002540.unk8[0]); ++i) {
-		gUnknown_03002540.unk8[0][i] = 0;
-		gUnknown_03002540.unk8[1][i] = 0;
+	gAutofireState.enabledButtons[buttonSetNum] |= buttons;
+	gAutofireState.initialDelay = initialDelay;
+	gAutofireState.subsequentDelay = subsequentDelay;
+	for (i = 0; i < (s32)COUNTOF(gAutofireState.counters[0]); ++i) {
+		gAutofireState.counters[0][i] = 0;
+		gAutofireState.counters[1][i] = 0;
 	}
 }
 
-void sub_8000398(s32 arg0, u16 arg1) {
-	gUnknown_03002540.unk0[arg0] &= ~arg1;
+void RemoveAutofireButtons(s32 buttonSetNum, u16 buttons) {
+	gAutofireState.enabledButtons[buttonSetNum] &= ~buttons;
 }
 
-void sub_80003B0(s32 arg0, u16 arg1) {
+void ClearHeldDurationForButtons(s32 buttonSetNum, u16 buttonMask) {
 	s32 i;
 
-	for (i = 0; i < (s32)COUNTOF(gUnknown_03002510.unk0[0]); ++i) {
-		if (arg1 & 1) {
-			gUnknown_03002510.unk0[arg0][i] = 0;
+	for (i = 0; i < (s32)COUNTOF(gKeyHeldDurations.durations[0]); ++i) {
+		if (buttonMask & 1) {
+			gKeyHeldDurations.durations[buttonSetNum][i] = 0;
 		}
-		arg1 >>= 1;
+		buttonMask >>= 1;
 	}
 }
 
-void sub_80003E4(s32 arg0, u16 arg1, u16 arg2) {
+void SetHeldDurationForButtons(s32 buttonSetNum, u16 buttonMask, u16 duration) {
 	s32 i;
 
-	for (i = 0; i < (s32)COUNTOF(gUnknown_03002510.unk0[0]); ++i) {
-		if (arg1 & 1) {
-			gUnknown_03002510.unk0[arg0][i] = arg2;
+	for (i = 0; i < (s32)COUNTOF(gKeyHeldDurations.durations[0]); ++i) {
+		if (buttonMask & 1) {
+			gKeyHeldDurations.durations[buttonSetNum][i] = duration;
 		}
-		arg1 >>= 1;
+		buttonMask >>= 1;
 	}
 }
 
-u16 sub_800041C(s32 arg0, u16 arg1) {
+u16 GetButtonHeldDuration(s32 buttonSetNum, u16 buttonMask) {
 	s32 i;
 
-	for (i = 0; i < (s32)COUNTOF(gUnknown_03002510.unk0[0]); ++i) {
-		if (arg1 & 1) {
-			return gUnknown_03002510.unk0[arg0][i];
+	for (i = 0; i < (s32)COUNTOF(gKeyHeldDurations.durations[0]); ++i) {
+		if (buttonMask & 1) {
+			return gKeyHeldDurations.durations[buttonSetNum][i];
 		}
-		arg1 >>= 1;
+		buttonMask >>= 1;
 	}
 	return 0;
 }
@@ -125,36 +125,40 @@ void UpdatePadState(void) {
 	gNewKeys[0] = rawInputs & ~gHeldKeys[0];
 	gHeldKeys[0] = rawInputs;
 	heldKeys = gHeldKeys[0];
-	for (i = 0; i < (s32)COUNTOF(gUnknown_03002510.unk0[0]); ++i) {
+	for (i = 0; i < (s32)COUNTOF(gKeyHeldDurations.durations[0]); ++i) {
 		if (heldKeys & 1) {
-			++gUnknown_03002510.unk0[0][i];
+			++gKeyHeldDurations.durations[0][i];
 		} else {
-			gUnknown_03002510.unk0[0][i] = 0;
+			gKeyHeldDurations.durations[0][i] = 0;
 		}
 		heldKeys >>= 1;
 	}
-	if (gUnknown_03002540.unk0[0]) {
-		for (autofireCheckableInputs = gUnknown_03002540.unk0[0], i = 0;
-		     i < (s32)COUNTOF(gUnknown_03002540.unk8[0]);
+	if (gAutofireState.enabledButtons[0]) {
+		for (autofireCheckableInputs = gAutofireState.enabledButtons[0], i = 0;
+		     i < (s32)COUNTOF(gAutofireState.counters[0]);
 		     ++i, autofireCheckableInputs >>= 1) {
 			if (autofireCheckableInputs & 1) {
-				if (gUnknown_03002540.unk8[0][i] & 0x8000) {
-					if ((gHeldKeys[0] >> i) & 1) {
-						if ((++gUnknown_03002540.unk8[0][i] & 0x7FFF) >= gUnknown_03002540.unk6) {
-							gUnknown_03002540.unk8[0][i] = 0x8000;
+				// Autofire is enabled for this button. Which delay are we using?
+                if (gAutofireState.counters[0][i] & AUTOFIRE_COUNTER_IS_SUBSEQUENT) {
+					// The button has fired at least once automatically already;
+                    // use the delay for subsequent autofire inputs.
+                    if ((gHeldKeys[0] >> i) & 1) {
+						if ((++gAutofireState.counters[0][i] & AUTOFIRE_COUNTER_DURATION_MASK) >= gAutofireState.subsequentDelay) {
+							gAutofireState.counters[0][i] = AUTOFIRE_COUNTER_IS_SUBSEQUENT | 0;
 							gNewKeys[0] |= 1 << i;
 						}
 					} else {
-						gUnknown_03002540.unk8[0][i] = 0;
+						gAutofireState.counters[0][i] = 0;
 					}
 				} else {
-					if ((gHeldKeys[0] >> i) & 1) {
-						if (++gUnknown_03002540.unk8[0][i] >= gUnknown_03002540.unk4) {
-							gUnknown_03002540.unk8[0][i] = 0x8000;
+					// The first autofire hasn't happened yet; use the initial delay
+                    if ((gHeldKeys[0] >> i) & 1) {
+						if (++gAutofireState.counters[0][i] >= gAutofireState.initialDelay) {
+							gAutofireState.counters[0][i] = AUTOFIRE_COUNTER_IS_SUBSEQUENT | 0;
 							gNewKeys[0] |= 1 << i;
 						}
 					} else {
-						gUnknown_03002540.unk8[0][i] = 0;
+						gAutofireState.counters[0][i] = 0;
 					}
 				}
 			}
@@ -165,48 +169,50 @@ void UpdatePadState(void) {
 void sub_800055C(void) {
 	s32 i;
 	s32 j;
-	u16 r2;
-	u16 r8;
+	u16 heldKeys;
+	u16 autofireCheckableInputs;
 
-	gUnknown_03000000[0] = gUnknown_03000000[1];
-	gUnknown_03000000[1] = gUnknown_03000000[2];
-	gUnknown_03000000[2] = gUnknown_03000000[3];
-	gUnknown_03000000[3] = ~REG_KEYINPUT;
+	gKeysBuffer[0] = gKeysBuffer[1];
+	gKeysBuffer[1] = gKeysBuffer[2];
+	gKeysBuffer[2] = gKeysBuffer[3];
+	gKeysBuffer[3] = ~REG_KEYINPUT;
 
-	gNewKeys[0] = (gHeldKeys[0] ^ gUnknown_03000000[0]) & gUnknown_03000000[0];
-	gHeldKeys[0] = gUnknown_03000000[0];
-	r2 = gHeldKeys[0];
+	gNewKeys[0] = (gHeldKeys[0] ^ gKeysBuffer[0]) & gKeysBuffer[0];
+	gHeldKeys[0] = gKeysBuffer[0];
+	heldKeys = gHeldKeys[0];
 
-	for (i = 0; i < 10; ++i) {
-		if (r2 & 1) {
-			++gUnknown_03002510.unk0[0][i];
+	for (i = 0; i < (s32)COUNTOF(gKeyHeldDurations.durations[0]); ++i) {
+		if (heldKeys & 1) {
+			++gKeyHeldDurations.durations[0][i];
 		} else {
-			gUnknown_03002510.unk0[0][i] = 0;
+			gKeyHeldDurations.durations[0][i] = 0;
 		}
-		r2 >>= 1;
+		heldKeys >>= 1;
 	}
 
 	for (i = 0; i < 2; ++i) {
-		if (gUnknown_03002540.unk0[i]) {
-			for (r8 = gUnknown_03002540.unk0[i], j = 0; j < 10; ++j, r8 >>= 1) {
-				if (r8 & 1) {
-					if (gUnknown_03002540.unk8[i][j] & 0x8000) {
+		if (gAutofireState.enabledButtons[i]) {
+			for (autofireCheckableInputs = gAutofireState.enabledButtons[i], j = 0;
+			     j < (s32)COUNTOF(gAutofireState.counters[0]);
+			     ++j, autofireCheckableInputs >>= 1) {
+				if (autofireCheckableInputs & 1) {
+					if (gAutofireState.counters[i][j] & AUTOFIRE_COUNTER_IS_SUBSEQUENT) {
 						if ((gHeldKeys[i] >> j) & 1) {
-							if ((++gUnknown_03002540.unk8[i][j] & 0x7FFF) >= gUnknown_03002540.unk6) {
-								gUnknown_03002540.unk8[i][j] = 0x8000;
+							if ((++gAutofireState.counters[i][j] & AUTOFIRE_COUNTER_DURATION_MASK) >= gAutofireState.subsequentDelay) {
+								gAutofireState.counters[i][j] = AUTOFIRE_COUNTER_IS_SUBSEQUENT | 0;
 								gNewKeys[i] |= 1 << j;
 							}
 						} else {
-							gUnknown_03002540.unk8[i][j] = 0;
+							gAutofireState.counters[i][j] = 0;
 						}
 					} else {
 						if ((gHeldKeys[i] >> j) & 1) {
-							if (++gUnknown_03002540.unk8[i][j] >= gUnknown_03002540.unk4) {
-								gUnknown_03002540.unk8[i][j] = 0x8000;
+							if (++gAutofireState.counters[i][j] >= gAutofireState.initialDelay) {
+								gAutofireState.counters[i][j] = AUTOFIRE_COUNTER_IS_SUBSEQUENT | 0;
 								gNewKeys[i] |= 1 << j;
 							}
 						} else {
-							gUnknown_03002540.unk8[i][j] = 0;
+							gAutofireState.counters[i][j] = 0;
 						}
 					}
 				}
@@ -220,7 +226,7 @@ void sub_80006B0(void) {
 
 	gUnknown_03000010 = 0;
 	gCurrentProc = 0;
-	_reg_last = 1;
+	gNumTcb = 1;
 	gUnknown_03002A30 = gUnknown_03002580;
 	DmaFill32(3, 0, gUnknown_03002580, sizeof gUnknown_03002580);
 	for (i = 0; i < COUNTOF(gUnknown_03002580); ++i) {
@@ -254,7 +260,7 @@ s32 sub_8000758(s32 (*arg0)(), u32 arg1) {
 s32 sub_800077C(s32 (*arg0)(), u32 arg1) {
 	s32 p;
 
-	if (_reg_last == COUNTOF(gUnknown_03002580)) {
+	if (gNumTcb == COUNTOF(gUnknown_03002580)) {
 		log_fatal(gUnknown_080FA4E8); // "NO MORE TCB in _reg_last\n"
 	}
 
@@ -270,7 +276,7 @@ s32 sub_800077C(s32 (*arg0)(), u32 arg1) {
 	gUnknown_03002A30[p].unkB = 0;
 	gUnknown_03002A30[p].unkC = 0;
 	gUnknown_03000010 = p;
-	++_reg_last;
+	++gNumTcb;
 	return p;
 }
 
@@ -291,7 +297,7 @@ s32 sub_800083C(s32 (*arg0)(), u32 arg1) {
 	if (gCurrentProc == 0) {
 		log_fatal(gUnknown_080FA504); // "Can't insert tcb when tcb no of my proc is 0.\n"
 	}
-	if (_reg_last == 25) {
+	if (gNumTcb == 25) {
 		log_fatal(gUnknown_080FA534); // "NO MORE TCB in _reg_ins\n"
 	}
 
@@ -304,7 +310,7 @@ s32 sub_800083C(s32 (*arg0)(), u32 arg1) {
 	gUnknown_03002A30[r5].unkB = 0;
 	gUnknown_03002A30[r5].unkC = 0;
 
-	if (_reg_last >= 2) {
+	if (gNumTcb >= 2) {
 		r1 = gUnknown_03002A30[gCurrentProc].unk9;
 		gUnknown_03002A30[gCurrentProc].unk9 = r5;
 		gUnknown_03002A30[r1].unkA = r5;
@@ -316,7 +322,7 @@ s32 sub_800083C(s32 (*arg0)(), u32 arg1) {
 		gUnknown_03002A30[r5].unkA = 0;
 		gUnknown_03000010 = r5;
 	}
-	++_reg_last;
+	++gNumTcb;
 	return r5;
 }
 
@@ -324,7 +330,7 @@ s32 create_proc(s32 (*arg0)(), u32 arg1) {
 	s32 r6;
 	s32 r1;
 
-	if (_reg_last == 25) {
+	if (gNumTcb == 25) {
 		log_fatal(gUnknown_080FA534);
 	}
 	r6 = sub_8000D18();
@@ -335,7 +341,7 @@ s32 create_proc(s32 (*arg0)(), u32 arg1) {
 	gUnknown_03002A30[r6].unkE = 1;
 	gUnknown_03002A30[r6].unkB = 0;
 	gUnknown_03002A30[r6].unkC = 0;
-	if (_reg_last > 1) {
+	if (gNumTcb > 1) {
 		r1 = gUnknown_03002A30[gCurrentProc].unkA;
 		gUnknown_03002A30[gCurrentProc].unkA = r6;
 		gUnknown_03002A30[r1].unk9 = r6;
@@ -350,17 +356,17 @@ s32 create_proc(s32 (*arg0)(), u32 arg1) {
 	if (gCurrentProc == gUnknown_03000010) {
 		gUnknown_03000010 = r6;
 	}
-	++_reg_last;
+	++gNumTcb;
 	return r6;
 }
 
 #ifdef NONMATCHING
 s32 next_proc(void) {
-	if (_reg_last == 1) {
+	if (gNumTcb == 1) {
 		return 3;
 	}
 	if (gUnknown_03002A30[gCurrentProc].unkD == 0) {
-		log_fatal(gUnknown_080FA550, _reg_last); // "Error next_proc() gNumTcb = %d\n"
+		log_fatal(gUnknown_080FA550, gNumTcb); // "Error next_proc() gNumTcb = %d\n"
 	}
 	if (gUnknown_03002A30[gCurrentProc].unk8 == 2) {
 		gUnknown_03002A30[gCurrentProc].unk8 = 0;
@@ -368,7 +374,7 @@ s32 next_proc(void) {
 
 	gProcReturnVal = gUnknown_03002A30[gCurrentProc].unk0(gUnknown_03002A30[gCurrentProc].unk4);
 
-	if (_reg_last == 1) {
+	if (gNumTcb == 1) {
 		return 3;
 	}
 	if (gUnknown_03002A30[gCurrentProc].unk8 == 0) {
@@ -400,7 +406,7 @@ __asm__(".syntax unified\n\
 	mov r7, sb\n\
 	mov r6, r8\n\
 	push {r6, r7}\n\
-	ldr r0, _08000A90 @ =_reg_last\n\
+	ldr r0, _08000A90 @ =gNumTcb\n\
 	mov r8, r0\n\
 	ldr r3, [r0]\n\
 	cmp r3, #1\n\
@@ -453,7 +459,7 @@ _08000A8A:\n\
 	movs r0, #3\n\
 	b _08000B70\n\
 	.align 2, 0\n\
-_08000A90: .4byte _reg_last\n\
+_08000A90: .4byte gNumTcb\n\
 _08000A94: .4byte gCurrentProc\n\
 _08000A98: .4byte gUnknown_03002A30\n\
 _08000A9C: .4byte gUnknown_080FA550\n\
@@ -613,7 +619,7 @@ s32 end_proc(u32 arg0) {
 	gUnknown_03002A30[arg0].unkE = 0;
 	gUnknown_03002A30[arg0].unkB = 0;
 	gUnknown_03002A30[arg0].unkC = 0;
-	--_reg_last;
+	--gNumTcb;
 	return 0;
 }
 
