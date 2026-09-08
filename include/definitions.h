@@ -50,7 +50,9 @@ struct Proc {
 	u8 unkC;
 	u8 unkD;
 	u8 unkE;
-	u8 unkF[0x21];
+	u8 fillF;
+	s32 data[2];
+	u8 fill18[0x18];
 };
 
 typedef struct sIrqHandler
@@ -113,6 +115,11 @@ typedef struct BattleAction
   const u8 *textPointer;
   void (*battleFunc)(void);
 } BattleAction;
+
+struct TestMenuEntry {
+	const char *unk0;
+	void (*unk4)(void);
+};
 
 struct EnemyData {
   /*  0 */ u8 type;
@@ -205,9 +212,14 @@ s32 sub_800083C(s32 (*arg0)(), u32 arg1);
 u32 sub_8000D18(void);
 s32 sub_8000DD4(u32);
 void log_fatal(const char *fmt, ...);
+s32 sub_8000F54(u32);
+s32 sub_8001074(u32);
+void CopyToVramFromDebugBuffer(void);
 void sub_80010D8(void);
 void EnableM4A(void);
 void m2_init_heap(void);
+void *m2_malloc(size_t);
+void m2_free(void*);
 void sub_80087C8(void);
 void sub_800E5B4(void);
 void sub_80137A4(void);
@@ -247,6 +259,7 @@ extern s32 gProcReturnVal;
 extern u32 gUnknown_0300000C;
 extern u32 gUnknown_03000010;
 extern u32 gNumTcb;
+extern u16 *gUnknown_03000018;
 /*extern u32 gBG0HOFS;
 extern u32 gBG0VOFS;
 extern u32 gBG1HOFS;
@@ -307,6 +320,7 @@ extern const u8 gUnknown_080603BA[];
 extern const u8 gUnknown_080603CC[];
 // TextBattle_Spy_FoundItem
 extern const u8 gUnknown_080621FA[];
+extern const struct TestMenuEntry gUnknown_082B7950[];
 extern void (*const kHALAnimationScriptFuncTable[])(void);
 // EnemyConfigurationTable
 extern const struct EnemyData gUnknown_08739D1C[231];
@@ -322,5 +336,7 @@ extern char gUnknown_080FA550[];
 extern char gUnknown_080FA570[];
 extern char gUnknown_080FA584[];
 extern char gUnknown_080FA5A0[];
+extern const u16 gUnknown_080FA624[];
+extern const u32 gUnknown_080FA824[];
 
 #endif  // GUARD_AGB_SRAM_H

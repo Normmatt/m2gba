@@ -139,10 +139,10 @@ void UpdatePadState(void) {
 		     ++i, autofireCheckableInputs >>= 1) {
 			if (autofireCheckableInputs & 1) {
 				// Autofire is enabled for this button. Which delay are we using?
-                if (gAutofireState.counters[0][i] & AUTOFIRE_COUNTER_IS_SUBSEQUENT) {
+				if (gAutofireState.counters[0][i] & AUTOFIRE_COUNTER_IS_SUBSEQUENT) {
 					// The button has fired at least once automatically already;
-                    // use the delay for subsequent autofire inputs.
-                    if ((gHeldKeys[0] >> i) & 1) {
+					// use the delay for subsequent autofire inputs.
+					if ((gHeldKeys[0] >> i) & 1) {
 						if ((++gAutofireState.counters[0][i] & AUTOFIRE_COUNTER_DURATION_MASK) >= gAutofireState.subsequentDelay) {
 							gAutofireState.counters[0][i] = AUTOFIRE_COUNTER_IS_SUBSEQUENT | 0;
 							gNewKeys[0] |= 1 << i;
@@ -152,7 +152,7 @@ void UpdatePadState(void) {
 					}
 				} else {
 					// The first autofire hasn't happened yet; use the initial delay
-                    if ((gHeldKeys[0] >> i) & 1) {
+					if ((gHeldKeys[0] >> i) & 1) {
 						if (++gAutofireState.counters[0][i] >= gAutofireState.initialDelay) {
 							gAutofireState.counters[0][i] = AUTOFIRE_COUNTER_IS_SUBSEQUENT | 0;
 							gNewKeys[0] |= 1 << i;
@@ -594,7 +594,7 @@ s32 end_proc(u32 arg0) {
 	u8 unkA;
 
 #ifdef UBFIX
-    if (arg0 == 0 || arg0 < 0 || arg0 >= 25 || gUnknown_03002A30[arg0].unkD == 0) {
+	if (arg0 == 0 || arg0 < 0 || arg0 >= 25 || gUnknown_03002A30[arg0].unkD == 0) {
 #else
 	// The bounds checking logic runs after the array has already been accessed!
 	// A modern compiler with LTO might be able to optimize the bounds checks away.
@@ -624,7 +624,7 @@ s32 end_proc(u32 arg0) {
 }
 
 void end_current_proc(void) {
-    end_proc(gCurrentProc);
+	end_proc(gCurrentProc);
 }
 
 s32 sub_8000C3C(u32 arg0) {
@@ -726,5 +726,94 @@ void sub_8000E3C(void) {
 }
 
 void log_fatal(const char *fmt, ...) {
-    while (1) {}
+	while (1) {}
+}
+
+s32 sub_8000E58(void) {
+	u16 *tilemap;
+	s32 procResult;
+
+	gUnknown_03000018 = m2_malloc(0x800);
+	tilemap = gUnknown_03000018;
+	DmaCopy32(3, gUnknown_080FA824, BG_VRAM + 0x8000, 0xE0 * TILE_SIZE_4BPP);
+	DmaCopy16(3, gUnknown_080FA624, BG_PLTT, 0x100 * 2);
+	DmaFill32(3, 0, tilemap, 0x800);
+	DmaCopy32(3, tilemap, BG_SCREEN_ADDR(0), 0x800);
+	REG_BG0CNT = 8;
+	REG_IME = 1;
+	REG_IE = 1;
+	REG_DISPSTAT = 8;
+	REG_BG0HOFS = 0;
+	REG_BG0VOFS = 0;
+	REG_BLDCNT = 0;
+	REG_DISPCNT = 0x100;
+	InitPadState();
+	sub_80006B0();
+	create_proc(sub_8000F54, 0);
+	create_proc(sub_8001074, 0);
+
+	while (1) {
+		if ((procResult = next_proc()) == -1) {
+			sub_8000DD8();
+			continue;
+		}
+		if (procResult == 3) break;
+	}
+	sub_8000754();
+	m2_free(gUnknown_03000018);
+	return 0;
+}
+
+s32 sub_8000F54(u32 unused) {
+	s32 i;
+	s32 *data = gUnknown_03002A30[gCurrentProc].data;
+
+	if (gUnknown_03002A30[gCurrentProc].unk8 == 0) {
+		data[0] = 0;
+		for (data[1] = 0; gUnknown_082B7950[data[1]].unk0[0] != '\0'; ++data[1]) {}
+		return 0;
+	}
+
+	if (gUnknown_03002A30[gCurrentProc].unkB == 1) {
+		end_current_proc();
+		return 0;
+	}
+
+	if (gNewKeys[0] & 0x40) {
+		--data[0];
+		if (data[0] < 0) {
+			data[0] = data[1] - 1;
+		}
+	}
+	if (gNewKeys[0] & 0x80) {
+		++data[0];
+		if (data[0] >= data[1]) {
+			data[0] = 0;
+		}
+	}
+	if (gNewKeys[0] & 1) {
+		MainCallback = gUnknown_082B7950[data[0]].unk4;
+		return -1;
+	}
+
+	DmaFill32(3, 0, &gUnknown_03000018[10*32 + 5], 32 * sizeof gUnknown_03000018[0]);
+	for (i = 0; i < 20 && gUnknown_082B7950[data[0]].unk0[i] != '\0'; ++i) {
+		gUnknown_03000018[10*32 + 5 + i] = gUnknown_082B7950[data[0]].unk0[i];
+	}
+	return 0;
+}
+
+s32 sub_8001074(u32 unused) {
+	if (gUnknown_03002A30[gCurrentProc].unk8 == 0) {
+		return 0;
+	}
+	if (gUnknown_03002A30[gCurrentProc].unkB == 1) {
+		end_current_proc();
+		return 0;
+	}
+
+	UpdatePadState();
+	VBlankIntrWait();
+	CopyToVramFromDebugBuffer();
+	return 0;
 }
