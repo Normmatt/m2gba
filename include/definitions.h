@@ -41,18 +41,18 @@ enum {
 };
 
 struct Proc {
-	s32 (*unk0)();
-	u32 unk4;
-	u8 unk8;
-	u8 unk9;
-	u8 unkA;
-	u8 unkB;
-	u8 unkC;
-	u8 unkD;
-	u8 unkE;
-	u8 fillF;
-	s32 data[2];
-	u8 fill18[0x18];
+	/* 00 */ s32 (*func)();
+	/* 04 */ u32 unk4;
+	/* 08 */ u8 unk8;
+	/* 09 */ u8 prev;
+	/* 0A */ u8 next;
+	/* 0B */ u8 unkB;
+	/* 0C */ u8 unkC;
+	/* 0D */ u8 unkD;
+	/* 0E */ u8 unkE;
+	/* 0F */ u8 fillF;
+	/* 10 */ s32 data[2];
+	/* 18 */ u8 fill18[0x18];
 };
 
 typedef struct sIrqHandler
@@ -118,7 +118,7 @@ typedef struct BattleAction
 
 struct TestMenuEntry {
 	const char *unk0;
-	void (*unk4)(void);
+	s32 (*unk4)(void);
 };
 
 struct EnemyData {
@@ -212,6 +212,7 @@ s32 sub_800083C(s32 (*arg0)(), u32 arg1);
 u32 sub_8000D18(void);
 s32 sub_8000DD4(u32);
 void log_fatal(const char *fmt, ...);
+s32 sub_8000E58(void);
 s32 sub_8000F54(u32);
 s32 sub_8001074(u32);
 void CopyToVramFromDebugBuffer(void);
@@ -222,7 +223,7 @@ void *m2_malloc(size_t);
 void m2_free(void*);
 void sub_80087C8(void);
 void sub_800E5B4(void);
-void sub_80137A4(void);
+s32 sub_80137A4(void);
 void m2_init_character_info_defaults(void);
 // GetBattleSpriteWidth
 extern u32 RandomNumber(u32 range);
@@ -239,6 +240,7 @@ extern void sub_80E8E80(void);
 extern void sub_80E8F1C(void);
 // FindInventorySpace2
 extern s32 sub_80EC4CC(s16);
+s32 sub_80F2014(void);
 
 //EWRAM
 /*extern void *gUnknown_02000000;
@@ -255,9 +257,8 @@ extern EWRAM_DATA struct Struct20248E0 gUnknown_020248E0;
 /// Buffer of 4 frames' worth of input, used in sub_800055C
 extern u16 gKeysBuffer[4];
 extern s32 gProcReturnVal;
-// Head and tail of the linked list of Proc structs?
 extern u32 gUnknown_0300000C;
-extern u32 gUnknown_03000010;
+extern u32 gProcListTail;
 extern u32 gNumTcb;
 extern u16 *gUnknown_03000018;
 /*extern u32 gBG0HOFS;
@@ -268,7 +269,7 @@ extern u32 gBG2HOFS;
 extern u32 gBG2VOFS;
 extern u32 gBG3HOFS;
 extern u32 gBG3VOFS;*/
-extern void (*MainCallback)(void);
+extern s32 (*MainCallback)(void);
 extern u32 IntrMain_RAM[0x200];
 extern u16 gHeldKeys[2];
 extern u16 gNewKeys[2];

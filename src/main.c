@@ -224,16 +224,16 @@ void sub_800055C(void) {
 void sub_80006B0(void) {
 	u32 i;
 
-	gUnknown_03000010 = 0;
+	gProcListTail = 0;
 	gCurrentProc = 0;
 	gNumTcb = 1;
 	gUnknown_03002A30 = gUnknown_03002580;
 	DmaFill32(3, 0, gUnknown_03002580, sizeof gUnknown_03002580);
 	for (i = 0; i < COUNTOF(gUnknown_03002580); ++i) {
 		gUnknown_03002A30[i].unkD = 0;
-		gUnknown_03002A30[i].unk0 = 0;
-		gUnknown_03002A30[i].unk9 = 0;
-		gUnknown_03002A30[i].unkA = 0;
+		gUnknown_03002A30[i].func = 0;
+		gUnknown_03002A30[i].prev = 0;
+		gUnknown_03002A30[i].next = 0;
 		gUnknown_03002A30[i].unk8 = 0;
 		gUnknown_03002A30[i].unk4 = 0;
 		gUnknown_03002A30[i].unkE = 0;
@@ -242,7 +242,7 @@ void sub_80006B0(void) {
 	}
 	gUnknown_03002A30[0].unkD = 2;
 	gUnknown_03002A30[0].unkE = 1;
-	gUnknown_03002A30[0].unk0 = sub_8000DD4;
+	gUnknown_03002A30[0].func = sub_8000DD4;
 }
 
 void sub_8000754(void) {}
@@ -251,7 +251,7 @@ s32 sub_8000758(s32 (*arg0)(), u32 arg1) {
 	s32 currentProc;
 	s32 result;
 	currentProc = gCurrentProc;
-	gCurrentProc = gUnknown_03002A30[0].unkA;
+	gCurrentProc = gUnknown_03002A30[0].next;
 	result = sub_800083C(arg0, arg1);
 	gCurrentProc = currentProc;
 	return result;
@@ -265,17 +265,17 @@ s32 sub_800077C(s32 (*arg0)(), u32 arg1) {
 	}
 
 	p = sub_8000D18();
-	gUnknown_03002A30[gUnknown_03000010].unkA = p;
+	gUnknown_03002A30[gProcListTail].next = p;
 	gUnknown_03002A30[p].unkD = 1;
-	gUnknown_03002A30[p].unk0 = arg0;
-	gUnknown_03002A30[p].unk9 = gUnknown_03000010;
-	gUnknown_03002A30[p].unkA = 0;
+	gUnknown_03002A30[p].func = arg0;
+	gUnknown_03002A30[p].prev = gProcListTail;
+	gUnknown_03002A30[p].next = 0;
 	gUnknown_03002A30[p].unk8 = 0;
 	gUnknown_03002A30[p].unk4 = arg1;
 	gUnknown_03002A30[p].unkE = 1;
 	gUnknown_03002A30[p].unkB = 0;
 	gUnknown_03002A30[p].unkC = 0;
-	gUnknown_03000010 = p;
+	gProcListTail = p;
 	++gNumTcb;
 	return p;
 }
@@ -284,7 +284,7 @@ s32 sub_8000818(s32 (*arg0)(), u32 arg1) {
 	s32 currentProc;
 	s32 result;
 	currentProc = gCurrentProc;
-	gCurrentProc = gUnknown_03002A30[0].unk9;
+	gCurrentProc = gUnknown_03002A30[0].prev;
 	result = sub_800083C(arg0, arg1);
 	gCurrentProc = currentProc;
 	return result;
@@ -303,7 +303,7 @@ s32 sub_800083C(s32 (*arg0)(), u32 arg1) {
 
 	r5 = sub_8000D18();
 	gUnknown_03002A30[r5].unkD = 1;
-	gUnknown_03002A30[r5].unk0 = arg0;
+	gUnknown_03002A30[r5].func = arg0;
 	gUnknown_03002A30[r5].unk8 = 0;
 	gUnknown_03002A30[r5].unk4 = arg1;
 	gUnknown_03002A30[r5].unkE = 1;
@@ -311,16 +311,16 @@ s32 sub_800083C(s32 (*arg0)(), u32 arg1) {
 	gUnknown_03002A30[r5].unkC = 0;
 
 	if (gNumTcb >= 2) {
-		r1 = gUnknown_03002A30[gCurrentProc].unk9;
-		gUnknown_03002A30[gCurrentProc].unk9 = r5;
-		gUnknown_03002A30[r1].unkA = r5;
-		gUnknown_03002A30[r5].unk9 = r1;
-		gUnknown_03002A30[r5].unkA = gCurrentProc;
+		r1 = gUnknown_03002A30[gCurrentProc].prev;
+		gUnknown_03002A30[gCurrentProc].prev = r5;
+		gUnknown_03002A30[r1].next = r5;
+		gUnknown_03002A30[r5].prev = r1;
+		gUnknown_03002A30[r5].next = gCurrentProc;
 	} else {
-		gUnknown_03002A30[gUnknown_03000010].unkA = r5;
-		gUnknown_03002A30[r5].unk9 = gUnknown_03000010;
-		gUnknown_03002A30[r5].unkA = 0;
-		gUnknown_03000010 = r5;
+		gUnknown_03002A30[gProcListTail].next = r5;
+		gUnknown_03002A30[r5].prev = gProcListTail;
+		gUnknown_03002A30[r5].next = 0;
+		gProcListTail = r5;
 	}
 	++gNumTcb;
 	return r5;
@@ -335,26 +335,26 @@ s32 create_proc(s32 (*arg0)(), u32 arg1) {
 	}
 	r6 = sub_8000D18();
 	gUnknown_03002A30[r6].unkD = 1;
-	gUnknown_03002A30[r6].unk0 = arg0;
+	gUnknown_03002A30[r6].func = arg0;
 	gUnknown_03002A30[r6].unk8 = 0;
 	gUnknown_03002A30[r6].unk4 = arg1;
 	gUnknown_03002A30[r6].unkE = 1;
 	gUnknown_03002A30[r6].unkB = 0;
 	gUnknown_03002A30[r6].unkC = 0;
 	if (gNumTcb > 1) {
-		r1 = gUnknown_03002A30[gCurrentProc].unkA;
-		gUnknown_03002A30[gCurrentProc].unkA = r6;
-		gUnknown_03002A30[r1].unk9 = r6;
-		gUnknown_03002A30[r6].unkA = r1;
-		gUnknown_03002A30[r6].unk9 = gCurrentProc;
+		r1 = gUnknown_03002A30[gCurrentProc].next;
+		gUnknown_03002A30[gCurrentProc].next = r6;
+		gUnknown_03002A30[r1].prev = r6;
+		gUnknown_03002A30[r6].next = r1;
+		gUnknown_03002A30[r6].prev = gCurrentProc;
 	} else {
-		gUnknown_03002A30[gUnknown_03000010].unkA = r6;
-		gUnknown_03002A30[r6].unk9 = gUnknown_03000010;
-		gUnknown_03002A30[r6].unkA = 0;
+		gUnknown_03002A30[gProcListTail].next = r6;
+		gUnknown_03002A30[r6].prev = gProcListTail;
+		gUnknown_03002A30[r6].next = 0;
 	}
 
-	if (gCurrentProc == gUnknown_03000010) {
-		gUnknown_03000010 = r6;
+	if (gCurrentProc == gProcListTail) {
+		gProcListTail = r6;
 	}
 	++gNumTcb;
 	return r6;
@@ -372,7 +372,7 @@ s32 next_proc(void) {
 		gUnknown_03002A30[gCurrentProc].unk8 = 0;
 	}
 
-	gProcReturnVal = gUnknown_03002A30[gCurrentProc].unk0(gUnknown_03002A30[gCurrentProc].unk4);
+	gProcReturnVal = gUnknown_03002A30[gCurrentProc].func(gUnknown_03002A30[gCurrentProc].unk4);
 
 	if (gNumTcb == 1) {
 		return 3;
@@ -380,7 +380,7 @@ s32 next_proc(void) {
 	if (gUnknown_03002A30[gCurrentProc].unk8 == 0) {
 		gUnknown_03002A30[gCurrentProc].unk8 = 1;
 	}
-	gCurrentProc = gUnknown_03002A30[gCurrentProc].unkA;
+	gCurrentProc = gUnknown_03002A30[gCurrentProc].next;
 
 	while (gUnknown_03002A30[gCurrentProc].unkD != 1 || gUnknown_03002A30[gCurrentProc].unkE != 1) {
 		if (gUnknown_03002A30[gCurrentProc].unkD == 2) {
@@ -394,7 +394,7 @@ s32 next_proc(void) {
 				}
 			}
 		}
-		gCurrentProc = gUnknown_03002A30[gCurrentProc].unkA;
+		gCurrentProc = gUnknown_03002A30[gCurrentProc].next;
 	}
 
 	return gProcReturnVal;
@@ -590,8 +590,8 @@ _08000B84: .4byte gUnknown_0300000C\n\
 #endif
 
 s32 end_proc(u32 arg0) {
-	u8 unk9;
-	u8 unkA;
+	u8 prev;
+	u8 next;
 
 #ifdef UBFIX
 	if (arg0 == 0 || arg0 < 0 || arg0 >= 25 || gUnknown_03002A30[arg0].unkD == 0) {
@@ -602,23 +602,30 @@ s32 end_proc(u32 arg0) {
 #endif
 		return 2;
 	}
-	unk9 = gUnknown_03002A30[arg0].unk9;
-	unkA = gUnknown_03002A30[arg0].unkA;
-	gUnknown_03002A30[unk9].unkA = unkA;
-	gUnknown_03002A30[unkA].unk9 = unk9;
-	if (arg0 == gUnknown_03000010) {
-		gUnknown_03000010 = unk9;
+
+	// Remove procedure `arg0` from the linked list of procedures
+	prev = gUnknown_03002A30[arg0].prev;
+	next = gUnknown_03002A30[arg0].next;
+	gUnknown_03002A30[prev].next = next;
+	gUnknown_03002A30[next].prev = prev;
+	// Update the tail index of the linked list if necessary
+	if (arg0 == gProcListTail) {
+		gProcListTail = prev;
 	}
+	// If we're removing the currently running procedure, make sure to set things up
+	// to correctly run the next procedure once we return to next_proc()
 	if (gCurrentProc == arg0) {
-		gCurrentProc = gUnknown_03002A30[arg0].unk9;
+		gCurrentProc = gUnknown_03002A30[arg0].prev;
 	}
+	// Clear everything to 0 
 	gUnknown_03002A30[arg0].unkD = 0;
-	gUnknown_03002A30[arg0].unk0 = (s32(*)())0;
-	gUnknown_03002A30[arg0].unk9 = 0;
-	gUnknown_03002A30[arg0].unkA = 0;
+	gUnknown_03002A30[arg0].func = (s32(*)())0;
+	gUnknown_03002A30[arg0].prev = 0;
+	gUnknown_03002A30[arg0].next = 0;
 	gUnknown_03002A30[arg0].unkE = 0;
 	gUnknown_03002A30[arg0].unkB = 0;
 	gUnknown_03002A30[arg0].unkC = 0;
+	// Task removed successfully
 	--gNumTcb;
 	return 0;
 }
@@ -627,6 +634,7 @@ void end_current_proc(void) {
 	end_proc(gCurrentProc);
 }
 
+// Restart task?
 s32 sub_8000C3C(u32 arg0) {
 	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].unkD != 1) {
 		return 2;
@@ -644,6 +652,7 @@ s32 sub_8000C74(u32 arg0, u32 arg1) {
 	return 0;
 }
 
+// Pause task?
 s32 sub_8000CA4(u32 arg0) {
 	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].unkD != 1) {
 		return 2;
@@ -652,6 +661,7 @@ s32 sub_8000CA4(u32 arg0) {
 	return 0;
 }
 
+// Resume task?
 s32 wakeup_tcb(u32 arg0) {
 	if (arg0 < 0 || arg0 >= 25 || arg0 == 0) {
 		log_fatal(gUnknown_080FA570, arg0);

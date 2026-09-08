@@ -1,7 +1,7 @@
 . = 0x00000000; gKeysBuffer = .;
 . = 0x00000008; gProcReturnVal = .;
 . = 0x0000000C; gUnknown_0300000C = .;
-. = 0x00000010; gUnknown_03000010 = .;
+. = 0x00000010; gProcListTail = .;
 . = 0x00000014; gNumTcb = .;
 . = 0x00000018; gUnknown_03000018 = .;
 . = 0x0000001C; gUnknown_0300001C = .;
