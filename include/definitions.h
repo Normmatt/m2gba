@@ -227,6 +227,7 @@ s32 sub_80137A4(void);
 void m2_init_character_info_defaults(void);
 // GetBattleSpriteWidth
 extern u32 RandomNumber(u32 range);
+void sub_80D2AFC(void);
 extern s16 sub_80DA6FC(s16 enemyId);
 extern void sub_80DB03C(u8);
 // DisplayInBattleText
@@ -284,6 +285,7 @@ extern u8 gUnknown_03002F10[TILE_SIZE_4BPP * 6 * 6];
 extern u32 gUnknown_03003390;
 extern u32 gUnknown_03003394;
 extern struct OamData gOamBuffer[0x80];
+extern u32 gUnknown_03004ED8;
 extern const u8 *gAnimationScriptPC;
 extern struct EventScriptRunner *gUnknown_0300509C;
 extern struct Struct030050A4 *gUnknown_030050A4;

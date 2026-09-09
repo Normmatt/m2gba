@@ -35969,15 +35969,20 @@ VBlankIntrWait: @ 0x080F47E4
 
 	thumb_func_start SoftResetRom
 SoftResetRom: @ 0x080F47EC
+	@ Disable all interrupts
 	ldr r3, _080F4800 @ =0x04000208
 	movs r2, #0
 	strb r2, [r3]
+	@ Set reset mode to "ROM"/cartridge mode, instead of multiboot mode
 	ldr r3, _080F4804 @ =gUnknown_03007FFA
 	movs r2, #0
 	strb r2, [r3]
+	@ Reset the user stack pointer to a known sane value (3007F00)
 	subs r3, #0xfa
 	mov sp, r3
+	@ RegisterRamReset
 	svc #1
+	@ SoftReset
 	svc #0
 	.align 2, 0
 _080F4800: .4byte 0x04000208

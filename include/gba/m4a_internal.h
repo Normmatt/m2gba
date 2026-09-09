@@ -391,7 +391,7 @@ void DummyFunc(void);
 void MPlayJumpTableCopy(void **mplayJumpTable);
 void SampleFreqSet(u32 freq);
 void m4aSoundVSyncOn(void);
-void m4aSoundVSyncOff(void);
+void SoundVSyncOff_rev01(void);
 
 void ClearModM(struct MusicPlayerTrack *track);
 void m4aMPlayModDepthSet(struct MusicPlayerInfo *mplayInfo, u16 trackBits, u8 modDepth);

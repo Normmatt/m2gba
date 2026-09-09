@@ -827,3 +827,31 @@ s32 sub_8001074(u32 unused) {
 	CopyToVramFromDebugBuffer();
 	return 0;
 }
+
+void CopyToVramFromDebugBuffer(void) {
+	DmaCopy32(3, gUnknown_03000018, BG_VRAM + 0, 0x800);
+}
+
+void sub_80010D8(void) {}
+
+void VBlankIntr(void) {
+	m4aSoundVSync();
+	sub_80D2AFC();
+	if (gUnknown_03002A34 && (REG_KEYINPUT ^ KEYS_MASK) == (A_BUTTON | B_BUTTON | START_BUTTON | SELECT_BUTTON)) {
+		SoundVSyncOff_rev01();
+		REG_DMA0CNT_H = 0;
+		REG_DMA1CNT_H = 0;
+		REG_DMA2CNT_H = 0;
+		REG_DMA3CNT_H = 0;
+		m4aMPlayAllStop();
+		m4aSoundMain();
+		REG_DISPCNT = 0x80;
+		while (1) {
+			if ((REG_KEYINPUT ^ KEYS_MASK) != (A_BUTTON | B_BUTTON | START_BUTTON | SELECT_BUTTON)) break;
+		}
+		SoftResetRom(0xE0);
+	}
+	m4aSoundMain();
+	INTR_CHECK = 1;
+	++gUnknown_03004ED8;
+}
