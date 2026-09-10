@@ -48,11 +48,19 @@ struct Proc {
 	/* 0A */ u8 next;
 	/* 0B */ u8 unkB;
 	/* 0C */ u8 unkC;
-	/* 0D */ u8 unkD;
-	/* 0E */ u8 unkE;
+	/* 0D */ u8 active;
+	/* 0E */ u8 state;
 	/* 0F */ u8 fillF;
 	/* 10 */ s32 data[2];
 	/* 18 */ u8 fill18[0x18];
+};
+enum {
+	PROC_ACTIVITY_FREE = 0,
+	PROC_ACTIVITY_ACTIVE = 1,
+	PROC_ACTIVITY_NULL_TASK = 2,
+	PROC_STATE_SLEEPING = 0,
+	PROC_STATE_RUNNING = 1,
+	PROC_STATE_RESUMING = 2
 };
 
 typedef struct sIrqHandler

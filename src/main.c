@@ -230,18 +230,18 @@ void sub_80006B0(void) {
 	gUnknown_03002A30 = gUnknown_03002580;
 	DmaFill32(3, 0, gUnknown_03002580, sizeof gUnknown_03002580);
 	for (i = 0; i < COUNTOF(gUnknown_03002580); ++i) {
-		gUnknown_03002A30[i].unkD = 0;
+		gUnknown_03002A30[i].active = PROC_ACTIVITY_FREE;
 		gUnknown_03002A30[i].func = 0;
 		gUnknown_03002A30[i].prev = 0;
 		gUnknown_03002A30[i].next = 0;
 		gUnknown_03002A30[i].unk8 = 0;
 		gUnknown_03002A30[i].unk4 = 0;
-		gUnknown_03002A30[i].unkE = 0;
+		gUnknown_03002A30[i].state = PROC_STATE_SLEEPING;
 		gUnknown_03002A30[i].unkB = 0;
 		gUnknown_03002A30[i].unkC = 0;
 	}
-	gUnknown_03002A30[0].unkD = 2;
-	gUnknown_03002A30[0].unkE = 1;
+	gUnknown_03002A30[0].active = PROC_ACTIVITY_NULL_TASK;
+	gUnknown_03002A30[0].state = PROC_STATE_RUNNING;
 	gUnknown_03002A30[0].func = sub_8000DD4;
 }
 
@@ -266,13 +266,13 @@ s32 sub_800077C(s32 (*arg0)(), u32 arg1) {
 
 	p = sub_8000D18();
 	gUnknown_03002A30[gProcListTail].next = p;
-	gUnknown_03002A30[p].unkD = 1;
+	gUnknown_03002A30[p].active = PROC_ACTIVITY_ACTIVE;
 	gUnknown_03002A30[p].func = arg0;
 	gUnknown_03002A30[p].prev = gProcListTail;
 	gUnknown_03002A30[p].next = 0;
 	gUnknown_03002A30[p].unk8 = 0;
 	gUnknown_03002A30[p].unk4 = arg1;
-	gUnknown_03002A30[p].unkE = 1;
+	gUnknown_03002A30[p].state = PROC_STATE_RUNNING;
 	gUnknown_03002A30[p].unkB = 0;
 	gUnknown_03002A30[p].unkC = 0;
 	gProcListTail = p;
@@ -302,11 +302,11 @@ s32 sub_800083C(s32 (*arg0)(), u32 arg1) {
 	}
 
 	r5 = sub_8000D18();
-	gUnknown_03002A30[r5].unkD = 1;
+	gUnknown_03002A30[r5].active = PROC_ACTIVITY_ACTIVE;
 	gUnknown_03002A30[r5].func = arg0;
 	gUnknown_03002A30[r5].unk8 = 0;
 	gUnknown_03002A30[r5].unk4 = arg1;
-	gUnknown_03002A30[r5].unkE = 1;
+	gUnknown_03002A30[r5].state = PROC_STATE_RUNNING;
 	gUnknown_03002A30[r5].unkB = 0;
 	gUnknown_03002A30[r5].unkC = 0;
 
@@ -334,11 +334,11 @@ s32 create_proc(s32 (*arg0)(), u32 arg1) {
 		log_fatal(gUnknown_080FA534);
 	}
 	r6 = sub_8000D18();
-	gUnknown_03002A30[r6].unkD = 1;
+	gUnknown_03002A30[r6].active = PROC_ACTIVITY_ACTIVE;
 	gUnknown_03002A30[r6].func = arg0;
 	gUnknown_03002A30[r6].unk8 = 0;
 	gUnknown_03002A30[r6].unk4 = arg1;
-	gUnknown_03002A30[r6].unkE = 1;
+	gUnknown_03002A30[r6].state = PROC_STATE_RUNNING;
 	gUnknown_03002A30[r6].unkB = 0;
 	gUnknown_03002A30[r6].unkC = 0;
 	if (gNumTcb > 1) {
@@ -365,7 +365,7 @@ s32 next_proc(void) {
 	if (gNumTcb == 1) {
 		return 3;
 	}
-	if (gUnknown_03002A30[gCurrentProc].unkD == 0) {
+	if (gUnknown_03002A30[gCurrentProc].active == PROC_ACTIVITY_FREE) {
 		log_fatal(gUnknown_080FA550, gNumTcb); // "Error next_proc() gNumTcb = %d\n"
 	}
 	if (gUnknown_03002A30[gCurrentProc].unk8 == 2) {
@@ -382,13 +382,13 @@ s32 next_proc(void) {
 	}
 	gCurrentProc = gUnknown_03002A30[gCurrentProc].next;
 
-	while (gUnknown_03002A30[gCurrentProc].unkD != 1 || gUnknown_03002A30[gCurrentProc].unkE != 1) {
-		if (gUnknown_03002A30[gCurrentProc].unkD == 2) {
+	while (gUnknown_03002A30[gCurrentProc].active != PROC_ACTIVITY_ACTIVE || gUnknown_03002A30[gCurrentProc].state != PROC_STATE_RUNNING) {
+		if (gUnknown_03002A30[gCurrentProc].active == PROC_ACTIVITY_NULL_TASK) {
 			for (gUnknown_0300000C = 0; gUnknown_0300000C < 25; ++gUnknown_0300000C) {
-				if (gUnknown_03002A30[gUnknown_0300000C].unkE == 2) {
-					gUnknown_03002A30[gUnknown_0300000C].unkE = 1;
+				if (gUnknown_03002A30[gUnknown_0300000C].state == PROC_STATE_RESUMING) {
+					gUnknown_03002A30[gUnknown_0300000C].state = PROC_STATE_RUNNING;
 				}
-				if (gUnknown_03002A30[gUnknown_0300000C].unkE == 1) {
+				if (gUnknown_03002A30[gUnknown_0300000C].state == PROC_STATE_RUNNING) {
 					gUnknown_03002A30[gUnknown_0300000C].unkB = gUnknown_03002A30[gUnknown_0300000C].unkC;
 					gUnknown_03002A30[gUnknown_0300000C].unkC = 0;
 				}
@@ -594,11 +594,11 @@ s32 end_proc(u32 arg0) {
 	u8 next;
 
 #ifdef UBFIX
-	if (arg0 == 0 || arg0 < 0 || arg0 >= 25 || gUnknown_03002A30[arg0].unkD == 0) {
+	if (arg0 == 0 || arg0 < 0 || arg0 >= 25 || gUnknown_03002A30[arg0].active == PROC_ACTIVITY_FREE) {
 #else
 	// The bounds checking logic runs after the array has already been accessed!
 	// A modern compiler with LTO might be able to optimize the bounds checks away.
-	if (gUnknown_03002A30[arg0].unkD == 0 || arg0 == 0 || arg0 < 0 || arg0 >= 25) {
+	if (gUnknown_03002A30[arg0].active == PROC_ACTIVITY_FREE || arg0 == 0 || arg0 < 0 || arg0 >= 25) {
 #endif
 		return 2;
 	}
@@ -618,11 +618,11 @@ s32 end_proc(u32 arg0) {
 		gCurrentProc = gUnknown_03002A30[arg0].prev;
 	}
 	// Clear everything to 0 
-	gUnknown_03002A30[arg0].unkD = 0;
+	gUnknown_03002A30[arg0].active = PROC_ACTIVITY_FREE;
 	gUnknown_03002A30[arg0].func = (s32(*)())0;
 	gUnknown_03002A30[arg0].prev = 0;
 	gUnknown_03002A30[arg0].next = 0;
-	gUnknown_03002A30[arg0].unkE = 0;
+	gUnknown_03002A30[arg0].state = PROC_STATE_SLEEPING;
 	gUnknown_03002A30[arg0].unkB = 0;
 	gUnknown_03002A30[arg0].unkC = 0;
 	// Task removed successfully
@@ -636,16 +636,16 @@ void end_current_proc(void) {
 
 // Restart task?
 s32 sub_8000C3C(u32 arg0) {
-	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].unkD != 1) {
+	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].active != PROC_ACTIVITY_ACTIVE) {
 		return 2;
 	}
 	gUnknown_03002A30[arg0].unk8 = 2;
-	gUnknown_03002A30[arg0].unkE = 1;
+	gUnknown_03002A30[arg0].state = PROC_STATE_RUNNING;
 	return 0;
 }
 
 s32 sub_8000C74(u32 arg0, u32 arg1) {
-	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].unkD != 1) {
+	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].active != PROC_ACTIVITY_ACTIVE) {
 		return 2;
 	}
 	gUnknown_03002A30[arg0].unk4 = arg1;
@@ -654,10 +654,10 @@ s32 sub_8000C74(u32 arg0, u32 arg1) {
 
 // Pause task?
 s32 sub_8000CA4(u32 arg0) {
-	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].unkD != 1) {
+	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].active != PROC_ACTIVITY_ACTIVE) {
 		return 2;
 	}
-	gUnknown_03002A30[arg0].unkE = 0;
+	gUnknown_03002A30[arg0].state = PROC_STATE_SLEEPING;
 	return 0;
 }
 
@@ -667,8 +667,8 @@ s32 wakeup_tcb(u32 arg0) {
 		log_fatal(gUnknown_080FA570, arg0);
 		return 2;
 	}
-	if (gUnknown_03002A30[arg0].unkD == 1) {
-		gUnknown_03002A30[arg0].unkE = 2;
+	if (gUnknown_03002A30[arg0].active == PROC_ACTIVITY_ACTIVE) {
+		gUnknown_03002A30[arg0].state = PROC_STATE_RESUMING;
 		return 0;
 	}
 	log_fatal(gUnknown_080FA584, arg0);
@@ -678,7 +678,7 @@ s32 wakeup_tcb(u32 arg0) {
 u32 sub_8000D18(void) {
 	u32 i;
 	for (i = 1; i < 25; ++i) {
-		if (gUnknown_03002A30[i].unkD == 0) {
+		if (gUnknown_03002A30[i].active == PROC_ACTIVITY_FREE) {
 			break;
 		}
 	}
@@ -686,7 +686,7 @@ u32 sub_8000D18(void) {
 }
 
 s32 set_signal(u32 arg0, u8 arg1) {
-	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].unkD != 1) {
+	if (arg0 < 0 || arg0 >= 25 || arg0 == 0 || gUnknown_03002A30[arg0].active != PROC_ACTIVITY_ACTIVE) {
 		log_fatal(gUnknown_080FA5A0);
 		return 2;
 	}
@@ -714,7 +714,7 @@ void sub_8000DD8(void) {
 	u32 i;
 	for (i = 0; i < 25; ++i) {
 		gUnknown_03002A30[i].unkC = 1;
-		gUnknown_03002A30[i].unkE = 2;
+		gUnknown_03002A30[i].state = PROC_STATE_RESUMING;
 	}
 }
 
@@ -722,10 +722,10 @@ s32 sub_8000E04(u32 arg0) {
 	if (arg0 < 0 || arg0 >= 25 || arg0 == 0) {
 		return 2;
 	}
-	if (gUnknown_03002A30[arg0].unkD != 1) {
+	if (gUnknown_03002A30[arg0].active != PROC_ACTIVITY_ACTIVE) {
 		return 0;
 	}
-	if (gUnknown_03002A30[arg0].unkE != 1) {
+	if (gUnknown_03002A30[arg0].state != PROC_STATE_RUNNING) {
 		return 0;
 	}
 	return 1;
@@ -745,18 +745,18 @@ s32 sub_8000E58(void) {
 
 	gUnknown_03000018 = m2_malloc(0x800);
 	tilemap = gUnknown_03000018;
-	DmaCopy32(3, gUnknown_080FA824, BG_VRAM + 0x8000, 0xE0 * TILE_SIZE_4BPP);
+	DmaCopy32(3, gUnknown_080FA824, BG_CHAR_ADDR(2), 0xE0 * TILE_SIZE_4BPP);
 	DmaCopy16(3, gUnknown_080FA624, BG_PLTT, 0x100 * 2);
 	DmaFill32(3, 0, tilemap, 0x800);
 	DmaCopy32(3, tilemap, BG_SCREEN_ADDR(0), 0x800);
-	REG_BG0CNT = 8;
+	REG_BG0CNT = BGCNT_PRIORITY(0) | BGCNT_CHARBASE(2) | BGCNT_16COLOR | BGCNT_TXT256x256;
 	REG_IME = 1;
-	REG_IE = 1;
-	REG_DISPSTAT = 8;
+	REG_IE = INTR_FLAG_VBLANK;
+	REG_DISPSTAT = DISPSTAT_VBLANK_INTR;
 	REG_BG0HOFS = 0;
 	REG_BG0VOFS = 0;
-	REG_BLDCNT = 0;
-	REG_DISPCNT = 0x100;
+	REG_BLDCNT = BLDCNT_EFFECT_NONE;
+	REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_BG0_ON;
 	InitPadState();
 	sub_80006B0();
 	create_proc(sub_8000F54, 0);
@@ -789,26 +789,26 @@ s32 sub_8000F54(u32 unused) {
 		return 0;
 	}
 
-	if (gNewKeys[0] & 0x40) {
+	if (gNewKeys[0] & DPAD_UP) {
 		--data[0];
 		if (data[0] < 0) {
 			data[0] = data[1] - 1;
 		}
 	}
-	if (gNewKeys[0] & 0x80) {
+	if (gNewKeys[0] & DPAD_DOWN) {
 		++data[0];
 		if (data[0] >= data[1]) {
 			data[0] = 0;
 		}
 	}
-	if (gNewKeys[0] & 1) {
+	if (gNewKeys[0] & A_BUTTON) {
 		MainCallback = gUnknown_082B7950[data[0]].unk4;
 		return -1;
 	}
 
 	DmaFill32(3, 0, &gUnknown_03000018[10*32 + 5], 32 * sizeof gUnknown_03000018[0]);
 	for (i = 0; i < 20 && gUnknown_082B7950[data[0]].unk0[i] != '\0'; ++i) {
-		gUnknown_03000018[10*32 + 5 + i] = gUnknown_082B7950[data[0]].unk0[i];
+		gUnknown_03000018[10*32 + 5 + i] = gUnknown_082B7950[data[0]].unk0[i] & 0xFF;
 	}
 	return 0;
 }
@@ -829,7 +829,7 @@ s32 sub_8001074(u32 unused) {
 }
 
 void CopyToVramFromDebugBuffer(void) {
-	DmaCopy32(3, gUnknown_03000018, BG_VRAM + 0, 0x800);
+	DmaCopy32(3, gUnknown_03000018, BG_SCREEN_ADDR(0), 0x800);
 }
 
 void sub_80010D8(void) {}
@@ -845,13 +845,13 @@ void VBlankIntr(void) {
 		REG_DMA3CNT_H = 0;
 		m4aMPlayAllStop();
 		m4aSoundMain();
-		REG_DISPCNT = 0x80;
+		REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_FORCED_BLANK;
 		while (1) {
 			if ((REG_KEYINPUT ^ KEYS_MASK) != (A_BUTTON | B_BUTTON | START_BUTTON | SELECT_BUTTON)) break;
 		}
-		SoftResetRom(0xE0);
+		SoftResetRom(RESET_REGS | RESET_SOUND_REGS | RESET_SIO_REGS);
 	}
 	m4aSoundMain();
-	INTR_CHECK = 1;
+	INTR_CHECK = INTR_FLAG_VBLANK;
 	++gUnknown_03004ED8;
 }
