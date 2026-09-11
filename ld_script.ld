@@ -29,6 +29,18 @@ SECTIONS
 		asm/code1.o(.text);
 		src/battle_1.o(.text);
 		asm/code2.o(.text);
+		*libgcc.a:_call_via_rX.o(.text);
+		*libgcc.a:_divsi3.o(.text);
+		*libgcc.a:_dvmd_tls.o(.text);
+		*libgcc.a:_modsi3.o(.text);
+		*libgcc.a:_udivsi3.o(.text);
+		*libgcc.a:_umodsi3.o(.text);
+		*libc.a:memcpy.o(.text);
+		*libc.a:memset.o(.text);
+		*libc.a:sprintf.o(.text);
+		*libc.a:strlen.o(.text);
+		*libc.a:vfprintf.o(.text);
+		*libc.a:wsetup.o(.text);
 		*libc.a:dtoa.o(.text);
 		*libc.a:fflush.o(.text);
 		*libc.a:findfp.o(.text);
@@ -70,6 +82,7 @@ SECTIONS
         data/data.o(.data);
         sound/sound.o(.data);
         data/data2.o(.data);
+        *libc.a:vfprintf.o(.rodata);
         *libc.a:dtoa.o(.rodata);
         *libc.a:impure.o(.rodata);
         *libc.a:locale.o(.rodata);
