@@ -49,15 +49,3 @@ gUnknown_082B77A8:
     .global gUnknown_082B77AC
 gUnknown_082B77AC:
     .incbin "baserom.gba", 0x002B77AC, 0x4
-
-    .global gUnknown_082B77B0
-gUnknown_082B77B0:
-    .incbin "baserom.gba", 0x002B77B0, 0xC
-
-    .global gUnknown_082B77BC
-gUnknown_082B77BC:
-    .incbin "baserom.gba", 0x002B77BC, 0x4
-
-    .global gUnknown_082B77C0
-gUnknown_082B77C0:
-    .incbin "baserom.gba", 0x002B77C0, 0x8

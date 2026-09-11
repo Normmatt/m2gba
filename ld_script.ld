@@ -29,7 +29,7 @@ SECTIONS
 		asm/code1.o(.text);
 		src/battle_1.o(.text);
 		asm/code2.o(.text);
-		/* *libc.a:dtoa.o(.text); */
+		*libc.a:dtoa.o(.text);
 		*libc.a:fflush.o(.text);
 		*libc.a:findfp.o(.text);
 		*libc.a:freer.o(.text);
@@ -70,11 +70,13 @@ SECTIONS
         data/data.o(.data);
         sound/sound.o(.data);
         data/data2.o(.data);
-        /* *libc.a:dtoa.o(.rodata); */
+        *libc.a:dtoa.o(.rodata);
+        *libc.a:impure.o(.rodata);
         *libc.a:locale.o(.rodata);
         *libc.a:mprec.o(.rodata);
         *libc.a:syscalls.o(.rodata);
         data/data_after_libc_rodata.o(.data);
+        *libc.a:impure.o(.data);
         *libc.a:locale.o(.data);
         *libc.a:mallocr.o(.data);
     } = 0

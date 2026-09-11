@@ -2777,8 +2777,4 @@ gUnknown_08B2B28A:
 
     .global gUnknown_08B2B3A4
 gUnknown_08B2B3A4:
-    .incbin "baserom.gba", 0x00B2B3A4, 0x308
-
-    .global _impure_ptr
-_impure_ptr:
-    .incbin "baserom.gba", 0x00B2B6AC, 0x4
+    .incbin "baserom.gba", 0x00B2B3A4, 0x1C
