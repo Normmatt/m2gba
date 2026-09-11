@@ -206,13 +206,9 @@
 . = 0x00000B08; gUnknown_03000B08 = .;
 . = 0x00000D88; gUnknown_03000D88 = .;
 . = 0x00000E28; gUnknown_03000E28 = .;
-. = 0x00000E78; gUnknown_03000E78 = .;
-. = 0x00000E7C; monitor_stdin = .;
-. = 0x00000E80; monitor_stdout = .;
-. = 0x00000E84; monitor_stderr = .;
-. = 0x00000E88; openfiles = .;
-. = 0x00000F28; gUnknown_03000F28 = .;
-. = 0x00000F40; gUnknown_03000F40 = .;
+. = 0x00000E78; *libc.a:syscalls.o(.bss);
+/* $3000F28 */ *libgcc.a:dp-bit.o(.bss);
+/* $3000F40 */ *libgcc.a:fp-bit.o(.bss);
 . = 0x00000F50; SoundMainRAM_Buffer = .;
 . = 0x00000F51; gUnknown_03000F51 = .;
 . = 0x000012D0; MainCallback = .;
@@ -525,7 +521,7 @@
 . = 0x00005F90; gUnknown_03005F90 = .;
 . = 0x00005FD0; m4a_memacc_area = .;
 . = 0x00005FE0; errno = .;
-. = 0x00005FE4; gUnknown_03005FE4 = .;
+. = 0x00005FE4; end = .;
 . = 0x00007E00; gUnknown_03007E00 = .;
 . = 0x00007FA0; gUnknown_03007FA0 = .;
 . = 0x00007FF0; SOUND_AREA_ADR = .;

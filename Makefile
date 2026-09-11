@@ -265,7 +265,7 @@ $(WAVE_ASM_BUILDDIR)/%.o: $(WAVE_ASM_SUBDIR)/%.s
     
 
 $(ELF): $(OBJ_DIR)/ld_script.ld $(OBJS)
-	cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T $(LDSCRIPT) $(OBJS_REL) -o ../../$@
+	cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T $(LDSCRIPT) $(OBJS_REL) -L../../tools/agbcc/lib -lc -lgcc -o ../../$@
 
 $(ROM): %.gba: %.elf
 	$(OBJCOPY) -O binary --gap-fill=0xFF --pad-to 0x9000000 $< $@

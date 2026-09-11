@@ -29,6 +29,39 @@ SECTIONS
 		asm/code1.o(.text);
 		src/battle_1.o(.text);
 		asm/code2.o(.text);
+		/* *libc.a:dtoa.o(.text); */
+		*libc.a:fflush.o(.text);
+		*libc.a:findfp.o(.text);
+		*libc.a:freer.o(.text);
+		*libc.a:fvwrite.o(.text);
+		*libc.a:fwalk.o(.text);
+		*libc.a:locale.o(.text);
+		*libc.a:makebuf.o(.text);
+		*libc.a:mallocr.o(.text);
+		*libc.a:mbtowc_r.o(.text);
+		*libc.a:memchr.o(.text);
+		*libc.a:memmove.o(.text);
+		*libc.a:mlock.o(.text);
+		*libc.a:mprec.o(.text);
+		*libc.a:s_isinf.o(.text);
+		*libc.a:s_isnan.o(.text);
+		*libc.a:sbrkr.o(.text);
+		*libc.a:stdio.o(.text);
+		*libc.a:strcmp.o(.text);
+		*libc.a:syscalls.o(.text);
+		*libc.a:writer.o(.text);
+		*libc.a:callocr.o(.text);
+		*libc.a:closer.o(.text);
+		*libc.a:errno.o(.text);
+		*libc.a:fstatr.o(.text);
+		*libc.a:libcfunc.o(.text);
+		*libc.a:lseekr.o(.text);
+		*libc.a:readr.o(.text);
+		*libgcc.a:dp-bit.o(.text);
+		*libgcc.a:fp-bit.o(.text);
+		*libgcc.a:_lshrdi3.o(.text);
+		*libgcc.a:_muldi3.o(.text);
+		*libgcc.a:_negdi2.o(.text);
 	} = 0
 
     .data :
@@ -37,8 +70,21 @@ SECTIONS
         data/data.o(.data);
         sound/sound.o(.data);
         data/data2.o(.data);
-        data/m1.o(.data);
+        /* *libc.a:dtoa.o(.rodata); */
+        *libc.a:locale.o(.rodata);
+        *libc.a:mprec.o(.rodata);
+        *libc.a:syscalls.o(.rodata);
+        data/data_after_libc_rodata.o(.data);
+        *libc.a:locale.o(.data);
+        *libc.a:mallocr.o(.data);
     } = 0
+    
+    . = 0x8F00000;
+    .mother1 :
+    ALIGN(2)
+    {
+        data/m1.o(.data);
+    }
     
     /* DWARF debug sections.
        Symbols in the DWARF debugging sections are relative to the beginning
