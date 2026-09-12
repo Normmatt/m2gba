@@ -123,7 +123,7 @@ OBJS_REL := $(patsubst $(OBJ_DIR)/%,%,$(OBJS))
 SUBDIRS  := $(sort $(dir $(OBJS)))
 $(shell mkdir -p $(SUBDIRS))
 
-$(C_BUILDDIR)/agb_sram.o: CC1FLAGS := -O1 -mthumb-interwork
+$(C_BUILDDIR)/lib/sram.o: CC1FLAGS := -O1 -mthumb-interwork
 $(C_BUILDDIR)/test.o: CC1FLAGS := -O0 -mthumb-interwork
 $(C_BUILDDIR)/sub_801E0EC.o: CC1FLAGS := -O0 -mthumb-interwork -g
 

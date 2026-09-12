@@ -29,6 +29,8 @@ SECTIONS
 		asm/code1.o(.text);
 		src/battle_1.o(.text);
 		asm/code2.o(.text);
+		src/lib/gba_supervisor_calls.o(.text);
+		src/lib/sram.o(.text);
 		*libgcc.a:_call_via_rX.o(.text);
 		*libgcc.a:_divsi3.o(.text);
 		*libgcc.a:_dvmd_tls.o(.text);
@@ -81,7 +83,7 @@ SECTIONS
     {
         data/data.o(.data);
         sound/sound.o(.data);
-        data/data2.o(.data);
+        src/lib/sram.o(.rodata);
         *libc.a:vfprintf.o(.rodata);
         *libc.a:dtoa.o(.rodata);
         *libc.a:impure.o(.rodata);
