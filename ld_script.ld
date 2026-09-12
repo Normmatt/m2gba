@@ -29,6 +29,7 @@ SECTIONS
 		asm/code1.o(.text);
 		src/battle_1.o(.text);
 		asm/code2.o(.text);
+		asm/music_player_2000.o(.text);
 		src/lib/gba_supervisor_calls.o(.text);
 		src/lib/sram.o(.text);
 		*libgcc.a:_call_via_rX.o(.text);
