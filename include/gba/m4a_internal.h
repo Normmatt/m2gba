@@ -112,44 +112,47 @@ struct MusicPlayerTrack;
 
 struct SoundChannel
 {
-    u8 status;
-    u8 type;
-    u8 rightVolume;
-    u8 leftVolume;
-    u8 attack;
-    u8 decay;
-    u8 sustain;
-    u8 release;
-    u8 ky;
-    u8 ev;
-    u8 er;
-    u8 el;
-    u8 echoVolume;
-    u8 echoLength;
-    u8 d1;
-    u8 d2;
-    u8 gt;
-    u8 mk;
-    u8 ve;
-    u8 pr;
-    u8 rp;
-    u8 d3[3];
-    u32 ct;
-    u32 fw;
-    u32 freq;
-    struct WaveData *wav;
-    u32 cp;
-    struct MusicPlayerTrack *track;
-    u32 pp;
-    u32 np;
-    u32 d4;
-    u16 xpi;
-    u16 xpc;
+    /* 00 */ u8 status;
+    /* 01 */ u8 type;
+    /* 02 */ u8 rightVolume;
+    /* 03 */ u8 leftVolume;
+    /* 04 */ u8 attack;
+    /* 05 */ u8 decay;
+    /* 06 */ u8 sustain;
+    /* 07 */ u8 release;
+    /* 08 */ u8 ky;
+    /* 09 */ u8 ev;
+    /* 0A */ u8 er;
+    /* 0B */ u8 el;
+    /* 0C */ u8 echoVolume;
+    /* 0D */ u8 echoLength;
+    /* 0E */ u8 d1;
+    /* 0F */ u8 d2;
+    /* 10 */ u8 gt;
+    /* 11 */ u8 mk;
+    /* 12 */ u8 ve;
+    /* 13 */ u8 pr;
+    /* 14 */ u8 rp;
+    /* 15 */ u8 d3[3];
+    /* 18 */ u32 ct;
+    /* 1C */ u32 fw;
+    /* 20 */ u32 freq;
+    /* 24 */ struct WaveData *wav;
+    /* 28 */ s8 *cp;
+    /* 2C */ struct MusicPlayerTrack *track;
+    /* 30 */ struct SoundChannel *prev;
+    /* 34 */ struct SoundChannel *next;
+    /* 38 */ u32 d4;
+    /* 3C */ u16 xpi;
+    /* 3E */ u16 xpc;
 };
+
+struct MusicPlayerInfo;
 
 #define MAX_DIRECTSOUND_CHANNELS 12
 
 #define PCM_DMA_BUF_SIZE 1584 // size of Direct Sound buffer
+#define PCM_DMA_BUF_CHANNELS 1 // mono!
 
 struct SoundInfo
 {
@@ -157,36 +160,36 @@ struct SoundInfo
     // values during sensitive operations for locking purposes.
     // This field should be volatile but isn't. This could potentially cause
     // race conditions.
-    u32 ident;
+    /* 000 */ u32 ident;
 
-    vu8 pcmDmaCounter;
+    /* 004 */ vu8 pcmDmaCounter;
 
     // Direct Sound
-    u8 reverb;
-    u8 maxChans;
-    u8 masterVolume;
-    u8 freq;
+    /* 005 */ u8 reverb;
+    /* 006 */ u8 maxChans;
+    /* 007 */ u8 masterVolume;
+    /* 008 */ u8 freq;
 
-    u8 mode;
-    u8 c15;
-    u8 pcmDmaPeriod; // number of V-blanks per PCM DMA
-    u8 maxLines;
-    u8 gap[3];
-    s32 pcmSamplesPerVBlank;
-    s32 pcmFreq;
-    s32 divFreq;
-    struct CgbChannel *cgbChans;
-    u32 func;
-    u32 intp;
-    void (*CgbSound)(void);
-    void (*CgbOscOff)(u8);
-    u32 (*MidiKeyToCgbFreq)(u8, u8, u8);
-    u32 MPlayJumpTable;
-    u32 plynote;
-    u32 ExtVolPit;
-    u8 gap2[16];
-    struct SoundChannel chans[MAX_DIRECTSOUND_CHANNELS];
-    s8 pcmBuffer[PCM_DMA_BUF_SIZE * 2];
+    /* 009 */ u8 mode;
+    /* 00A */ u8 c15;
+    /* 00B */ u8 pcmDmaPeriod; // number of V-blanks per PCM DMA
+    /* 00C */ u8 maxLines;
+    /* 00D */ u8 gap[3];
+    /* 010 */ s32 pcmSamplesPerVBlank;
+    /* 014 */ s32 pcmFreq;
+    /* 018 */ s32 divFreq;
+    /* 01C */ struct CgbChannel *cgbChans;
+    /* 020 */ void (*func)(void*);
+    /* 024 */ void *intp;
+    /* 028 */ void (*CgbSound)(void);
+    /* 02C */ void (*CgbOscOff)(u8);
+    /* 030 */ u32 (*MidiKeyToCgbFreq)(u8, u8, u8);
+    /* 034 */ void *MPlayJumpTable;
+    /* 038 */ void (*plynote)(u8, struct MusicPlayerInfo *, struct MusicPlayerTrack *);
+    /* 03C */ u32 ExtVolPit;
+    /* 040 */ u8 gap2[16];
+    /* 050 */ struct SoundChannel chans[MAX_DIRECTSOUND_CHANNELS];
+    /* 350 */ s8 pcmBuffer[PCM_DMA_BUF_SIZE * PCM_DMA_BUF_CHANNELS];
 };
 
 struct SongHeader

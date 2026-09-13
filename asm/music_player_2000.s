@@ -5,27 +5,32 @@
 
 	thumb_func_start umul3232H32
 umul3232H32: @ 0x080F26D4
-	add r2, pc, #0x0 @ =sub_080F26D8
+	adr r2, .armcode
 	bx r2
-
-	arm_func_start sub_080F26D8
-sub_080F26D8: @ 0x080F26D8
+.arm
+.armcode:
 	umull r2, r3, r0, r1
 	add r0, r3, #0
 	bx lr
 
 	thumb_func_start SoundMain
 SoundMain: @ 0x080F26E4
+	@ Check whether the sound driver state is free for us to use right now
 	ldr r0, _080F2750 @ =SOUND_AREA_ADR
 	ldr r0, [r0]
 	ldr r2, _080F2754 @ =0x68736D53
 	ldr r3, [r0]
 	cmp r2, r3
-	beq _080F26F2
+	beq .unlocked
+	@ Something else is in the middle of messing with it. Bail
 	bx lr
-_080F26F2:
+.unlocked:
+	@ We can use it! Lock it now.
 	adds r3, #1
 	str r3, [r0]
+	@ Save R0, LR, and all callee-saved registers, and make room for
+	@ 6 local variables on the stack.
+	@ (R0 contains the address of the sound driver state.)
 	push {r4, r5, r6, r7, lr}
 	mov r1, r8
 	mov r2, sb
@@ -33,49 +38,72 @@ _080F26F2:
 	mov r4, fp
 	push {r0, r1, r2, r3, r4}
 	sub sp, #0x18
+	@ Has the library consumer set a max number of scanlines for audio mixing?
 	ldrb r1, [r0, #0xc]
 	cmp r1, #0
-	beq _080F2716
+	beq .end_scanline_set
+	@ It has. Calculate the ending scanline as (VCOUNT + setting).
+	@ If VCOUNT was read outside of vblank, it is considered to happen "after"
+	@ vblank by adding the duration of a whole frame (228 lines).
 	ldr r2, _080F275C @ =0x04000006
 	ldrb r2, [r2]
-	cmp r2, #0xa0
-	bhs _080F2714
-	adds r2, #0xe4
-_080F2714:
+	cmp r2, #160
+	bhs .extra_time_added
+	adds r2, #228
+.extra_time_added:
 	adds r1, r1, r2
-_080F2716:
+.end_scanline_set:
+	@ Set sp+0x14 to the ending scanline, or 0 if none has been set
 	str r1, [sp, #0x14]
+	@ Do we have a function indicating an active music player?
 	ldr r3, [r0, #0x20]
 	cmp r3, #0
-	beq _080F2726
+	beq .sequence_players_done
+	@ We do. Call it, and begin the chain of music players calling each other.
+	@ It takes a music player state struct as an argument.
 	ldr r0, [r0, #0x24]
 	bl .call_r3
+	@ Revert R0 back to the address of the sound driver state, after the above clobbering
 	ldr r0, [sp, #0x18]
-_080F2726:
+.sequence_players_done:
+	@ Now we can begin audio mixing. Start with the native GameBoy channels
 	ldr r3, [r0, #0x28]
 	bl .call_r3
+	@ (R0 was clobbered)
 	ldr r0, [sp, #0x18]
+	@ R8 = sample count per frame, aka the size of the audio buffer to output into
 	ldr r3, [r0, #0x10]
 	mov r8, r3
+	@ R5 = pointer to audio output buffer. Choose the appropriate buffer based
+	@ on which buffers were filled last
+	@ (R4 - 1) is the number of buffers we have available to fill before wrapping around
+	@ in the overall output buffer; we want to fill these available buffers in order of
+	@ ascending address, to simplify the sound DMA.
 	ldr r5, _080F2760 @ =0x00000350
 	adds r5, r5, r0
 	ldrb r4, [r0, #4]
+	@ If the audio engine is playing the last possible buffer (R4 == 1),
+	@ wrap around and choose the first possible audio buffer, which will be played after
+	@ the sound DMA is reset. (m4aSoundVSync will never allow R4 to equal 0.)
 	subs r7, r4, #1
-	bls _080F2746
+	bls .finalize_out_buffer_addr
 	ldrb r1, [r0, #0xb]
 	subs r1, r1, r7
 	mov r2, r8
 	muls r2, r1, r2
 	adds r5, r5, r2
-_080F2746:
+.finalize_out_buffer_addr:
+	@ Store it in sp+0x8
 	str r5, [sp, #8]
+	@ R6 = size of the entire audio buffer
 	ldr r6, _080F2764 @ =0x00000630
-	ldr r3, _080F2758 @ =gUnknown_03000F51
+	@ Execute code in RAM for the rest of it
+	ldr r3, _080F2758 @ =SoundMainRAM_Buffer+1
 	bx r3
 	.align 2, 0
 _080F2750: .4byte SOUND_AREA_ADR
 _080F2754: .4byte 0x68736D53
-_080F2758: .4byte gUnknown_03000F51
+_080F2758: .4byte SoundMainRAM_Buffer+1
 _080F275C: .4byte 0x04000006
 _080F2760: .4byte 0x00000350
 _080F2764: .4byte 0x00000630
@@ -84,18 +112,26 @@ _080F2764: .4byte 0x00000630
 SoundMainRAM: @ 0x080F2768
 	ldrb r3, [r0, #5]
 	cmp r3, #0
-	beq sub_080F27B4
-	add r1, pc, #0x4 @ =sub_080F2774
+	beq .clear_audio_buffer
+	adr r1, .reverb
 	bx r1
 	.align 2, 0
-
-	arm_func_start sub_080F2774
-sub_080F2774: @ 0x080F2774
+.arm
+.reverb: @ 0x080F2774
+	@ Reverb has taps at two points in time: the samples from the audio buffer
+	@ about to be written to, and the audio buffer after it.
+	@ R4 == 2 means only one audio buffer is available, so the second one will
+	@ come from wrapping around to the first again.
 	cmp r4, #2
 	addeq r7, r0, #0x350
 	addne r7, r5, r8
+	@ R4 = loop counter; loop ends when it reaches 0
 	mov r4, r8
-_080F2784:
+1: @ 0x080F2784
+	@ The normal MP2K reverb algorithm takes 4 samples total (2 left, 2 right)
+	@ and adds them together, and multiplies by reverb/(128*4).
+	@ Since this is the mono engine, we add only two samples together and divide
+	@ by reverb/(128*2).
 	ldrsb r0, [r5]
 	ldrsb r1, [r7], #1
 	add r0, r0, r1
@@ -105,49 +141,56 @@ _080F2784:
 	addne r0, r0, #1
 	strb r0, [r5], #1
 	subs r4, r4, #1
-	bgt _080F2784
-	add r0, pc, #0x1F @ =sub_080F27D2
+	bgt 1b
+	adr r0, .buffer_initialized+1
 	bx r0
-
-	thumb_func_start sub_080F27B4
-sub_080F27B4: @ 0x080F27B4
+.thumb
+.clear_audio_buffer: @ 0x080F27B4
 	movs r0, #0
+	@ R1 = loop counter
+	@ All audio buffer sizes are multiples of 4. Shift out additional bits and
+	@ store the remainder as necessary so we can clear the remaining part of the
+	@ buffer in increments of 16 bytes.
 	mov r1, r8
 	lsrs r1, r1, #3
-	blo _080F27BE
+	bcc .multiple_of_8
 	stm r5!, {r0}
-_080F27BE:
+.multiple_of_8:
 	lsrs r1, r1, #1
-	blo _080F27C6
+	bcc .multiple_of_16
 	stm r5!, {r0}
 	stm r5!, {r0}
-_080F27C6:
+.multiple_of_16:
 	stm r5!, {r0}
 	stm r5!, {r0}
 	stm r5!, {r0}
 	stm r5!, {r0}
 	subs r1, #1
-	bgt _080F27C6
-
-	non_word_aligned_thumb_func_start sub_080F27D2
-sub_080F27D2: @ 0x080F27D2
+	bgt .multiple_of_16
+.buffer_initialized: @ 0x080F27D2
 	ldr r4, [sp, #0x18]
+	@ IP = reciprocal of sample rate (seconds per sample), as a Q9.23 fixed point number
 	ldr r0, [r4, #0x18]
 	mov ip, r0
+	@ SP+0x4 (in R0 for now) = loop count, the number of channels left to process
 	ldrb r0, [r4, #6]
+	@ R4 = pointer to a channel/source
 	adds r4, #0x50
-_080F27DC:
+.chan_loop:
 	str r0, [sp, #4]
+	@ R3 = pointer to sample
 	ldr r3, [r4, #0x24]
+	@ If an end scanline was set, check if we reached/surpassed it
 	ldr r0, [sp, #0x14]
 	cmp r0, #0
 	beq _080F27FC
+	@ Read VCOUNT, considering non-vblank times to have occurred after vblank
 	ldr r1, _080F27F8 @ =0x04000006
 	ldrb r1, [r1]
-	cmp r1, #0xa0
-	bhs _080F27F0
-	adds r1, #0xe4
-_080F27F0:
+	cmp r1, #160
+	bhs 2f
+	adds r1, #228
+2:
 	cmp r1, r0
 	blo _080F27FC
 	b _080F2A7E
@@ -405,7 +448,7 @@ sub_080F2A74: @ 0x080F2A74
 	subs r0, #1
 	ble _080F2A7E
 	adds r4, #0x40
-	b _080F27DC
+	b .chan_loop
 _080F2A7E:
 	ldr r0, [sp, #0x18]
 	ldr r3, _080F2A94 @ =0x68736D53
