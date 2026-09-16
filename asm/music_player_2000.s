@@ -183,7 +183,7 @@ SoundMainRAM: @ 0x080F2768
 	@ If an end scanline was set, check if we reached/surpassed it
 	ldr r0, [sp, #0x14]
 	cmp r0, #0
-	beq _080F27FC
+	beq .process_channel
 	@ Read VCOUNT, considering non-vblank times to have occurred after vblank
 	ldr r1, _080F27F8 @ =0x04000006
 	ldrb r1, [r1]
@@ -192,167 +192,218 @@ SoundMainRAM: @ 0x080F2768
 	adds r1, #228
 2:
 	cmp r1, r0
-	blo _080F27FC
+	blo .process_channel
 	b _080F2A7E
 	.align 2, 0
 _080F27F8: .4byte 0x04000006
-_080F27FC:
+.process_channel:
 	ldrb r6, [r4]
 	movs r0, #0xc7
 	tst r0, r6
-	bne _080F2806
-	b sub_080F2A74
-_080F2806:
+	bne .process_active_channel
+	b .next_channel
+.process_active_channel:
+	@ Advance the envelope to the next stage
 	movs r0, #0x80
 	tst r0, r6
-	beq _080F2836
+	beq .envelope_active
 	movs r0, #0x40
 	tst r0, r6
-	bne _080F2846
+	bne .note_finished
+	@ The channel was just keyed on. Initialize it and put it in the attack phase.
 	movs r6, #3
 	strb r6, [r4]
+	@ Play the sample starting at the beginning
 	adds r0, r3, #0
 	adds r0, #0x10
 	str r0, [r4, #0x28]
+	@ with the appropriate number of bytes remaining before it ends
 	ldr r0, [r3, #0xc]
 	str r0, [r4, #0x18]
+	@ Set envelope level and inter-sample position to 0
+	@ R5 = envelope level
 	movs r5, #0
 	strb r5, [r4, #9]
 	str r5, [r4, #0x1c]
+	@ Set the channel status to "looping" for a looping sample, and proceed to process attack
 	ldrb r2, [r3, #3]
 	movs r0, #0xc0
 	tst r0, r2
-	beq _080F288E
+	beq .attack
 	movs r0, #0x10
 	orrs r6, r0
 	strb r6, [r4]
-	b _080F288E
-_080F2836:
+	b .attack
+.envelope_active:
+	@ R5 = envelope level
 	ldrb r5, [r4, #9]
 	movs r0, #4
 	tst r0, r6
-	beq _080F284C
+	beq .not_echo
+	@ Echo. Tick down the echo duration counter without adjusting the volume
 	ldrb r0, [r4, #0xd]
 	subs r0, #1
 	strb r0, [r4, #0xd]
-	bhi _080F289C
-_080F2846:
+	@ If we hit 0, then the note ends and the channel is off.
+	@ Otherwise, continue with channel processing
+	bhi .envelope_done
+.note_finished:
 	movs r0, #0
 	strb r0, [r4]
-	b sub_080F2A74
-_080F284C:
+	b .next_channel
+.not_echo:
 	movs r0, #0x40
 	tst r0, r6
-	beq _080F286C
+	beq .not_release
+	@ Release -- follows an exponential curve in the amplitude domain
 	ldrb r0, [r4, #7]
 	muls r5, r0, r5
 	lsrs r5, r5, #8
+	@ Did the envelope level meet or drop below the configured echo volume?
 	ldrb r0, [r4, #0xc]
 	cmp r5, r0
-	bhi _080F289C
-_080F285E:
+	bhi .envelope_done
+.set_up_echo:
+	@ Envelope level = echo volume. Is a nonzero echo volume set?
 	ldrb r5, [r4, #0xc]
 	cmp r5, #0
-	beq _080F2846
+	beq .note_finished
+	@ Echo is configured. Mark it in the channel status
 	movs r0, #4
 	orrs r6, r0
 	strb r6, [r4]
-	b _080F289C
-_080F286C:
+	b .envelope_done
+.not_release:
 	movs r2, #3
 	ands r2, r6
 	cmp r2, #2
-	bne _080F288A
+	bne .not_decay
+	@ Decay -- follows an exponential curve in the amplitude domain
 	ldrb r0, [r4, #5]
 	muls r5, r0, r5
 	lsrs r5, r5, #8
+	@ Did the envelope level meet or drop below the Sustain setting?
 	ldrb r0, [r4, #6]
 	cmp r5, r0
-	bhi _080F289C
+	bhi .envelope_done
+	@ It did. Set the envelope level to the sustain level.
+	@ If that level is 0, try to set up echo
 	adds r5, r0, #0
-	beq _080F285E
+	beq .set_up_echo
+	@ Otherwise, change the envelope state to sustain
 	subs r6, #1
 	strb r6, [r4]
-	b _080F289C
-_080F288A:
+	b .envelope_done
+.not_decay:
 	cmp r2, #3
-	bne _080F289C
-_080F288E:
+	bne .envelope_done
+.attack:
+	@ Attack -- follows a linear curve in the amplitude domain
 	ldrb r0, [r4, #4]
 	adds r5, r5, r0
+	@ Did the envelope level hit or exceed the maximum (0xFF)?
 	cmp r5, #0xff
-	blo _080F289C
+	blo .envelope_done
+	@ It did. Clamp the envelope level to 0xFF and change the envelope state to decay
 	movs r5, #0xff
 	subs r6, #1
 	strb r6, [r4]
-_080F289C:
+.envelope_done:
 	strb r5, [r4, #9]
+	@ Scale the current envelope level by (PCM stream volume + 1) / 16
 	ldr r0, [sp, #0x18]
 	ldrb r0, [r0, #7]
 	adds r0, #1
 	muls r0, r5, r0
 	lsrs r5, r0, #4
+	@ MONO: scale the envelope level by (left vol + right vol)/512,
+	@ and store that result only to the right-channel envelope level
 	ldrb r0, [r4, #2]
 	ldrb r1, [r4, #3]
 	adds r0, r0, r1
 	muls r0, r5, r0
 	lsrs r0, r0, #9
 	strb r0, [r4, #0xa]
+	@ Is this a channel with a looping sample? If not, SP+0x10 = 0
 	movs r0, #0x10
 	ands r0, r6
 	str r0, [sp, #0x10]
-	beq _080F28CC
+	beq .loop_length_set
+	@ Otherwise, SP+0xC = pointer to the loop point
 	adds r0, r3, #0
 	adds r0, #0x10
 	ldr r1, [r3, #8]
 	adds r0, r0, r1
 	str r0, [sp, #0xc]
+	@ SP+0x10 = length of loop section
 	ldr r0, [r3, #0xc]
 	subs r0, r0, r1
 	str r0, [sp, #0x10]
-_080F28CC:
+.loop_length_set:
+	@ R5 = address of audio output buffer
+	@ R2 = remaining sample count (before the end of the sample or loop)
+	@ R3 = pointer to current spot in the sample (coarse position)
 	ldr r5, [sp, #8]
 	ldr r2, [r4, #0x18]
 	ldr r3, [r4, #0x28]
-	add r0, pc, #0x4 @ =sub_080F28D8
+	adr r0, sub_080F28D8
 	bx r0
 	.align 2, 0
-
-	arm_func_start sub_080F28D8
+.arm
 sub_080F28D8: @ 0x080F28D8
+	@ SP+0 = audio buffer size
 	str r8, [sp]
+	@ SL = the final calculated amplitude for the channel, << 16
 	ldrb sl, [r4, #0xa]
 	lsl sl, sl, #0x10
 	ldrb r0, [r4, #1]
 	tst r0, #8
-	beq _080F29E0
-_080F28F0:
+	beq .pitched_sample
+.percussion_sample_loop:
 	cmp r2, #4
-	ble _080F294C
+	ble .mix_percussion_sample_1to4
+	@ There are 4 or more samples before the loop point.
+	@ But is it more than enough to fill the audio buffer? (Exactly enough means handling looping)
+	@ If it is, LR = 0, and subtract the audio buffer size from R2 now and skip ahead
 	subs r2, r2, r8
 	movgt lr, #0
-	bgt _080F291C
+	bgt .mix_percussion_sample_4ormore
+	@ Otherwise, the sample will loop or end while filling the audio buffer.
+	@ Back up the audio buffer size in LR and restore the original value of R2
 	mov lr, r8
 	add r2, r2, r8
+	@ R8 = remaining sample count - 4
 	sub r8, r2, #4
+	@ LR = audio buffer size - (remaining sample count - 4)
 	sub lr, lr, r8
+	@ R2 = the number of samples to handle individually at the end (1-4)
 	ands r2, r2, #3
 	moveq r2, #4
-_080F291C:
+.mix_percussion_sample_4ormore:
+	@ Load the current interim result of audio output/mixing, 4 bytes at a time
 	ldr r6, [r5]
-_080F2920:
+3:
+	@ Load the sample byte
 	ldrsb r0, [r3], #1
+	@ Multiply it by the final amplitude << 16.
+	@ This puts the result in the most significant 16 bits, with no extra sign extension.
 	mul r1, sl, r0
+	@ Reduce the precision of the result to 8 bits to match the output buffer format
 	bic r1, r1, #0xff0000
+	@ Rotate the existing audio to move the relevant byte into the high 8 bits, and add
 	add r6, r1, r6, ror #8
+	@ And do this 4 times
 	adds r5, r5, #0x40000000
-	blo _080F2920
+	bcc 3b
+	@ Store the audio back to memory
 	str r6, [r5], #4
+	@ Keep doing this as long as we can
 	subs r8, r8, #4
-	bgt _080F291C
+	bgt .mix_percussion_sample_4ormore
+	@ If the buffer is filled, then exit early
 	adds r8, r8, lr
 	beq _080F2A60
-_080F294C:
+.mix_percussion_sample_1to4:
 	ldr r6, [r5]
 _080F2950:
 	ldrsb r0, [r3], #1
@@ -366,7 +417,7 @@ _080F2968:
 	blo _080F2950
 	str r6, [r5], #4
 	subs r8, r8, #4
-	bgt _080F28F0
+	bgt .percussion_sample_loop
 	b _080F2A60
 _080F2980:
 	ldr r0, [sp, #0x18]
@@ -397,7 +448,7 @@ _080F29C0:
 	ror r6, r6, r0
 	str r6, [r5], #4
 	b _080F2A68
-_080F29E0:
+.pitched_sample:
 	push {r4, ip}
 	ldr lr, [r4, #0x1c]
 	ldr r1, [r4, #0x20]
@@ -439,11 +490,10 @@ _080F2A60:
 	str r3, [r4, #0x28]
 _080F2A68:
 	ldr r8, [sp]
-	add r0, pc, #0x1 @ =sub_080F2A74
+	adr r0, .next_channel+1
 	bx r0
-
-	thumb_func_start sub_080F2A74
-sub_080F2A74: @ 0x080F2A74
+.thumb
+.next_channel: @ 0x080F2A74
 	ldr r0, [sp, #4]
 	subs r0, #1
 	ble _080F2A7E
