@@ -193,7 +193,7 @@ SoundMainRAM: @ 0x080F2768
 2:
 	cmp r1, r0
 	blo .process_channel
-	b _080F2A7E
+	b .mixing_done
 	.align 2, 0
 _080F27F8: .4byte 0x04000006
 .process_channel:
@@ -390,7 +390,8 @@ sub_080F28D8: @ 0x080F28D8
 	mul r1, sl, r0
 	@ Reduce the precision of the result to 8 bits to match the output buffer format
 	bic r1, r1, #0xff0000
-	@ Rotate the existing audio to move the relevant byte into the high 8 bits, and add
+	@ Rotate the existing audio to move the relevant byte into the high 8 bits, and add.
+	@ Adding in this way keeps the bits of other samples the same.
 	add r6, r1, r6, ror #8
 	@ And do this 4 times
 	adds r5, r5, #0x40000000
@@ -402,116 +403,158 @@ sub_080F28D8: @ 0x080F28D8
 	bgt .mix_percussion_sample_4ormore
 	@ If the buffer is filled, then exit early
 	adds r8, r8, lr
-	beq _080F2A60
+	beq .channel_done_for_now
 .mix_percussion_sample_1to4:
+	@ Second verse, same as the first. See above for line-by-line comments
 	ldr r6, [r5]
-_080F2950:
+4:
 	ldrsb r0, [r3], #1
 	mul r1, sl, r0
 	bic r1, r1, #0xff0000
 	add r6, r1, r6, ror #8
+	@ Different from above: check if we reached the loop point/end of the sample
 	subs r2, r2, #1
-	beq _080F29B0
-_080F2968:
+	beq .handle_percussion_sample_end
+.mix_percussion_sample_1to4_continue:
 	adds r5, r5, #0x40000000
-	blo _080F2950
+	bcc 4b
 	str r6, [r5], #4
+	@ Keep adding to the mixer output until the buffer is completely filled
 	subs r8, r8, #4
 	bgt .percussion_sample_loop
-	b _080F2A60
-_080F2980:
-	ldr r0, [sp, #0x18]
+	b .channel_done_for_now
+.handle_pitched_sample_end:
+	@ If the sample loops...
+	ldr r0, [sp, #0x10+8]
 	cmp r0, #0
-	beq _080F29A4
-	ldr r3, [sp, #0x14]
+	beq .pitched_sample_end_nonlooping
+	@ Reload the audio pointer to be at the loop point
+	ldr r3, [sp, #0xC+8]
+	@ SB = the number of bytes we advanced past the end of the sample (-remaining bytes)
 	rsb sb, r2, #0
-_080F2994:
+6:
+	@ Add the loop length until we have a positive number of bytes remaining
 	adds r2, r0, r2
-	bgt _080F2A34
+	bgt .pitched_sample_positions_set
 	sub sb, sb, r0
-	b _080F2994
-_080F29A4:
+	b 6b
+.pitched_sample_end_nonlooping:
 	pop {r4, ip}
 	mov r2, #0
-	b _080F29C0
-_080F29B0:
+	b .channel_off
+.handle_percussion_sample_end:
+	@ If the sample loops, set R2 to the loop length, reload the pointer, and continue mixing
 	ldr r2, [sp, #0x10]
 	cmp r2, #0
 	ldrne r3, [sp, #0xc]
-	bne _080F2968
-_080F29C0:
+	bne .mix_percussion_sample_1to4_continue
+	@ Otherwise... the sample has ended.
+.channel_off:
+	@ Zero out the channel status
 	strb r2, [r4]
+	@ Store back the remaining bytes of mixed audio to the output buffer
 	lsr r0, r5, #0x1e
 	bic r5, r5, #0xc0000000
 	rsb r0, r0, #3
 	lsl r0, r0, #3
 	ror r6, r6, r0
 	str r6, [r5], #4
-	b _080F2A68
+	b .channel_done
 .pitched_sample:
+	@ Save R4 and IP so we can use them
 	push {r4, ip}
+	@ LR = fine sample position
 	ldr lr, [r4, #0x1c]
+	@ R4 = sample frequency * the output sample rate reciprocal
+	@ In other words, the ratio of audio sample sample rate to output buffer sample rate.
+	@ How much to adjust the position by, << 23
 	ldr r1, [r4, #0x20]
 	mul r4, ip, r1
+	@ R0 = sample byte at current coarse position
+	@ R1 = slope from this sample to the next one
+	@ Advance R3 past these two samples
 	ldrsb r0, [r3]
 	ldrsb r1, [r3, #1]!
 	sub r1, r1, r0
-_080F29FC:
+.pitched_sample_new_buffer_word:
 	ldr r6, [r5]
-_080F2A00:
+5:
+	@ SB = linear interpolation result, based on the slope, intercept, and fine position
 	mul sb, lr, r1
 	add sb, r0, sb, asr #23
+	@ IP = channel amplitude * interpolated sample, with the low 8 bits truncated off,
+	@ shifted 24 to the left to eliminate the sign bit
 	mul ip, sl, sb
 	bic ip, ip, #0xff0000
+	@ Mix with the rest of the output audio
 	add r6, ip, r6, ror #8
+	@ Adjust the fine sample position according to the current frequency
 	add lr, lr, r4
-	lsrs sb, lr, #0x17
-	beq _080F2A40
+	@ SB = integer part of the fine position. Is it 0?
+	lsrs sb, lr, #23
+	beq .mix_pitched_sample_continue
+	@ It is nonzero. We advanced to a new coarse sample position
+	@ Attempt to clear out the bits of the integer part of the fine position.
 	bic lr, lr, #0x3f800000
+	@ Do we have at least 1 byte of the sample remaining before the loop point/end?
 	subs r2, r2, sb
-	ble _080F2980
+	ble .handle_pitched_sample_end
+	@ We do. Are we advancing the coarse position by 1?
 	subs sb, sb, #1
+	@ If so, just calculate the new intercept with the slope info we have
 	addeq r0, r0, r1
-_080F2A34:
+.pitched_sample_positions_set:
+	@ Otherwise, load the new intercept from memory
 	ldrsbne r0, [r3, sb]!
+	@ Refresh the slope and intercept, and advance R3 appropriately
 	ldrsb r1, [r3, #1]!
 	sub r1, r1, r0
-_080F2A40:
+.mix_pitched_sample_continue:
+	@ Do all of this 4 times
 	adds r5, r5, #0x40000000
-	blo _080F2A00
+	bcc 5b
+	@ Store the mixed audio back to memory
 	str r6, [r5], #4
 	subs r8, r8, #4
-	bgt _080F29FC
+	bgt .pitched_sample_new_buffer_word
+	@ All this time, the slope/intercept stuff means we advanced R3 1 more than necessary.
+	@ Point it back at at the correct first byte.
 	sub r3, r3, #1
 	pop {r4, ip}
+	@ Commit the final fine sample position to memory
 	str lr, [r4, #0x1c]
-_080F2A60:
+.channel_done_for_now:
+	@ Commit the coarse sample position and number of bytes before the end to memory
 	str r2, [r4, #0x18]
 	str r3, [r4, #0x28]
-_080F2A68:
+.channel_done:
+	@ Reload R8 with the audio buffer size again, for the next loop
 	ldr r8, [sp]
 	adr r0, .next_channel+1
 	bx r0
 .thumb
 .next_channel: @ 0x080F2A74
+	@ Have we gotten through all the channels?
 	ldr r0, [sp, #4]
 	subs r0, #1
-	ble _080F2A7E
+	ble .mixing_done
+	@ No. Advance R4 to the next channel
 	adds r4, #0x40
 	b .chan_loop
-_080F2A7E:
+.mixing_done:
+	@ Unlock the sound driver state
 	ldr r0, [sp, #0x18]
 	ldr r3, _080F2A94 @ =0x68736D53
 	str r3, [r0]
+	@ Pop everything off the stack -- the 9 of the 10 registers + 0x18 extra bytes
 	add sp, #0x1c
 	pop {r0, r1, r2, r3, r4, r5, r6, r7}
 	mov r8, r0
 	mov sb, r1
 	mov sl, r2
 	mov fp, r3
+	@ The 10th register contained the return address; jump back to it now
 	pop {r3}
-
-	non_word_aligned_thumb_func_start .call_r3
 .call_r3: @ 0x080F2A92
 	bx r3
 	.align 2, 0
