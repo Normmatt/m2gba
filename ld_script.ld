@@ -25,6 +25,8 @@ SECTIONS
 		src/crt0.o(.text);
         src/main.o(.text);
 		asm/code.o(.text);
+		data/script_data.o(.text);
+		asm/code_after_script_data.o(.text);
 		src/hal_anim.o(.text);
 		asm/code1.o(.text);
 		src/battle_1.o(.text);
@@ -79,11 +81,11 @@ SECTIONS
 		*libgcc.a:_negdi2.o(.text);
 	} = 0
 
-    .data :
+    .rodata :
 	ALIGN(4)
     {
-        data/data.o(.data);
-        sound/sound.o(.data);
+        data/rodata.o(.rodata);
+        sound/sound.o(.rodata);
         src/lib/sram.o(.rodata);
         *libc.a:vfprintf.o(.rodata);
         *libc.a:dtoa.o(.rodata);
@@ -91,6 +93,8 @@ SECTIONS
         *libc.a:locale.o(.rodata);
         *libc.a:mprec.o(.rodata);
         *libc.a:syscalls.o(.rodata);
+        /* The bytes in between .rodata and .data are filled with 00. Keeping
+           them in the same output section makes that easy to accomplish. */
         data/data_after_libc_rodata.o(.data);
         *libc.a:impure.o(.data);
         *libc.a:locale.o(.data);

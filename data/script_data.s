@@ -1,3 +1,4 @@
+    .section .text
 
     .global gUnknown_08026330
 gUnknown_08026330:
